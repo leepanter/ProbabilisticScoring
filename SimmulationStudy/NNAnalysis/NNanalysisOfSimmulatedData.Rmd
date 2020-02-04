@@ -1,0 +1,191 @@
+---
+title: "Neural Net Analysis of Similated Data"
+author: "Lee Panter"
+output: 
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: Rmarkdown_preamble.tex
+geometry: margin=0.5in
+fontsize: 11pt
+bibliography: BibdotBib.bib
+---
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+***
+
+<!--  ####  Description   #### -->
+\begin{center}
+\LARGE{\underline{\textbf{Description}}}
+\end{center}
+
+This script will build a Convolutional Neural Network for the data simmulated in the DataSimmulatio.Rmd script.  
+
+In completing this script, we desire to complete the following goals:
+
+1. Partition data into training, test, and validation sets. The training and test sets should allow for iterative cross-validation, and the validations set may be small, and will be used primarily for ensuring the efficacy of the model.
+2. Perform the model fitting process on the training data sets, and test for over-fitting using the test data sets defined through cross validation.
+3. Compare model estimates for edge weights and biases to those generated in Alan's presentation.  
+4. Determine if results are more similar in certain scenarios, and recommend further methodological enhancements to better replicate Alan's results.
+
+***
+
+<!--  ####  Script Dependencies   #### -->
+\begin{center}
+\LARGE{\underline{\textbf{Script Dependencies}}}
+\end{center}
+
+
+<!--  Packages -->  
+## Package Dependencies
+```{r}
+library(neuralnet)
+```
+
+
+<!--  Working Directory  -->       
+## Working Directory
+```{r}
+WD="/Users/lee/Documents/Lee/School/CU Denver/Spring 2020/Math6630Consulting/AlanMalik_EducProbScore/SimmulationStudy/NNAnalysis"
+setwd(WD)
+```
+
+
+<!-- Data  &  Variables -->       
+## Load Data
+```{r}
+load(file = "/Users/lee/Documents/Lee/School/CU Denver/Spring 2020/Math6630Consulting/AlanMalik_EducProbScore/SimmulationStudy/DataSimmulation/df_uniform.Rdata")
+df.uniform=df_uniform
+
+load(file = "/Users/lee/Documents/Lee/School/CU Denver/Spring 2020/Math6630Consulting/AlanMalik_EducProbScore/SimmulationStudy/DataSimmulation/df_beta22.Rdata")
+df.beta22=df_beta22
+
+load(file = "/Users/lee/Documents/Lee/School/CU Denver/Spring 2020/Math6630Consulting/AlanMalik_EducProbScore/SimmulationStudy/DataSimmulation/df_beta25.Rdata")
+df.beta25=df_beta25
+
+rm(df_uniform)
+rm(df_beta22)
+rm(df_beta25)
+```
+***
+
+
+
+# Part (1)
+
+We will separate our data into 10 subsets, which we can use for training and testing:
+
+```{r}
+set.seed(123)
+
+index.i=list()
+df.uniform.i=list()
+df.beta22.i=list()
+df.beta25.i=list()
+
+for(i in 1:10){
+  index.i[[i]]=sample(1:1000, 100, replace=FALSE)
+}
+
+for(i in 1:10){
+  df.uniform.i[[i]]=df.uniform[index.i[[i]],]
+  df.beta22.i[[i]]=df.beta22[index.i[[i]],]
+  df.beta25.i[[i]]=df.beta25[index.i[[i]],]
+}
+
+```
+
+```{r}
+index.train=sample(1:1000, 800, replace = FALSE)
+
+df.uniform.train=df.uniform[index.train,]
+df.uniform.test=df.uniform[-index.train,]
+
+df.beta22.train= df.beta22[index.train,]
+df.beta22.test = df.beta22[-index.train,]
+
+df.beta25.train= df.beta25[index.train,]
+df.beta25.test = df.beta25[-index.train,]
+```
+
+
+# Part (2)
+
+We now fit a Convolitional Neural Network, but we need to scale the data first
+
+```{r}
+normal.data=function(in.vec){
+  return((in.vec-min(in.vec))/(max(in.vec)-min(in.vec)))
+}
+
+df.scale.uniform=list()
+df.scale.beta22=list()
+df.scale.beta25=list()
+
+for(i in 1:10){
+  df.scale.uniform[[i]]=as.data.frame(lapply(df.uniform.i[[i]][,1:10], normal.data))
+  df.scale.uniform[[i]]=cbind(df.scale.uniform, 
+                              df.uniform.i[[i]][,11:12])
+  
+  df.scale.beta22[[i]]=as.data.frame(lapply(df.beta22.i[[i]][,1:10], normal.data))
+  df.scale.beta22[[i]]=cbind(df.scale.beta22, 
+                              df.beta22.i[[i]][,11:12])
+  
+  df.scale.beta25[[i]]=as.data.frame(lapply(df.beta25.i[[i]][,1:10], normal.data))
+  df.scale.beta25[[i]]=cbind(df.scale.beta25, 
+                              df.beta25.i[[i]][,11:12])
+}
+
+df.scale.uniform.train=as.data.frame(lapply(df.uniform.train[,1:10], 
+                                            normal.data))
+df.scale.uniform.train=cbind(df.scale.uniform.train, 
+                              df.uniform.train[,11:12])
+
+df.scale.beta22.train=as.data.frame(lapply(df.beta22.train[,1:10], 
+                                            normal.data))
+df.scale.beta22.train=cbind(df.scale.beta22.train, 
+                              df.uniform.train[,11:12])
+
+df.scale.beta25.train=as.data.frame(lapply(df.beta25.train[,1:10], 
+                                            normal.data))
+df.scale.beta25.train=cbind(df.scale.beta25.train, 
+                              df.uniform.train[,11:12])
+
+```
+
+We now fit the Neural Networks
+
+```{r}
+nn.uniform=neuralnet(ResponseCat ~ Q1 + Q2 + Q3 + Q4 + Q5 + Q6 + Q7 + Q8 + Q9,
+                     data=df.scale.uniform.train,
+                     hidden = 4,
+                     linear.output = FALSE,
+                     stepmax = 1e+05,
+                     rep = 2,
+                     err.fct = "ce")
+```
+
+<!------------------------------------------------------------------------------>
+<!-- Post-Script -->       
+<!------------------------------------------------------------------------------>
+
+<!-- Notes:        -->       
+
+<!-- Compilation Errors -->       
+
+<!-- Execution Errors -->
+
+<!-- Next Scripts to Consider -->
+
+<!------------------------------------------------------------------------------>
+
