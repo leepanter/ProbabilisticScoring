@@ -1,0 +1,157 @@
+---
+title: "Introduction, Notation, and Problem Statement"
+output: 
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: Rmarkdown_preamble.tex
+geometry: margin=0.5in
+fontsize: 11pt
+bibliography: BibdotBib.bib
+---
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+***
+
+<!--  ####  Description   #### -->
+\begin{center}
+\LARGE{\underline{\textbf{Description}}}
+\end{center}
+
+This document will outline the goals of the work to follow, including descriptions of the appraoches we will employ to demonstrate the superior accuracy of Probabilistic Scoring in the classification of PHQ-9 administrations.
+
+***
+
+<!--  ####  Problem Statement   #### -->
+
+# Problem Statement
+
+The main goals of this analysis are:
+
+- demonstrate that Probabilistic Scoring is superior in accuracy to conventional linear scoring
+- show that the accuracy of Probabilistic Scoring is a function of sample size, and that larger sample sizes (larger training data sets) correspond to better classification accuracy
+- Show that Probabilistic Scoring converges to the best estimate of "Baseline Truth" in larger samples (bigger training sets).  
+
+
+\vspace{15pt}
+
+# Implementation
+
+The analysis and investigation of Probabilistic Scoring will begin with a thorough investigation of mehtods:
+
+- Attempt to replicate stated results so that the defined method is completely understood.
+- Use cross-validation to partition data into various sizes of testing and training sets and implement replicated method across CV data.
+
+We can investigate the convergence point of the accuracy of each method as it pertains to "Baseline Truth" by examining the behavior of the prediction accuracy as the sample size increases.
+
+
+\vspace{15pt}
+
+
+# Notation
+
+We will use the following generalized notation in order to clarify our communications.
+
+
+- Indices
+  - $h=\text{Classification Group Index} \quad h=1,\ldots,H$
+    - The classification group is the result of the PHQ-9.  It quantifies the extent to which a test-taker is at risk of depression
+  - $i=\text{Subject/Observation Number} \quad i=1,\ldots,I$
+    - The subject/observation number will be used as a unique mapping to each row of the data
+  - $j=\text{Question Number} \quad j=1,2,\ldots,9$
+    - The question number will be used for mapping response data back to the question of origin
+
+- Random Variables
+  - $K_{ij}=\text{Response of Subect i on question j} \quad K_{ij} \in \left \{0,1,2,3 \right \}$
+  - $M_{i} = \text{Sum of question responses for subject i} \quad M_{i} \in \left \{0,1,\ldots, 27 \right \}$
+    - $M_{i} = \sum_{j=1}^{9} K_{ij}$
+  - $C_{h}=\left \{ i | \gamma_{h} \leq M_{i} < \gamma_{h+1} \right \}= \text{Level-set Classification Outcome Spaces}$
+    - $\gamma_{h} \in \left \{  \gamma_{1}, \gamma_{2}, \ldots, \gamma_{H}, \gamma_{H+1}   \right \}$ are real numbers defining a partition of $\{0,1,\ldots, 27 \}$
+
+- We say that the probability of subject i being classified into Classification group $C_{h}$ after answering $K_{ij}$ to question j is given by:
+
+$$P\left( C_{h} = c_{h} \ | \ K_{ij} = k_{ij} \right) = \frac{P\left( K_{ij} = k_{ij} \ | \ C_{h} = c_{h}   \right) \ P\left(  C_{h} = c_{h} \right)  }{P\left(  K_{ij} = k_{ij} \right)}$$
+
+Note that:
+
+$$P\left(C_{h} = c_{h} \right) = \frac{\text{no. of people in Ch group}}{\text{Total no. of people}}$$
+
+$$P\left( K_{ij} = k_{ij} \right)=\frac{\text{no. of people answer kij to quest. j}}{\text{Total no. question responses to quest. j}}$$
+$$P\left( K_{ij} = k_{ij} | C_{h} = c_{h} \right)= \frac{\text{no. of people in Ch group w/kij}}{\text{no. of people in Ch group}}$$
+
+\newpage
+***
+
+# Code Appendix
+
+<!--  ####  Script Dependencies   #### -->
+\begin{center}
+\LARGE{\underline{\textbf{Script Dependencies}}}
+\end{center}
+
+
+<!--  Packages -->  
+## Package Dependencies
+
+
+
+<!--  Working Directory  -->       
+## Working Directory
+
+
+
+<!-- Data  &  Variables -->       
+## Load Data
+
+
+***
+<!------------------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------------------>
+<!-- Begin Script -->       
+<!------------------------------------------------------------------------------>
+\begin{center}
+\LARGE{\underline{\textbf{Begin Script}}}
+\end{center}
+
+
+\cite{centers2017new}
+
+\bibliography{BibdotBib}
+
+
+
+
+\begin{center}
+\LARGE{\underline{\textbf{End Script}}}
+\end{center}
+<!------------------------------------------------------------------------------>
+<!-- End Script -->       
+<!------------------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------------------>
+<!-- Post-Script -->       
+<!------------------------------------------------------------------------------>
+
+<!-- Notes:        -->       
+
+<!-- Compilation Errors -->       
+
+<!-- Execution Errors -->
+
+<!-- Next Scripts to Consider -->
+
+<!------------------------------------------------------------------------------>
+

@@ -38,6 +38,11 @@ for(i in 1:2495){
 dat$respTot=respTot
 dat$SubjectNo=1:2495
 
+datNew=data.frame(respVector)
+datNew$respTot=respTot
+datNew$subjectNo=dat$SubjectNo
+
+
 g=ggplot(dat, aes(respTot))+
   geom_histogram(bins = 50)+
   geom_hline(yintercept = 0)+
@@ -66,8 +71,31 @@ g
 
 # We Will try to replicate the first weight value
 
-# We first calculate the probability of answering a "0"
+# Total number of responses
 tot.responses=2495*9
+
+# Subset of people who were eventually classified as "Type I"
+dat0=subset(datNew, respTot<7)
+
+# of people who answered 0 to question 1 within above set
+num=length(dat0[which(dat0$resp1==0),1])/tot.responses
+
+
+# Total number of people who answered 0 to question 1
+den=length(datNew[which(datNew$resp1==0),1])/tot.responses
+
+
+num/den
+####	Different Approach	 ####
+
+datResp=subset(datNew, resp1==0 & respTot<7)
+lhs=dim(datResp)[1]/tot.responses
+
+PC1=length(which(datNew$respTot<7))/tot.responses
+
+lhs/PC1
+
+w10=num/den
 response.df=data.frame(respVector)
 pr.answer.0 =(length(response.df$resp1[which(response.df$resp1==0)])+
   length(response.df$resp2[which(response.df$resp2==0)])+
