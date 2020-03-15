@@ -89,6 +89,40 @@ $$P\left(C_{h} = c_{h} \right) = \frac{\text{no. of people in Ch group}}{\text{T
 $$P\left( K_{ij} = k_{ij} \right)=\frac{\text{no. of people answer kij to quest. j}}{\text{Total no. question responses to quest. j}}$$
 $$P\left( K_{ij} = k_{ij} | C_{h} = c_{h} \right)= \frac{\text{no. of people in Ch group w/kij}}{\text{no. of people in Ch group}}$$
 
+# Cross-Validation Data Sets
+
+The goal of the cross-validation (cv) process is to understand the interaction between prababilistic scoring accuracy and training data sample size. We have been given a complete data set of N=2495 observations of PHQ9 questionnaires.  We will partition the full data into test and training data, calculate expected classifications on test, and perform an accuracy analysis of these classifications.  We will look to compare accuracy measures as training data size increases.  We define the following quantities from a 
+provided integer-pair relation $N.obs \sim N.set$ which quantifies the number of sets ($N.set$) into which the full data set will be partitioned, each containing the same number of observations. The integers will be related according to:
+$$N.set = \left \lfloor \frac{N}{N.obs} \right \rfloor$$
+and 
+$$N.obs = \left \lfloor \frac{N}{N.set} \right \rfloor$$
+
+$$N=2495 \quad \Longrightarrow \quad N.set \in \left \{ 2,3,\ldots,2495  \right \}$$
+and 
+$$N.obs \in \left \{ \left \lfloor \frac{N}{2} \right \rfloor, \left \lfloor \frac{N}{2} \right \rfloor +1, \ldots, N-1   \right \} $$
+In this way, we can define the subset sets corresponding to each value of N.set (or N.obs):
+$$\Pi_{N.set} = \left \{ \pi_{1},\pi_{2}, \ldots, \pi_{N.set-1} \right \} \quad \text{for} \quad N.set=2, 3, \ldots, 2495$$
+and we define our training data to be:
+$$\Pi_{N.set}^{Train}=\bigcup_{i\in S} \pi_{i}$$
+where
+$$S=\Pi_{N.set} \backslash \left \{\pi_{N.set-1} \right \}$$
+and we define our test data to be:
+$$\Pi_{N.set}^{Test}=\pi_{N.set-1}$$
+
+
+## Applied CV Data Sets
+
+```{r}
+N.sets=c()
+N=2495
+N.obs=1:2495
+N.sets=floor(N/N.obs)
+N.train.sets=N.sets-1
+N.obs.train=N.sets*N.obsd
+plot(N.sets~N.obs.train)
+```
+
+
 \newpage
 ***
 

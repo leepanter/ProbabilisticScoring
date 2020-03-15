@@ -19,7 +19,11 @@
 
 
 ####	Libraries and Prelims	 ####
+WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9"
+setwd(WD)
+
 set.seed(123)
+
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9/phq9DataSubsetImport.R")
 
 
@@ -27,8 +31,9 @@ source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataMana
 ####	Begin Script	 ####
 CVsplit=function(dat.in, N.set){
 
-  # Test for N.set >=2
-  if(N.set<2){return(0)}
+  if(N.set==2496)
+    {return(list(dat.in))}
+
   else{
     N.dat.in.rows=dim(dat.in)[1]
     N.dat.in.cols=dim(dat.in)[2]
@@ -54,10 +59,7 @@ CVsplit=function(dat.in, N.set){
     out.list=list(dat.train.out,
                   dat.test.out,
                   N.obs)
-
-  }
+    return(out.list)
+    }
 }
-
-
-
 ####	End Script	 ####

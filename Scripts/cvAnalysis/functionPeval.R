@@ -1,4 +1,4 @@
-# functionInitEvalAtt.R
+# functionPeval.R
 
 ####  Description:  This script calculated the probabilities of being classified into one of three different outcome categories based upon training data.
 
@@ -23,7 +23,7 @@ source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataMana
 ####	Begin Script	 ####
 
 # Deine categorical separation points
-InitEvalAtt=function(dat.in, qNum, respNum, qName){
+Peval=function(dat.in, qNum, respNum, qName){
 # InitEvalAtt(DataName,
 #  QuestionNumber (numeric),
 #  ResponseNumber (numeric),

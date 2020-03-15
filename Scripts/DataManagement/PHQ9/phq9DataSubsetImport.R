@@ -7,9 +7,6 @@ setwd(WD)
 
 phq9=read.csv(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Data/PHQ9subset.csv")
 
-save(phq9, file = "phq9.Rdata")
-
-
 dat.in=phq9
 
 dat.in=dat.in[,2:32]
@@ -41,6 +38,8 @@ for(i in 1:2495){
                    dat.in$Q9[i])
 }
 
+Qstring=c("Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9")
+
 tot.vec=c()
 for(i in 1:2495){
   tot.vec[i]=sum(unlist(resp.list[[i]]))
@@ -48,6 +47,12 @@ for(i in 1:2495){
 
 dat.in$qTot=tot.vec
 
+phq9Subset=dat.in
+
+save(phq9Subset, file = "phq9Subset.Rdata")
+
 save(dat.in, file = "datin.Rdata")
 
-
+rm(dat.in)
+rm(i)
+rm(WD)
