@@ -1,0 +1,157 @@
+---
+title: "CVanalysis Documentation"
+output: 
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: Rmarkdown_preamble.tex
+geometry: margin=0.5in
+fontsize: 11pt
+---
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+***
+
+<!--  ####  Description   #### -->
+\begin{center}
+\LARGE{\underline{\textbf{Description}}}
+\end{center}
+
+This document contains descriptions of all objects that will be used for the cvAnalysis
+
+***
+
+<!------------------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------------------>
+<!-- Begin Script -->       
+<!------------------------------------------------------------------------------>
+
+# Data Import and Processing
+
+## phq9DataSubsetImport 
+
+- File Dependencies:
+  - PHQ9subset.csv 
+    - subsetted PHQ9 data exported from Excel
+    
+- File Exports:
+  - phq9Subset.Rdata
+    - Rdata file containing final formatted variables
+  - datin.Rdata
+    - Redundant Rdata file for experimentation and nomenclature convinience
+
+- Goals:
+  - Save important variables from full PHQ9 data for analysis
+  - Calculate and integrate variables necessary for downstream analysis
+  
+- Processes:
+  - Reduces data to Question Responses with values 0-3
+  - Calculates sum of responses for each subject
+  - Adds a string identifier for each question 
+  
+
+# Functions
+
+## CVsplit(dat.in, n.set)
+
+- Description: a function for partitioning the full PHQ9 data into a user-specified number of traing and test sets.
+
+- Arguments: 
+  - dat.in: data desired to partition (will generally always be the full PHQ9 data)
+  - n.set: Number of sets (total, including test set) into which to partition data
+    - **NOTE:** setting n.set=2496 will return the entire data set
+
+- Return Values:
+  - Type is list()
+  - format:  obj <- list(dat.train.out, dat.test.out, N.obs)
+  - dat.train.out: a list of training data sets (in order of selection)
+  - dat.test.out: a list of testing data sets (in order of selection)
+  - N.obs: a numerical value indicating the number of observations in a training/test set
+
+
+## Peval(dat.in, qNum, respNum, qName)
+
+- Description: a function that calculates the probability of being classified into one of three different outcome categories based upon training data.
+
+- Arguments: 
+  - dat.in: training data file on which to perform calculations
+  - qNum: question number of inquiry
+  - respNum: given response of inquiry
+  - qName: Column String name for response of interest Q1, Q2, Q3...
+  
+- Return Values:
+  - Type is vector c()
+  - format: obj <- c(C1, C2, C3)
+  - a three-item vector of probabilites corresponding to the chances of eventually being characterized within a certain classification outcome C1, C2, C3
+
+
+
+## PCVeval(dat.in, N.PCV.obs)
+
+- Description: a function that evaluates Peval for all possible answers to a single question.
+
+- Arguments: 
+  - dat.in: training data file on which to perform calculations
+  - qNum: question number of inquiry
+  - qName: Column String name for response of interest Q1, Q2, Q3...
+  
+- Return Values:
+  - Type is list()
+  - Format: obj <- list(Peval(resp0), Peval(resp1), Peval(resp2), Peval(resp3))
+  - a four-item list of probabilities corresponding to the chances of eventually being characterized within a certain classification outcom C1, C2, C3 provided that you answered a user specified question with any one of the four responses
+
+
+## PCVeval_overQnum(dat.in, N.PCV.obs)
+
+- Description: a function that evaluates PCVeval for questions in a data set specified.
+
+- Arguments: 
+  - dat.in: training data file on which to perform calculations
+  
+- Return Values:
+  - Type is list()
+  - Format: obj <- list(PCVeval(Q1),..., PCVeval(Q9))
+  - a nine-item list, each of which contains the four-item lists from the evaluation of the PCVeval() function.
+
+
+## ReformatWeights(in.list)
+
+- Description: This script defines a function that will take the output created by the PCVeval_overQnum() function and transform the output list into a single data frame for easier computation.
+
+- Arguments:
+  - list.in: list argument 9X4X3 dimensional array produced by PCVeval_overQnum()
+
+- Returns:
+  - out.list: List of 3 data frames, one list with three 9X4 data frames
+  
+<!------------------------------------------------------------------------------>
+<!-- End Script -->       
+<!------------------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------------------>
+<!-- Post-Script -->       
+<!------------------------------------------------------------------------------>
+
+<!-- Notes:        -->       
+
+<!-- Compilation Errors -->       
+
+<!-- Execution Errors -->
+
+<!-- Next Scripts to Consider -->
+
+<!------------------------------------------------------------------------------>
+

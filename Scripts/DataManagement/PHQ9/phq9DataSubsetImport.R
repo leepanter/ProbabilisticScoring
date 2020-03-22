@@ -38,7 +38,11 @@ for(i in 1:2495){
                    dat.in$Q9[i])
 }
 
+Qnum=c(1,2,3,4,5,6,7,8,9)
 Qstring=c("Q1","Q2","Q3","Q4","Q5","Q6","Q7","Q8","Q9")
+
+Anum=c(0,1,2,3)
+Astring=c("0", "1", "2", "3")
 
 tot.vec=c()
 for(i in 1:2495){

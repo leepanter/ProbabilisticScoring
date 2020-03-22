@@ -22,12 +22,7 @@ source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataMana
 
 ####	Begin Script	 ####
 
-# Deine categorical separation points
 Peval=function(dat.in, qNum, respNum, qName){
-# InitEvalAtt(DataName,
-#  QuestionNumber (numeric),
-#  ResponseNumber (numeric),
-#  "qName" (String))
 
   low.thresh=7
   high.thresh=10
@@ -36,21 +31,41 @@ Peval=function(dat.in, qNum, respNum, qName){
   index.qNum=which(colnames(dat.in)==qName)
   qDat=dat.in[,index.qNum]
 
-  # Calculate Prior Proababilities
-  PC1.index=which(dat.in$qTot<low.thresh & qDat==respNum)
-  PrPc1=length(PC1.index)
+  ### Calculate Prior Proababilities
 
-  PC2.index=which(low.thresh<=dat.in$qTot & dat.in$qTot<high.thresh & qDat==respNum)
-  PrPc2=length(PC2.index)
+  # Calculate P(E_j) for j=0,1,2,3
+  PErespNum=length(which(qDat==respNum))/2495
 
-  PC3.index=which(dat.in$qTot >= high.thresh & qDat==respNum)
-  PrPc3=length(PC3.index)
+  # Indices in dat.in classified as C1
+  PC1=length(which(dat.in$qTot<low.thresh & qDat==respNum))
 
-  PqRespNum=length(which(qDat==respNum))
+  # Calculate Number of people in C1
+  C1.total=length(which(dat.in$qTot<low.thresh))
 
-  ret1=PrPc1/PqRespNum
-  ret2=PrPc2/PqRespNum
-  ret3=PrPc3/PqRespNum
+  PrPc1=PC1/C1.total
+
+
+  # Indices in dat.in classified as C2
+  PC2=length(which(low.thresh<=dat.in$qTot & dat.in$qTot<high.thresh & qDat==respNum))
+
+  # Calculate Number of people in C2
+  C2.total=length(which(low.thresh<=dat.in$qTot & dat.in$qTot<high.thresh))
+
+  PrPc2=PC2/C2.total
+
+
+  # Indices in dat.in classified as C3
+  PC3=length(which(dat.in$qTot >= high.thresh & qDat==respNum))
+
+  # Calculate Number of people in C3
+  C3.total=length(which(dat.in$qTot >= high.thresh ))
+
+  PrPc3=PC3/C3.total
+
+
+  ret1=PrPc1/PErespNum
+  ret2=PrPc2/PErespNum
+  ret3=PrPc3/PErespNum
   out=c(ret1, ret2, ret3)
   return(out)
 }

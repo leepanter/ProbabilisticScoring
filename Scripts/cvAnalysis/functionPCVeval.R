@@ -15,37 +15,20 @@ set.seed(123)
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9/phq9DataSubsetImport.R")
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9/functionCVsplit.R")
 source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionPeval.R")
-source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionPCVeval_overQnum.R")
 
 
 
-
-PCVeval=function(dat.in, N.PCV.obs){
+PCVeval=function(dat.in, qNum, qName){
   init.dat.in=dat.in
-  init.N.PCV.obs=N.PCV.obs
-  init.N.set=floor(N.row/in.N.PCV.obs)
+  init.qNum=qNum
+  init.qName=qName
+  out.list=list()
 
-  N.row=dim(init.dat.in)[1]
+  for(i in 1:4){
+    out.list[[i]]=Peval(init.dat.in, init.qNum, i-1, init.qName)
+  }
 
-  dat.out=CVsplit(init.dat.in, init.N.set)
-
-
+  return(out.list)
 }
 
 
-
-dat.in=phq9Subset
-N.PCV.obs.full=2496
-N.PCV.ob=1000
-
-init.dat.in=dat.in
-in.N.PCV.obs.full=N.PCV.obs.full
-in.N.PCV.obs=N.PCV.obs
-# N.row=dim(init.dat.in)[1]
-# init.N.set=floor(N.row/in.N.PCV.obs)
-
-dat.out.full=CVsplit(init.dat.in, N.PCV.obs.full)
-dat.out=CVsplit(init.dat.in, N.PCV.ob)
-
-dat.out.OverQnum.full=PCeval_overQnum(dat.out.full[[1]], 1, Qstring[1])
-dat.out.OverQnum=PCeval_overQnum(dat.out[[1]][[1]], 1, Qstring[1])
