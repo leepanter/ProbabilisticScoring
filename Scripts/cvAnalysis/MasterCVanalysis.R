@@ -20,36 +20,43 @@ source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataMana
 
 # Variable Dependencies:
 set.seed(123)
+options(warn = -1)
 
 # File Dependencies
 
-## function: CVsplit(mydat, n.sets) ##
-source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9/functionCVsplit.R")
+## functions:
 
-## function: Peval(dat.in, qNum, respNum, qName) ##
-source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionPeval.R")
+# Weight Calculations
+source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsWeightCalculations.R")
 
-## function: PCVeval(dat.in, N.PCV.obs)
-source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionPCVeval.R")
+# Probabilistic Score Calculations
+source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsProbScoreCalc.R")
 
-## function: PCeval_overQnum(dat.in, Qnum, Qstring) ##
-source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionPCVeval_overQnum.R")
-
-## function: ReformatWeights(in.list)
-source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionReformatWeights.R")
-
+# Scoring Analysis
+source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsScoringAnalysis.R")
 
 #-------------------------------------------------------------------------#
 ####	Begin Script	 ####
 #-------------------------------------------------------------------------#
 
 #### full data weight calculations	 ####
-
-full.data=phq9Subset
+full.data=phq9
 full.data.weights=ReformatWeights(PCVeval_overQnum(full.data))
 for(i in 1:3){
   full.data.weights[[i]]=round(full.data.weights[[i]], digits = 4)
 }
+
+
+####	Example of calculation of Probabilistic Weights	 ####
+CV4.dat=CVsplit(phq9, 4)
+CV4.sequences=EvalSeqData(CV4.dat[[1]], CV4.dat[[2]], 4)
+
+CV4.convg.90=list()
+
+for(i in 1:623){
+  CV4.convg.90[[i]]=convg(CV4.sequences[[1]][[i]], 0.90)
+}
+
 
 #-------------------------------------------------------------------------#
 ####	End Script	 ####

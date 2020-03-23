@@ -119,6 +119,8 @@ weight.col.index.t8=which(Anum==test.set.subject1.sequence[1,9])
       subject.1.class.prob.t8[3]*train.set.weights[[3]][9,weight.col.index.t8]))
 
 
+
+
 #-------------------------------------------------------------------------#
 ####	End Script	 ####
 #-------------------------------------------------------------------------#

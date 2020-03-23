@@ -74,9 +74,9 @@ We will use the following generalized notation in order to clarify our communica
 - Random Variables
   - $K_{ij}=\text{Response of Subect i on question j} \quad K_{ij} \in \left \{0,1,2,3 \right \}$
   - $M_{i} = \text{Sum of question responses for subject i} \quad M_{i} \in \left \{0,1,\ldots, 27 \right \}$
-    - $M_{i} = \sum_{j=1}^{9} K_{ij}$
+    - NOTE: $M_{i} = \sum_{j=1}^{9} K_{ij}$
   - $C_{h}=\left \{ i | \gamma_{h} \leq M_{i} < \gamma_{h+1} \right \}= \text{Level-set Classification Outcome Spaces}$
-    - $\gamma_{h} \in \left \{  \gamma_{1}, \gamma_{2}, \ldots, \gamma_{H}, \gamma_{H+1}   \right \}$ are real numbers defining a partition of $\{0,1,\ldots, 27 \}$
+    - $\gamma_{h} \in \left \{  \gamma_{1}, \gamma_{2}, \ldots, \gamma_{H}, \gamma_{H+1}   \right \}$ are real numbers defining a partition of the integer outcomes in the set $\{0,1,\ldots, 27 \}$
 
 - We say that the probability of subject i being classified into Classification group $C_{h}$ after answering $K_{ij}$ to question j is given by:
 
@@ -84,10 +84,10 @@ $$P\left( C_{h} = c_{h} \ | \ K_{ij} = k_{ij} \right) = \frac{P\left( K_{ij} = k
 
 Note that:
 
-$$P\left(C_{h} = c_{h} \right) = \frac{\text{no. of people in Ch group}}{\text{Total no. of people}}$$
+$$P\left(C_{h} = c_{h} \right) = \frac{\text{no. of people in Ch group}}{I}$$
 
-$$P\left( K_{ij} = k_{ij} \right)=\frac{\text{no. of people answer kij to quest. j}}{\text{Total no. question responses to quest. j}}$$
-$$P\left( K_{ij} = k_{ij} | C_{h} = c_{h} \right)= \frac{\text{no. of people in Ch group w/kij}}{\text{no. of people in Ch group}}$$
+$$P\left( K_{ij} = k_{ij} \right)=\frac{\text{no. of people answer kij to quest. j}}{I}$$
+$$P\left( K_{ij} = k_{ij} | C_{h} = c_{h} \right)= \frac{k_{ij} \bigcap c_{h}}{c_{h}}=\frac{\text{no. of people answer kij to quest. j also in group Ch}}{\text{no. of people in Ch group}}$$
 
 # Cross-Validation Data Sets
 
@@ -118,7 +118,7 @@ N=2495
 N.obs=1:2495
 N.sets=floor(N/N.obs)
 N.train.sets=N.sets-1
-N.obs.train=N.sets*N.obsd
+N.obs.train=N.sets*N.obs
 plot(N.sets~N.obs.train)
 ```
 
@@ -160,7 +160,7 @@ plot(N.sets~N.obs.train)
 \end{center}
 
 
-\cite{centers2017new}
+
 
 \bibliography{BibdotBib}
 

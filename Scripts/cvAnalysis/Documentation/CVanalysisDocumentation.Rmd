@@ -39,6 +39,7 @@ This document contains descriptions of all objects that will be used for the cvA
 <!------------------------------------------------------------------------------>
 
 # Data Import and Processing
+**functionsDataImportProcessing.R**
 
 ## phq9DataSubsetImport 
 
@@ -55,16 +56,14 @@ This document contains descriptions of all objects that will be used for the cvA
 - Goals:
   - Save important variables from full PHQ9 data for analysis
   - Calculate and integrate variables necessary for downstream analysis
+  - Adds variables that will be employed for supervised learning
   
 - Processes:
   - Reduces data to Question Responses with values 0-3
   - Calculates sum of responses for each subject
   - Adds a string identifier for each question 
   
-
-# Functions
-
-## CVsplit(dat.in, n.set)
+## list(dat.train.out, dat.test.out, N.obs) = CVsplit(dat.in, n.set)
 
 - Description: a function for partitioning the full PHQ9 data into a user-specified number of traing and test sets.
 
@@ -81,7 +80,10 @@ This document contains descriptions of all objects that will be used for the cvA
   - N.obs: a numerical value indicating the number of observations in a training/test set
 
 
-## Peval(dat.in, qNum, respNum, qName)
+# Weight Calculations
+**functionsWeightCalculations.R**
+
+## c(C1, C2, C3) = Peval(dat.in, qNum, respNum, qName)
 
 - Description: a function that calculates the probability of being classified into one of three different outcome categories based upon training data.
 
@@ -98,7 +100,7 @@ This document contains descriptions of all objects that will be used for the cvA
 
 
 
-## PCVeval(dat.in, N.PCV.obs)
+## list(Peval(resp0), Peval(resp1), Peval(resp2), Peval(resp3)) = PCVeval(dat.in, N.PCV.obs)
 
 - Description: a function that evaluates Peval for all possible answers to a single question.
 
@@ -113,7 +115,7 @@ This document contains descriptions of all objects that will be used for the cvA
   - a four-item list of probabilities corresponding to the chances of eventually being characterized within a certain classification outcom C1, C2, C3 provided that you answered a user specified question with any one of the four responses
 
 
-## PCVeval_overQnum(dat.in, N.PCV.obs)
+## list(PCVeval(Q1),...,PCVeval(Q9)) = PCVeval_overQnum(dat.in, N.PCV.obs)
 
 - Description: a function that evaluates PCVeval for questions in a data set specified.
 
@@ -126,7 +128,7 @@ This document contains descriptions of all objects that will be used for the cvA
   - a nine-item list, each of which contains the four-item lists from the evaluation of the PCVeval() function.
 
 
-## ReformatWeights(in.list)
+## out.list = ReformatWeights(in.list)
 
 - Description: This script defines a function that will take the output created by the PCVeval_overQnum() function and transform the output list into a single data frame for easier computation.
 
@@ -135,6 +137,54 @@ This document contains descriptions of all objects that will be used for the cvA
 
 - Returns:
   - out.list: List of 3 data frames, one list with three 9X4 data frames
+
+
+# Probabilistic Score Calculations
+**functionsProbScoreCalc.R**
+
+## EvalSeqData(cvData.train.in, cvData.test.in, cvData.N.set.in)
+
+- Descriptions: Defines a function that will generalize the evaluation of the probabilistic scoring algorithm across multiple subjects to multiple train/test data pairings
+
+- Arguments:
+  - cvData.train.in: List of training data sets as output by CVsplit
+  - cvData.test.in: List of training data sets as output by CVsplit
+  - cvData.N.set.in: the total number of partitions that the orginal data was split into.
+  
+- Returns:
+  - out.seq.subj.probs.overSet
+  
+
+## Eval.Subjects.Prob.sequence = **EvalSeqSubject**(train.weights.in, test.data.in, set.no.in)
+
+- Description: Defines a function that will generalize the evaluation of the probabilistic scoring algorithm to multiple subjects within a single test/train data pairing
+
+- Arguments:
+  - train.weights.in: Output of the ReformatWeights() function
+  - test.data.in: corrsponding data frame of test data used to calculate training weights
+  - set.no.in: user-specified test-train pairing index (will generally be looping index)
+
+- Returns:
+  - Eval.Subjects.Prob.sequence: list of nine 1X3 probability calculations corresponding to the probability of being in C1, C2, C3, for each subject.  
+
+
+## sub.Prob.sequence=**EvalSeq**(train.weights.in, test.data.in, set.no.in, subject.no.in)
+
+- Description: Defines a function that will calculate the probabilistic scoring algorithm for a single subject in a single train/test data pairing
+
+- Arguments:
+  - train.weights.in: Output of the ReformatWeights() function
+  - test.data.in: corrsponding data frame of test data used to calculate training weights
+  - set.no.in: user-specified test-train pairing index (will generally be looping index)
+  - subject.no.in: subject (in terms of row number in the test set) for which the probabilistic scoring algorithm is desired to be evaluated.
+  
+- Returns:
+  - sub.Prob.sequence: list of 1X3 probability calculations corresponding to the probability of being in C1, C2, C3
+
+  
+  
+  
+  
   
 <!------------------------------------------------------------------------------>
 <!-- End Script -->       
