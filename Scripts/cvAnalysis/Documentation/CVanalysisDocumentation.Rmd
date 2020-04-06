@@ -39,7 +39,7 @@ This document contains descriptions of all objects that will be used for the cvA
 <!------------------------------------------------------------------------------>
 
 # Data Import and Processing
-**functionsDataImportProcessing.R**
+**Code Document:** \textit{functionsDataImportProcessing.R}
 
 ## phq9DataSubsetImport 
 
@@ -81,7 +81,7 @@ This document contains descriptions of all objects that will be used for the cvA
 
 
 # Weight Calculations
-**functionsWeightCalculations.R**
+**Code Document:** \textit{functionsWeightCalculations.R}
 
 ## c(C1, C2, C3) = Peval(dat.in, qNum, respNum, qName)
 
@@ -140,7 +140,7 @@ This document contains descriptions of all objects that will be used for the cvA
 
 
 # Probabilistic Score Calculations
-**functionsProbScoreCalc.R**
+**Code Document:** \textit{functionsProbScoreCalc.R}
 
 ## EvalSeqData(cvData.train.in, cvData.test.in, cvData.N.set.in)
 
@@ -152,7 +152,7 @@ This document contains descriptions of all objects that will be used for the cvA
   - cvData.N.set.in: the total number of partitions that the orginal data was split into.
   
 - Returns:
-  - out.seq.subj.probs.overSet
+  - out.seq.subj.probs.overSet: A list of cvData.N.set.in lists of subject-specific 3X9 sequential probability evaluations
   
 
 ## Eval.Subjects.Prob.sequence = **EvalSeqSubject**(train.weights.in, test.data.in, set.no.in)
@@ -182,7 +182,21 @@ This document contains descriptions of all objects that will be used for the cvA
   - sub.Prob.sequence: list of 1X3 probability calculations corresponding to the probability of being in C1, C2, C3
 
   
+# Probablilistic Score Evaluations
+**Code Document:** \textit{functionsScoringAnalysis.R}
+
+## out.result<-list(index.j,max.seq.val,index.max)=convg(sub.seq.in, thresh.in)
   
+- Description: Defines a function that determines if an subject specific input sequence of probabilities (3x9 probabilistic) converges to a class (C1, C2, C3) with a provided probability threshold.  
+
+- Arguments:
+  - sub.seq.in: 3x9 sequence of probabilistic scores specific to an individual.
+  - thresh.in: probabilistic convergence threshold (e.g. 90%, 95%, 99.5%)
+  
+- Returns: 
+  - index.j: how many iterations of the probabilistic scoring algorithm were required for the sequence to converge. (note that $\text{thresh.in}>\frac{1}{3} \ \Rightarrow \ \text{index.j}\in\left \{  2,\ldots,9   \right \}$)
+  - max.seq.val: Probability at convergence
+  - index.max: Class index at maximum probability (which class eventually converged to)
   
   
   

@@ -1,0 +1,64 @@
+---
+title: "Introduction"
+output: 
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: Rmarkdown_preamble.tex
+geometry: margin=0.5in
+fontsize: 11pt
+bibliography: BibdotBib.bib
+---
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+***
+
+The Patient Health Questionnaire-9 (PHQ-9) is used in clinical settings to aid medical practicioners who diagnose and treat depression.  The questionnaire is designed to provide unbiased and validated measures used to monitor a patient's mental health.  However, implementations of the PHQ-9 have demonstrated that the test lacks the accuracy to empower providers to act on its results. Providers often fail to act on potentially significant scenarios, or act on scenarios improperly identified by the test.  Both circumstances cost money and hardship to the healthcare system.  
+
+Probabilistic Scoring is a method of determining the same validated measures as a standard PHQ-9 evaluation; but has the potential of being even more accurate, being as fast or faster to use, and possibly relating PHQ-9 scores to information that is actionable for providers.  This investigation looks to compare the accuracy of Probabilistic Scoring against traditional methods.  The details of Probabilitstic scoring will be explained, and two approaches to comparing accuracies will be taken. It is hoped that this exploration demonstrates the use of Probabilistic Scoring as a method of evaluating PHQ-9 assessments is superior to traditional methods.
+
+
+# Background
+
+The Patient Health Questionnaire is used in clinical settings as a tool for monitoring the severity of depression and response to treatment in a patient [@patient.info]. The questionnaire is self-administered, consists of nine questions in which the test-taker ranks the frequency at which they experience the descriptions in each of the nine questions. Each of the nine descriptions relates to a specific Diagnostic and Statistical Manual of Mental Disorder (DSM-IV) criteria for depression [@patient.info].  The response options for each question include:
+
+ - "not at all" (numerical score 0) 
+ - "several days" (numerical score 1)
+ - "more than half of the days" (numerical score 2)
+ - "nearly every day" (numerical score 3)
+
+
+# References
+
+\bibliography{BibdotBib}
+
+
+<!------------------------------------------------------------------------------>
+<!-- End Script -->       
+<!------------------------------------------------------------------------------>
+
+
+<!------------------------------------------------------------------------------>
+<!-- Post-Script -->       
+<!------------------------------------------------------------------------------>
+
+<!-- Notes:        -->       
+
+<!-- Compilation Errors -->       
+
+<!-- Execution Errors -->
+
+<!-- Next Scripts to Consider -->
+
+<!------------------------------------------------------------------------------>
+

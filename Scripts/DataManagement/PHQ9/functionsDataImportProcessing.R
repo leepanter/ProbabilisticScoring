@@ -146,16 +146,30 @@ for(i in 1:8){
 }
 
 
-index.sample.5s=sample(which(dat.in$qTot==5) , 2, replace=FALSE)
-index.sample.6s=sample(which(dat.in$qTot==6) , 3, replace=FALSE)
-index.sample.7s=sample(which(dat.in$qTot==7) , 2, replace=FALSE)
-index.sample.8sdown=sample(which(dat.in$qTot==8) , 1, replace=FALSE)
-index.sample.8sup=sample(which(dat.in$qTot==8) , 1, replace=FALSE)
-index.sample.9sdown=sample(which(dat.in$qTot==9) , 1, replace=FALSE)
-index.sample.9sup=sample(which(dat.in$qTot==9) , 1, replace=FALSE)
-index.sample.10s=sample(which(dat.in$qTot==10) , 1, replace=FALSE)
-index.sample.11s=sample(which(dat.in$qTot==11) , 1, replace=FALSE)
-index.sample.12s=sample(which(dat.in$qTot==12) , 1, replace=FALSE)
+# index.sample.5s=sample(which(dat.in$qTot==5) , 2, replace=FALSE)
+# index.sample.6s=sample(which(dat.in$qTot==6) , 3, replace=FALSE)
+# index.sample.7s=sample(which(dat.in$qTot==7) , 2, replace=FALSE)
+# index.sample.8sdown=sample(which(dat.in$qTot==8) , 1, replace=FALSE)
+# index.sample.8sup=sample(which(dat.in$qTot==8) , 1, replace=FALSE)
+# index.sample.9sdown=sample(which(dat.in$qTot==9) , 1, replace=FALSE)
+# index.sample.9sup=sample(which(dat.in$qTot==9) , 1, replace=FALSE)
+# index.sample.10s=sample(which(dat.in$qTot==10) , 1, replace=FALSE)
+# index.sample.11s=sample(which(dat.in$qTot==11) , 1, replace=FALSE)
+# index.sample.12s=sample(which(dat.in$qTot==12) , 1, replace=FALSE)
+
+
+index.sample.5s=sample(which(dat.in$qTot==5) , 2*21, replace=FALSE)
+index.sample.6s=sample(which(dat.in$qTot==6) , 3*21, replace=FALSE)
+index.sample.7s=sample(which(dat.in$qTot==7) , 2*21, replace=FALSE)
+index.sample.8sdown=sample(which(dat.in$qTot==8) , 1*21, replace=FALSE)
+index.sample.8sup=sample(which(dat.in$qTot==8) , 1*21, replace=FALSE)
+index.sample.9sdown=sample(which(dat.in$qTot==9) , 1*21, replace=FALSE)
+index.sample.9sup=sample(which(dat.in$qTot==9) , 1*21, replace=FALSE)
+index.sample.10s=sample(which(dat.in$qTot==10) , 1*21, replace=FALSE)
+index.sample.11s=sample(which(dat.in$qTot==11) , 1*21, replace=FALSE)
+index.sample.12s=sample(which(dat.in$qTot==12) , 1*21, replace=FALSE)
+
+
 
 
 dat.in$SupOutString=dat.in$sumClassString
