@@ -60,7 +60,7 @@ max.train.obs=max(number.of.training.obs)
 number.of.sets.min=number.of.sets[which.min(number.of.training.obs)]
 number.of.sets.max=number.of.sets[which.max(number.of.training.obs)]
 
-
+number.of.training.obs.subset=number.of.training.obs[1247:2493]
 #-------------------------------------------------------------------------#
 #### full data weight calculations	 ####
 #-------------------------------------------------------------------------#
@@ -180,17 +180,33 @@ CV4.accuracy.traditional=mean(CV4_j.data.accuracy.traditional)
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
 N.obs.k=c()
-lower.loop.limit=1225
-upper.loop.limit=1275
+#lower.loop.limit=1225
+#upper.loop.limit=1275
+n.minus.one=24
+
+N.set.arg=seq(from=1248, to=2490, length.out = n.minus.one)
+N.set.arg=c(N.set.arg,1247)
+
+for(i in 1:n.minus.one+1){
+  N.set.arg[i]=floor(N.set.arg[i])
+}
+
+boot.sample.i=list()
+
+for(i in 1:n.minus.one+1){
+  boot.sample.i[[i]]=CVsplit(phq9, N.set.arg[i])
+}
 
 
-for(k in lower.loop.limit:upper.loop.limit){
-
-  k.index=1+k-lower.loop.limit
+for(k in 1:n.minus.one+1){
+  k.setVal=N.set.arg[k]
+  k.index=k
 
   ####	Divide Data into K CV data sets
-  CVk.dat=CVsplit(full.data, k)
+  #CVk.dat=CVsplit(phq9, k.setVal)
+  CVk.dat=boot.sample.i[[k.index]]
   Number.k.obs=CVk.dat[[3]]
+
 
   ####  Initialized Empty Variables
   CVk_j.train=list()
@@ -199,7 +215,7 @@ for(k in lower.loop.limit:upper.loop.limit){
   CVk_j.data.accuracy=c()
   CVk_j.data.accuracy.traditional=c()
 
-  for(j in 1:k){
+  for(j in 1:k.setVal){
     CVk_j.train[[j]]=CVk.dat[[1]][[j]]
     CVk_j.test[[j]]=CVk.dat[[2]][[j]]
     CVk_j.probClasses=c()
@@ -237,26 +253,36 @@ for(k in lower.loop.limit:upper.loop.limit){
   CVk.accuracy.traditional=mean(CVk_j.data.accuracy.traditional)
   traditional.accuracy.ksets[k.index]=CVk.accuracy.traditional
 
-  N.obs.k[k.index]=Number.k.obs*(k-1)
+  N.obs.k[k.index]=Number.k.obs*(k.setVal-1)
 }
 
-zeros=rep(0, times=37)
-ones=rep(1, times=37)
+N.obs.k=c()
+for(k in 1:n.minus.one+1){
+  N.obs.k[k]=length(boot.sample.i[[k]][[1]])
+}
+
+accuracy.df=data.frame(N.obs.k, accuracy.ksets)
+
+zeros=rep(0, times=n.minus.one+1)
+ones=rep(1, times=n.minus.one+1)
 ID=as.factor(c(ones, zeros))
-N.obs.train.k=rep(N.obs.k, times=2)
-accuracy.out=c(accuracy.ksets,traditional.accuracy.ksets)
-accuracy.df=data.frame(N.obs.train.k, ID, accuracy.out)
+N.obs.train.k.lmFE=rep(N.obs.k, times=2)
+accuracy.out.lmFE=c(accuracy.ksets,traditional.accuracy.ksets)
+accuracy.df.lmFE=data.frame(N.obs.train.k, ID, accuracy.out)
 
-accuracy.lm=lm(accuracy.out~ID*N.obs.train.k, data = accuracy.df)
+accuracy.lm=lm(accuracy.ksets~N.obs.k, data = accuracy.df)
 (accuracy.lms=summary(accuracy.lm))
+accuracy.lmFE=lm(accuracy.out.lmFE~ID*N.obs.train.k.lmFE,
+                 data = accuracy.df.lmFE)
+(accuracy.lmFEs=summary(accuracy.lmFE))
 
 
-accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.train.k, y=accuracy.out,
-                                      color=ID, shape=ID))+
+
+accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.k, y=accuracy.ksets))+
   xlab("Observations in Traing Set")+
   ylab("Accuracy of Prob.Scoring")+
-  geom_abline(intercept = as.numeric(coef(accuracy.lm)[1]), slope=as.numeric(coef(accuracy.lm)[2]))+
-  geom_line()+
+  geom_abline(intercept = as.numeric(coef(accuracy.lm))[[1]],
+              slope=as.numeric(coef(accuracy.lm))[[2]])+
   geom_point()
 
 accuracy.plot
