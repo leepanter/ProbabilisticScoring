@@ -40,7 +40,6 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 ####	Begin Script	 ####
 #-------------------------------------------------------------------------#
 
-
 ####	CV-meta analysis	 ####
 
 ####  Determine the number of training observations for each K-set selection
@@ -61,6 +60,8 @@ number.of.sets.min=number.of.sets[which.min(number.of.training.obs)]
 number.of.sets.max=number.of.sets[which.max(number.of.training.obs)]
 
 number.of.training.obs.subset=number.of.training.obs[1247:2493]
+
+
 #-------------------------------------------------------------------------#
 #### full data weight calculations	 ####
 #-------------------------------------------------------------------------#
@@ -76,7 +77,7 @@ full.data.probClasses=c()
 full.data.probClasses.Convg=list()
 
 for(i in 1:2495){
-  full.data.probClasses.Convg[[i]]=convg(full.data.probSequences[[i]], 0.66)
+  full.data.probClasses.Convg[[i]]=convg(full.data.probSequences[[i]], 0.75)
 }
 
 for(i in 1:2495){
@@ -84,6 +85,7 @@ for(i in 1:2495){
 }
 
 full.data.accuracy=length(which(full.data.probClasses==full.data$SupOutNum))/2495
+
 
 
 #-------------------------------------------------------------------------#
@@ -127,51 +129,55 @@ accuracy.threshold.argument[17]
 # 0.75 is the highest classification accuracy argument
 
 
-#-------------------------------------------------------------------------#
-####	CV 4	 ####
-#-------------------------------------------------------------------------#
-
-####	Divide Data into 4 CV data sets
-CV4.dat=CVsplit(full.data, 4)
-
-####  Initialized Empty Variables
-CV4_j.train=list()
-CV4_j.test=list()
-CV4_j.train.weights=list()
-CV4_j.data.accuracy=c()
-CV4_j.data.accuracy.traditional=c()
-CV4_j.probClasses=c()
-CV4_j.probClasses.Convg=list()
 
 
-for(j in 1:4){
-  CV4_j.train[[j]]=CV4.dat[[1]][[j]]
-  CV4_j.test[[j]]=CV4.dat[[2]][[j]]
+# #-------------------------------------------------------------------------#
+# ####	CV 4	 ####
+# #-------------------------------------------------------------------------#
+# 
+# ####	Divide Data into 4 CV data sets
+# CV4.dat=CVsplit(full.data, 4)
+# 
+# ####  Initialized Empty Variables
+# CV4_j.train=list()
+# CV4_j.test=list()
+# CV4_j.train.weights=list()
+# CV4_j.data.accuracy=c()
+# CV4_j.data.accuracy.traditional=c()
+# CV4_j.probClasses=c()
+# CV4_j.probClasses.Convg=list()
+# 
+# 
+# for(j in 1:4){
+#   CV4_j.train[[j]]=CV4.dat[[1]][[j]]
+#   CV4_j.test[[j]]=CV4.dat[[2]][[j]]
+# 
+#   CV4_j.train.weights[[j]]=ReformatWeights(PCVeval_overQnum(CV4_j.train[[j]]))
+# 
+#   for(i in 1:3){
+#     CV4_j.train.weights[[j]][[i]]=round(CV4_j.train.weights[[j]][[i]], digits = 4)
+#   }
+# 
+#   CV4_j.probSequences=EvalSeqSubject(CV4_j.train.weights[[j]], CV4_j.test[[j]], 1)
+# 
+#   for(i in 1:623){
+#     CV4_j.probClasses.Convg[[i]]=convg(CV4_j.probSequences[[i]], 0.75)
+#   }
+# 
+#   for(i in 1:623){
+#     CV4_j.probClasses[i]=CV4_j.probClasses.Convg[[i]][[3]]
+#   }
+# 
+#   CV4_j.data.accuracy[j]=length(which(CV4_j.probClasses==CV4_j.test[[j]]$SupOutNum))/623
+# 
+#   CV4_j.data.accuracy.traditional[j]=length(which(CV4_j.test[[j]]$sumClassNum==CV4_j.test[[j]]$SupOutNum))/623
+# }
+# 
+# ####  Accuracy Values
+# CV4.accuracy=mean(CV4_j.data.accuracy)
+# CV4.accuracy.traditional=mean(CV4_j.data.accuracy.traditional)
 
-  CV4_j.train.weights[[j]]=ReformatWeights(PCVeval_overQnum(CV4_j.train[[j]]))
 
-  for(i in 1:3){
-    CV4_j.train.weights[[j]][[i]]=round(CV4_j.train.weights[[j]][[i]], digits = 4)
-  }
-
-  CV4_j.probSequences=EvalSeqSubject(CV4_j.train.weights[[j]], CV4_j.test[[j]], 1)
-
-  for(i in 1:623){
-    CV4_j.probClasses.Convg[[i]]=convg(CV4_j.probSequences[[i]], 0.75)
-  }
-
-  for(i in 1:623){
-    CV4_j.probClasses[i]=CV4_j.probClasses.Convg[[i]][[3]]
-  }
-
-  CV4_j.data.accuracy[j]=length(which(CV4_j.probClasses==CV4_j.test[[j]]$SupOutNum))/623
-
-  CV4_j.data.accuracy.traditional[j]=length(which(CV4_j.test[[j]]$sumClassNum==CV4_j.test[[j]]$SupOutNum))/623
-}
-
-####  Accuracy Values
-CV4.accuracy=mean(CV4_j.data.accuracy)
-CV4.accuracy.traditional=mean(CV4_j.data.accuracy.traditional)
 #-------------------------------------------------------------------------#
 ####	CVk	 ####
 #-------------------------------------------------------------------------#
@@ -180,12 +186,10 @@ CV4.accuracy.traditional=mean(CV4_j.data.accuracy.traditional)
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
 N.obs.k=c()
-#lower.loop.limit=1225
-#upper.loop.limit=1275
-n.minus.one=24
+n.minus.one=99
 
-N.set.arg=seq(from=1248, to=2490, length.out = n.minus.one)
-N.set.arg=c(N.set.arg,1247)
+N.set.arg=seq(from=3, to=2490, length.out = n.minus.one-1)
+N.set.arg=c(N.set.arg,1247,1248)
 
 for(i in 1:n.minus.one+1){
   N.set.arg[i]=floor(N.set.arg[i])
@@ -263,20 +267,9 @@ for(k in 1:n.minus.one+1){
 
 accuracy.df=data.frame(N.obs.k, accuracy.ksets)
 
-zeros=rep(0, times=n.minus.one+1)
-ones=rep(1, times=n.minus.one+1)
-ID=as.factor(c(ones, zeros))
-N.obs.train.k.lmFE=rep(N.obs.k, times=2)
-accuracy.out.lmFE=c(accuracy.ksets,traditional.accuracy.ksets)
-accuracy.df.lmFE=data.frame(N.obs.train.k, ID, accuracy.out)
 
 accuracy.lm=lm(accuracy.ksets~N.obs.k, data = accuracy.df)
 (accuracy.lms=summary(accuracy.lm))
-accuracy.lmFE=lm(accuracy.out.lmFE~ID*N.obs.train.k.lmFE,
-                 data = accuracy.df.lmFE)
-(accuracy.lmFEs=summary(accuracy.lmFE))
-
-
 
 accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.k, y=accuracy.ksets))+
   xlab("Observations in Traing Set")+
@@ -287,8 +280,34 @@ accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.k, y=accuracy.ksets))+
 
 accuracy.plot
 
-plot(accuracy.lm)
+zeros=rep(0, times=n.minus.one+1)
+ones=rep(1, times=n.minus.one+1)
+ID=as.factor(c(ones, zeros))
+N.obs.train.k.lmFE=rep(N.obs.k, times=2)
+accuracy.out.lmFE=c(accuracy.ksets,traditional.accuracy.ksets)
+accuracy.df.lmFE=data.frame(N.obs.train.k.lmFE, ID, accuracy.out.lmFE)
 
+accuracy.lmFE=lm(accuracy.out.lmFE~ID+N.obs.train.k.lmFE+ID:N.obs.train.k.lmFE,
+                 data = accuracy.df.lmFE)
+(accuracy.lmFEs=summary(accuracy.lmFE))
+
+accuracy.df.lmFE.re=reshape::melt(accuracy.df.lmFE, id.vars=c("N.obs.train.k.lmFE","ID"))
+
+trad.intercept=as.numeric(coef(accuracy.lmFE))[1]+as.numeric(coef(accuracy.lmFE))[2]
+trad.slope=as.numeric(coef(accuracy.lmFE))[3]+as.numeric(coef(accuracy.lmFE))[4]
+
+prob.intercept=as.numeric(coef(accuracy.lmFE))[1]
+prob.slope=as.numeric(coef(accuracy.lmFE))[3]
+
+
+p=ggplot2::ggplot(accuracy.df.lmFE.re, aes(x = N.obs.train.k.lmFE, y = accuracy.out.lmFE, 
+                                           group = ID))+
+  geom_point()+
+  geom_abline(intercept = trad.intercept, slope = trad.slope)+
+  geom_abline(intercept = prob.intercept, slope = prob.slope)
+
+
+p
 
 #-------------------------------------------------------------------------#
 ####	End Script	 ####
