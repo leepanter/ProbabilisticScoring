@@ -46,7 +46,7 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 ## This portion of code will subsample the given data.  Each subsample will include all colums of data, and the number of rows in each sub-sample will range from one to 2495.  Each subsample will be stored in its own list item so that a subsample distribution of weights may be generated in the following step.
 
 n.minus.one=99
-N.set.arg=seq(from=1248, to=2490, length.out = n.minus.one)
+N.set.arg=seq(from=3, to=2490, length.out = n.minus.one)
 N.set.arg=c(N.set.arg,1247)
 
 for(i in 1:n.minus.one+1){
