@@ -10,5 +10,5 @@ rsconnect::writeManifest(appDir = "/Users/lee/Documents/GitHub/ProbabilisticScor
                                       "MasterCVanalysis2.R",
                                       "test.Rmd",
                                       "phq9Subset.Rdata",
-                                      "functionsDataImportProcessing")
+                                      "functionsDataImportProcessing.R")
                          )
