@@ -26,6 +26,7 @@
 # Imports PHQ9 Data Subst from original data set
 
 WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9"
+# WD="/home/lpanter/PScoreUpdate1/GCloudUpdate"
 setwd(WD)
 
 ####	Libraries and Prelims	 ####

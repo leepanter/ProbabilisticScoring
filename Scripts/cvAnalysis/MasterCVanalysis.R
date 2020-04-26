@@ -18,196 +18,57 @@ setwd(WD)
 # Data Dependencies:
 # PHQ9 Data
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/DataManagement/PHQ9/phq9DataSubsetImport.R")
+# source(file="phq9DataSubsetImport.R")
 
 # Variable Dependencies:
 set.seed(123)
 options(warn = -1)
 
-# File Dependencies
+## File Dependencies
+# CVInitialSetup.R
+source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/CVInitialSetups.R")
+# source(file="CVInitialSetups.R")
 
 ## functions:
-
 # Weight Calculations
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsWeightCalculations.R")
+# source(file="functionsWeightCalculations.R")
 
 # Probabilistic Score Calculations
 source(file = "/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsProbScoreCalc.R")
+# source(file="functionsProbScoreCalc.R")
 
 # Scoring Analysis
 source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis/functionsScoringAnalysis.R")
-
+# source(file="functionsScoringAnalysis.R")
 #-------------------------------------------------------------------------#
 ####	Begin Script	 ####
 #-------------------------------------------------------------------------#
 
-####	CV-meta analysis	 ####
-
-####  Determine the number of training observations for each K-set selection
-number.of.training.obs=c()
-number.of.sets=3:2493
-for(i in 3:2493){
-  number.of.training.obs[i-2]=(floor(2495/number.of.sets[i-2]))*(number.of.sets[i-2]-1)
-}
-
-plot(number.of.training.obs~number.of.sets)
-
-####  Determine min and max number of training observations possible
-min.train.obs=min(number.of.training.obs)
-max.train.obs=max(number.of.training.obs)
-
-####  Determine which k-value correspond to the extemas
-number.of.sets.min=number.of.sets[which.min(number.of.training.obs)]
-number.of.sets.max=number.of.sets[which.max(number.of.training.obs)]
-
-number.of.training.obs.subset=number.of.training.obs[1247:2493]
-
-
-#-------------------------------------------------------------------------#
-#### full data weight calculations	 ####
-#-------------------------------------------------------------------------#
-full.data=phq9
-full.data.weights=ReformatWeights(PCVeval_overQnum(full.data))
-for(i in 1:3){
-  full.data.weights[[i]]=round(full.data.weights[[i]], digits = 4)
-}
-
-####  Calculate full data-weight probabilistic outcomes
-full.data.probSequences=EvalSeqSubject(full.data.weights, full.data, 1)
-full.data.probClasses=c()
-full.data.probClasses.Convg=list()
-
-for(i in 1:2495){
-  full.data.probClasses.Convg[[i]]=convg(full.data.probSequences[[i]], 0.75)
-}
-
-for(i in 1:2495){
-  full.data.probClasses[i]=full.data.probClasses.Convg[[i]][[3]]
-}
-
-full.data.accuracy=length(which(full.data.probClasses==full.data$SupOutNum))/2495
-
-
-
-#-------------------------------------------------------------------------#
-#### Accuracy as a function of threshold specification, for full data set	 ####
-#-------------------------------------------------------------------------#
-thresholdAccuracy=function(accuracy.in, data.weights.in, data.set.in){
-  init.accuracy.in=accuracy.in
-  init.data.weights.in=data.weights.in
-  init.data.set.in=data.set.in
-
-  data.probClasses=c()
-  data.probClasses.Convg=list()
-
-  rowdim.data.set.in=dim(init.data.set.in)[1]
-  data.probSequences=EvalSeqSubject(init.data.weights.in, init.data.set.in, 1)
-
-  for(i in 1:rowdim.data.set.in){
-    data.probClasses.Convg[[i]]=convg(data.probSequences[[i]], init.accuracy.in)
-  }
-
-  for(i in 1:rowdim.data.set.in){
-    data.probClasses[i]=data.probClasses.Convg[[i]][[3]]
-  }
-
-  out.data.accuracy=length(which(data.probClasses==init.data.set.in$SupOutNum))/rowdim.data.set.in
-  return(out.data.accuracy)
-}
-
-thresholdAccuracy.vector_fulldata=c()
-accuracy.threshold.argument=seq(from=0.35, to = 0.95, by = 0.025)
-
-for(i in 1:25){
-  thresholdAccuracy.vector_fulldata[i]=thresholdAccuracy(accuracy.threshold.argument[i],
-                                                         full.data.weights,
-                                                         full.data)
-}
-plot(thresholdAccuracy.vector_fulldata~accuracy.threshold.argument)
-thresholdAccuracy.vector_fulldata[17]
-accuracy.threshold.argument[17]
-
-# 0.75 is the highest classification accuracy argument
-
-
-
-
-# #-------------------------------------------------------------------------#
-# ####	CV 4	 ####
-# #-------------------------------------------------------------------------#
-# 
-# ####	Divide Data into 4 CV data sets
-# CV4.dat=CVsplit(full.data, 4)
-# 
-# ####  Initialized Empty Variables
-# CV4_j.train=list()
-# CV4_j.test=list()
-# CV4_j.train.weights=list()
-# CV4_j.data.accuracy=c()
-# CV4_j.data.accuracy.traditional=c()
-# CV4_j.probClasses=c()
-# CV4_j.probClasses.Convg=list()
-# 
-# 
-# for(j in 1:4){
-#   CV4_j.train[[j]]=CV4.dat[[1]][[j]]
-#   CV4_j.test[[j]]=CV4.dat[[2]][[j]]
-# 
-#   CV4_j.train.weights[[j]]=ReformatWeights(PCVeval_overQnum(CV4_j.train[[j]]))
-# 
-#   for(i in 1:3){
-#     CV4_j.train.weights[[j]][[i]]=round(CV4_j.train.weights[[j]][[i]], digits = 4)
-#   }
-# 
-#   CV4_j.probSequences=EvalSeqSubject(CV4_j.train.weights[[j]], CV4_j.test[[j]], 1)
-# 
-#   for(i in 1:623){
-#     CV4_j.probClasses.Convg[[i]]=convg(CV4_j.probSequences[[i]], 0.75)
-#   }
-# 
-#   for(i in 1:623){
-#     CV4_j.probClasses[i]=CV4_j.probClasses.Convg[[i]][[3]]
-#   }
-# 
-#   CV4_j.data.accuracy[j]=length(which(CV4_j.probClasses==CV4_j.test[[j]]$SupOutNum))/623
-# 
-#   CV4_j.data.accuracy.traditional[j]=length(which(CV4_j.test[[j]]$sumClassNum==CV4_j.test[[j]]$SupOutNum))/623
-# }
-# 
-# ####  Accuracy Values
-# CV4.accuracy=mean(CV4_j.data.accuracy)
-# CV4.accuracy.traditional=mean(CV4_j.data.accuracy.traditional)
-
-
-#-------------------------------------------------------------------------#
-####	CVk	 ####
-#-------------------------------------------------------------------------#
-
-####  This Portion will now generalize to arbitrary k values
+# Initialize Empty Variables in Global Scope
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
 N.obs.k=c()
-n.minus.one=99
-
-N.set.arg=seq(from=3, to=2490, length.out = n.minus.one-1)
-N.set.arg=c(N.set.arg,1247,1248)
-
-for(i in 1:n.minus.one+1){
-  N.set.arg[i]=floor(N.set.arg[i])
-}
-
 boot.sample.i=list()
 
-for(i in 1:n.minus.one+1){
+number.samples=25
+sample.length=number.samples+2
+sample.vec.k.sets=df.set.info$df.k.sets
+sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
+N.set.arg=sort(c(N.set.arg,1247, 1248))
+
+
+for(i in 1:sample.length){
   boot.sample.i[[i]]=CVsplit(phq9, N.set.arg[i])
 }
 
 
-for(k in 1:n.minus.one+1){
+for(k in 1:sample.length){
   k.setVal=N.set.arg[k]
   k.index=k
 
   ####	Divide Data into K CV data sets
-  #CVk.dat=CVsplit(phq9, k.setVal)
   CVk.dat=boot.sample.i[[k.index]]
   Number.k.obs=CVk.dat[[3]]
 
@@ -256,12 +117,10 @@ for(k in 1:n.minus.one+1){
 
   CVk.accuracy.traditional=mean(CVk_j.data.accuracy.traditional)
   traditional.accuracy.ksets[k.index]=CVk.accuracy.traditional
-
-  N.obs.k[k.index]=Number.k.obs*(k.setVal-1)
 }
 
-N.obs.k=c()
-for(k in 1:n.minus.one+1){
+
+for(k in 1:sample.length){
   N.obs.k[k]=length(boot.sample.i[[k]][[1]])
 }
 
@@ -277,11 +136,10 @@ accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.k, y=accuracy.ksets))+
   geom_abline(intercept = as.numeric(coef(accuracy.lm))[[1]],
               slope=as.numeric(coef(accuracy.lm))[[2]])+
   geom_point()
-
 accuracy.plot
 
-zeros=rep(0, times=n.minus.one+1)
-ones=rep(1, times=n.minus.one+1)
+zeros=rep(0, times=sample.length)
+ones=rep(1, times=sample.length)
 ID=as.factor(c(ones, zeros))
 N.obs.train.k.lmFE=rep(N.obs.k, times=2)
 accuracy.out.lmFE=c(accuracy.ksets,traditional.accuracy.ksets)
@@ -300,7 +158,7 @@ prob.intercept=as.numeric(coef(accuracy.lmFE))[1]
 prob.slope=as.numeric(coef(accuracy.lmFE))[3]
 
 
-p=ggplot2::ggplot(accuracy.df.lmFE.re, aes(x = N.obs.train.k.lmFE, y = accuracy.out.lmFE, 
+p=ggplot2::ggplot(accuracy.df.lmFE.re, aes(x = N.obs.train.k.lmFE, y = accuracy.out.lmFE,
                                            group = ID))+
   geom_point()+
   geom_abline(intercept = trad.intercept, slope = trad.slope)+

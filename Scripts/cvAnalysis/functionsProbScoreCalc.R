@@ -24,6 +24,7 @@
 
 # Set Working Directory
 WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis"
+# WD="/home/lpanter/PScoreUpdate1/GCloudUpdate"
 setwd(WD)
 
 # Data Dependencies:
