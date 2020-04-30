@@ -50,50 +50,134 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 
 ####	Sample-Length Analysis  ####
 len.train=c()
+len.test=c()
 N=2495
 k=5:2490
 len.k=length(k)
 for(i in 1:len.k){
   len.train[i]=floor(N/(k[i]))*(k[i]-1)
 }
-
-# plot(len.train~k)
+for(i in 1:len.k){
+  len.test[i]=floor(N/(k[i]))
+}
 
 min.train=min(len.train)
 min.index.train=which(len.train==min.train)
 
+min.test=min(len.test)
+min.index.test=which(len.test==min.test)
+
 max.train=max(len.train)
 max.index.train=which(len.train==max.train)
 
+max.test=max(len.test)
+max.index.test=which(len.test==max.test)
+
 uniq.len.train=unique(len.train)
+uniq.len.test=unique(len.test)
 
 index.len.train=list()
+index.len.test=list()
 
-len.uniq.k=length(uniq.len.train)
+len.train.uniq.k=length(uniq.len.train)
+len.test.uniq.k=length(uniq.len.test)
 
-for(i in 1:len.uniq.k){
+
+for(i in 1:len.train.uniq.k){
   index.len.train[[i]]=which(len.train==sort(uniq.len.train)[i])
 }
 
-set.info=list()
-k.sets=list()
+for(i in 1:len.test.uniq.k){
+  index.len.test[[i]]=which(len.test==sort(uniq.len.test)[i])
+}
+
+set.train.info=list()
+k.sets.train=list()
 N.obs.training.set=c()
 
+set.test.info=list()
+k.sets.test=list()
+N.obs.testing.set=c()
 
-for(i in 1:len.uniq.k){
+for(i in 1:len.train.uniq.k){
   N.obs.training.set[[i]]=sort(uniq.len.train)[i]
-  k.sets[[i]]=k[index.len.train[[i]]]
-}
-set.info=list(N.obs.training.set, k.sets)
-
-even.probs.vector=c()
-for(i in 1:len.uniq.k){
-  even.probs.vector[i]=set.info[[2]][[i]][1]
+  k.sets.train[[i]]=k[index.len.train[[i]]]
 }
 
-df.set.info=data.frame(as.numeric(even.probs.vector), N.obs.training.set)
-colnames(df.set.info)=c("df.k.sets", "N.obs.training.set")
- #plot(df.set.info$N.obs.training.set~df.set.info$df.k.sets)
+for(i in 1:len.test.uniq.k){
+  N.obs.testing.set[[i]]=sort(uniq.len.test)[i]
+  k.sets.test[[i]]=k[index.len.test[[i]]]
+}
+
+
+set.train.info=list(N.obs.training.set, k.sets.train)
+set.test.info=list(N.obs.testing.set, k.sets.test)
+
+
+even.probs.vector.train=c()
+even.probs.vector.test=c()
+
+for(i in 1:len.train.uniq.k){
+  even.probs.vector.train[i]=set.train.info[[2]][[i]][1]
+}
+
+for(i in 1:len.test.uniq.k){
+  even.probs.vector.test[i]=set.test.info[[2]][[i]][1]
+}
+
+
+df.train.set.info=data.frame(as.numeric(even.probs.vector.train),
+                             N.obs.training.set)
+colnames(df.train.set.info)=c("df.k.sets.train", "N.obs.training.set")
+
+df.test.set.info=data.frame(as.numeric(even.probs.vector.test),
+                             N.obs.testing.set)
+colnames(df.test.set.info)=c("df.k.sets.test", "N.obs.testing.set")
+
+k.training.values=sort(df.train.set.info$df.k.sets.train)[1:10]
+
+df.set.info=data.frame(k, len.train, len.test)
+
+# p=ggplot(df.set.info, aes(x=k))+
+#   geom_point(aes(y=len.train), color="tan4")+
+#   geom_point(aes(y=len.test), color="tomato")
+# p
+#
+# p=ggplot(df.train.set.info, aes(x=df.k.sets.train))+
+#   geom_point(aes(y=N.obs.training.set))+
+#   xlim(0,2500)+
+#   geom_hline(yintercept = 1996, color="blue")+
+#   geom_vline(xintercept = 5, color="blue")+
+#   geom_hline(yintercept = 2320, color="red")+
+#   geom_vline(xintercept=233, color="red")
+# p
+#
+#
+# p=ggplot(df.test.set.info, aes(x=df.k.sets.test))+
+#   geom_point(aes(y=N.obs.testing.set))+
+#   xlim(0,2500)+
+#   geom_hline(yintercept = 499, color="blue")+
+#   geom_vline(xintercept = 5, color="blue")+
+#   geom_hline(yintercept = 10, color="red")+
+#   geom_vline(xintercept=233, color="red")
+# p
+
+k.final=sort(df.train.set.info$df.k.sets.train)[1:100]
+df.train.set.info=df.train.set.info[order(df.train.set.info$df.k.sets.train),]
+N.obs.train.final=df.train.set.info$N.obs.training.set[1:100]
+N.obs.test.final=c()
+for(i in 1:100){
+  N.obs.test.final[i]=floor(N/k.final[i])
+}
+
+df.k.final=data.frame(k.final, N.obs.train.final, N.obs.test.final)
+colnames(df.k.final)=c("k", "N.obs.train", "N.obs.test")
+
+
+# p=ggplot(df.k.final, aes(x=k))+
+#   geom_point(aes(y=N.obs.train), color="tan4")+
+#   geom_point(aes(y=N.obs.test), color="tomato")
+# p
 
 
 #-------------------------------------------------------------------------#
@@ -177,6 +261,17 @@ rm(full.data); rm(full.data.probClasses.Convg)
 rm(full.data.probSequences); rm(full.data.probClasses)
 
 rm(accuracy.threshold.argument); rm(thresholdAccuracy.vector_fulldata)
+
+rm(df.set.info); rm(df.test.set.info); rm(df.train.set.info);
+rm(index.len.test); rm(k.sets.test);
+rm(k.sets.train); rm(p); rm(set.test.info);
+rm(set.train.info); rm(even.probs.vector.test); rm(even.probs.vector.train);
+rm(k.final); rm(k.training.values); rm(len.test);
+rm(len.test.uniq.k); rm(len.train.uniq.k); rm(max.index.test);
+rm(max.test); rm(min.index.test); rm(min.test);
+rm(N.obs.test.final); rm(N.obs.testing.set); rm(N.obs.train.final);
+rm(uniq.len.train); rm(uniq.len.test)
+
 
 
 #-------------------------------------------------------------------------#

@@ -12,6 +12,10 @@ library(tidyverse)
 library(cluster)
 library(dendextend)
 library(ggplot2)
+packageurl <- "https://cran.r-project.org/src/contrib/Archive/kohonen/kohonen_2.0.19.tar.gz"
+install.packages(packageurl, repos = NULL, type = "source")
+library(kohonen)
+
 
 # Set Working Directory
 WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis"
@@ -54,7 +58,8 @@ dat.kmeans=dat[,4:12]
 
 # K Means  ----------------------------------------------------------------
 
-k.means.out=kmeans(dat.kmeans, centers=3, iter.max = 50, nstart = 100)
+k.means.out1=kmeans(dat.kmeans, centers=3, iter.max = 50, nstart = 100)
+k.means.out=kmeans(dat.kmeans, centers=3, iter.max = 1000, nstart = 2000)
 
 dat$kmeans=k.means.out$cluster
 kmeans.factor=c()
@@ -128,7 +133,96 @@ for(i in 1:sample.length){
   boot.sample.i[[i]]=CVsplit(phq9, N.set.arg[i])
 }
 
+# Initialized Global Environment Empties
+training.set.length=c()
+test.set.length=c()
+N.j=c()
+P.score.train.weights=list()
 
+for(i in 1:sample.length){
+  # Define Static Variables
+  training.set.length[i]=dim(boot.sample.i[[i]][[1]][[1]])[1]
+  test.set.length[i]=dim(boot.sample.i[[i]][[2]][[1]])[1]
+  N.j[i]=length(boot.sample.i[[i]][[1]])
+
+  # Initialized Fixed-i environment variables
+  P.score.train.weights.i=list()
+
+  for(j in 1:N.j[i]){
+    P.score.train.weights.i[[j]]=ReformatWeights(PCVeval_overQnum(boot.sample.i[[i]][[1]][[j]]))
+  }
+
+  for(k in 1:3){
+    P.score.train.weights.i[[j]][[k]]=round(P.score.train.weights.i[[j]][[k]], digits = 4)
+  }
+  P.score.train.weights[[i]]=P.score.train.weights.i
+}
+
+P.score.sequences=list()
+for(i in 1:sample.length){
+  P.score.sequences.i=list()
+  for(j in 1:N.j[i]){
+    P.score.sequences.i[[j]]=EvalSeqSubject(P.score.train.weights[[i]][[j]],
+                                            boot.sample.i[[i]][[2]][[j]],1)
+  }
+  P.score.sequences[[i]]=P.score.sequences.i
+}
+
+P.score.probClass=list()
+for(i in 1:sample.length){
+  P.score.probClass.i=list()
+  for(j in 1:N.j[i]){
+    P.score.probClass.i.j
+    for(k in 1:boot.sample.i[[i]][[3]]){
+      P.score.probClass.i.j[[k]]=convg(P.score.sequences[[i]][[j]][[k]], 0.75)
+    }
+    P.score.probClass.i[[j]]=P.score.probClass.i.j
+  }
+  P.score.probClass[[i]]=P.score.probClass.i
+}
+
+outcome.Pscore=list()
+outcome.kmeans=list()
+for(i in 1:sample.length){
+  outcome.Pscore.i=list()
+  outcome.kmeans.i=list()
+  for(j in 1:N.j[i]){
+    outcome.Pscore.i.j=c()
+    outcome.kmeans.i.j=c()
+    for(k in 1:boot.sample.i[[i]][[3]]){
+      outcome.Pscore.i.j[k]=P.score.probClass[[i]][[j]][[k]][[3]]
+      outcome.kmeans.i.j[k]=boot.sample.i[[i]][[2]][[j]][k,17]
+    }
+    outcome.Pscore.i[[j]]=outcome.Pscore.i.j
+    outcome.kmeans.i[[j]]=outcome.kmeans.i.j
+  }
+  outcome.Pscore[[i]]=outcome.Pscore.i
+  outcome.kmeans[[i]]=outcome.kmeans.i
+}
+
+unlist.outcome.Pscore=list()
+unlist.outcome.kmeans=list()
+average.class.denom=c()
+for(i in 1:sample.length){
+  unlist.outcome.Pscore[[i]]=unlist(outcome.Pscore[[i]])
+  unlist.outcome.kmeans[[i]]=unlist(outcome.kmeans[[i]])
+  average.class.denom[i]=length(unlist.outcome.Pscore[[i]])
+}
+
+
+accuracy.outcome.kmeans=c()
+for(i in 1:sample.length){
+  accuracy.outcome.kmeans[i]=length(which(unlist.outcome.kmeans[[i]]==unlist.outcome.Pscore[[i]]))/average.class.denom[i]
+}
+
+training.set.length=c()
+for(i in 1:sample.length){
+  training.set.length[i]=dim(boot.sample.i[[i]][[1]][[1]])
+}
+
+plot(accuracy.outcome.kmeans~training.set.length)
+
+# SAME CALCULATION WITH DIFFERENT CODING
 for(k in 1:sample.length){
   k.setVal=N.set.arg[k]
   k.index=k
@@ -334,5 +428,72 @@ for(i in 1:2495){
 dat$hcluster.factor=hcluster.factor
 
 length(which(dat$hcluster.factor==dat$SupOutString))/2495
+
+
+
+
+
+#-------------------------------------------------------------------------#
+# SOM Clustering ----------------------------------------------------------
+#-------------------------------------------------------------------------#
+
+dat.som=scale(dat.kmeans)
+
+out.grid=somgrid(xdim = 12, ydim=9, topo = "rectangular")
+
+som.out=som(dat.som, grid = out.grid)
+
+plot(som.out, type = 'changes')
+
+plot(som.out)
+plot(som.out, type = 'mapping')
+plot(som.out, type = 'count')
+plot(som.out, type = 'dist.neighbours')
+plot(som.out, type = 'codes')
+plot(som.out, type = 'quality')
+
+dat$somOut.108=som.out$unit.classif
+somOut.108=som.out$unit.classif
+
+
+plot(hclust(dist(som.out$codes)))
+class.cuts=cutree(hclust(dist(som.out$codes)),3)
+plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
+add.cluster.boundaries(som.out, class.cuts)
+
+#-------------------------------------------------------------------------#
+#good seeds: 3
+dat.som=scale(dat.kmeans)
+set.seed(3)
+out.grid=somgrid(xdim = 10, ydim= 10, topo = "rectangular")
+
+som.out=som(dat.som, grid = out.grid,
+            rlen=1000)
+
+plot(som.out, type = 'changes')
+
+plot(som.out)
+plot(som.out, type = 'mapping')
+plot(som.out, type = 'count')
+plot(som.out, type = 'dist.neighbours')
+plot(som.out, type = 'codes')
+plot(som.out, type = 'quality')
+
+
+dat$somOut.108=som.out$unit.classif
+somOut.108=som.out$unit.classif
+
+
+plot(hclust(dist(som.out$codes)))
+class.cuts=cutree(hclust(dist(som.out$codes)),3)
+plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
+add.cluster.boundaries(som.out, class.cuts)
+
+mydata <- som.out$codes
+wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
+for (i in 2:15) {
+  wss[i] <- sum(kmeans(mydata, centers=i)$withinss)
+}
+plot(wss)
 
 
