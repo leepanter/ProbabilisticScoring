@@ -51,18 +51,22 @@ traditional.accuracy.ksets=c()
 N.obs.k=c()
 boot.sample.i=list()
 
-# number.samples=25
-# sample.length=number.samples+2
-# sample.vec.k.sets=df.set.info$df.k.sets
-# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-# N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
-# N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-df.set.info=df.k.final
-colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+number.samples=100
+sample.length=number.samples+2
+df.set.info=df.train.set.info
+colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+sample.vec.k.sets=df.set.info$df.k.sets
+sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
+N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-sample.length=100
-N.set.arg=df.set.info$df.k.sets
+
+# df.set.info=df.k.final
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+#
+# sample.length=100
+# N.set.arg=df.set.info$df.k.sets
 
 for(i in 1:sample.length){
   boot.sample.i[[i]]=CVsplit(phq9, N.set.arg[i])

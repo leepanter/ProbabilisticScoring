@@ -56,8 +56,10 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 ## This portion of code will subsample the given data.  Each subsample will include all colums of data, and the number of rows in each sub-sample will range from one to 2495.  Each subsample will be stored in its own list item so that a subsample distribution of weights may be generated in the following step.
 
 
-# number.samples=25
+# number.samples=100
 # sample.length=number.samples+2
+# df.set.info=df.train.set.info
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
 # sample.vec.k.sets=df.set.info$df.k.sets
 # sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
 # N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))

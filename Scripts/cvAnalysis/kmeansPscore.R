@@ -117,12 +117,22 @@ phq9$kmeans.factor=dat$kmeans.factor
 #-------------------------------------------------------------------------#
 # Kmeans CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
-number.samples=25
-sample.length=number.samples+2
-sample.vec.k.sets=df.set.info$df.k.sets
-sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
-N.set.arg=sort(c(N.set.arg,1247, 1248))
+
+# number.samples=100
+# sample.length=number.samples+2
+# df.set.info=df.train.set.info
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+# sample.vec.k.sets=df.set.info$df.k.sets
+# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+# N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
+# N.set.arg=sort(c(N.set.arg,1247, 1248))
+
+df.set.info=df.k.final
+colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+
+sample.length=100
+N.set.arg=df.set.info$df.k.sets
+
 
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
@@ -221,135 +231,6 @@ for(i in 1:sample.length){
 }
 
 plot(accuracy.outcome.kmeans~training.set.length)
-
-# SAME CALCULATION WITH DIFFERENT CODING
-for(k in 1:sample.length){
-  k.setVal=N.set.arg[k]
-  k.index=k
-
-  ####	Divide Data into K CV data sets
-  CVk.dat=boot.sample.i[[k.index]]
-  Number.k.obs=CVk.dat[[3]]
-
-
-  ####  Initialized Empty Variables
-  CVk_j.train=list()
-  CVk_j.test=list()
-  CVk_j.train.weights=list()
-  CVk_j.data.accuracy=c()
-  CVk_j.data.accuracy.traditional=c()
-
-  for(j in 1:k.setVal){
-    CVk_j.train[[j]]=CVk.dat[[1]][[j]]
-    CVk_j.test[[j]]=CVk.dat[[2]][[j]]
-    CVk_j.probClasses=c()
-    CVk_j.probClasses.Convg=list()
-
-    ### Calculate data weights
-    CVk_j.train.weights[[j]]=ReformatWeights(PCVeval_overQnum(CVk_j.train[[j]]))
-
-    for(i in 1:3){
-      CVk_j.train.weights[[j]][[i]]=round(CVk_j.train.weights[[j]][[i]], digits = 4)
-    }
-
-    ###  Calculate CVk-j probabilistic outcomes
-    CVk_j.probSequences=EvalSeqSubject(CVk_j.train.weights[[j]], CVk_j.test[[j]], 1)
-
-    for(i in 1:Number.k.obs){
-      CVk_j.probClasses.Convg[[i]]=convg(CVk_j.probSequences[[i]], 0.75)
-    }
-
-    for(i in 1:Number.k.obs){
-      CVk_j.probClasses[i]=CVk_j.probClasses.Convg[[i]][[3]]
-    }
-
-    ####  Calculate Accuracy of probablistic classes
-    CVk_j.data.accuracy[j]=length(which(CVk_j.probClasses==CVk_j.test[[j]]$kmeans))/Number.k.obs
-
-    ####  Calculate Accuracy of traditional Classes
-    CVk_j.data.accuracy.traditional[j]=length(which(CVk_j.test[[j]]$sumClassNum==CVk_j.test[[j]]$kmeans))/Number.k.obs
-  }
-
-  ####  Output Accuracy Values
-  CVk.accuracy=mean(CVk_j.data.accuracy)
-  accuracy.ksets[k.index]=CVk.accuracy
-
-  CVk.accuracy.traditional=mean(CVk_j.data.accuracy.traditional)
-  traditional.accuracy.ksets[k.index]=CVk.accuracy.traditional
-
-  N.obs.k[k.index]=Number.k.obs*(k.setVal-1)
-}
-
-
-#-------------------------------------------------------------------------#
-####	REMOVE	 ####
-#-------------------------------------------------------------------------#
-
-accuracy.ksets=c()
-traditional.accuracy.ksets=c()
-N.obs.k=c()
-
-k=1
-
-k.setVal=N.set.arg[k]
-k.index=k
-
-####	Divide Data into K CV data sets
-CVk.dat=boot.sample.i[[k.index]]
-Number.k.obs=CVk.dat[[3]]
-
-
-####  Initialized Empty Variables
-CVk_j.train=list()
-CVk_j.test=list()
-CVk_j.train.weights=list()
-CVk_j.data.accuracy=c()
-CVk_j.data.accuracy.traditional=c()
-
-for(j in 1:k.setVal){
-  CVk_j.train[[j]]=CVk.dat[[1]][[j]]
-  CVk_j.test[[j]]=CVk.dat[[2]][[j]]
-  CVk_j.probClasses=c()
-  CVk_j.probClasses.Convg=list()
-
-  ### Calculate data weights
-  CVk_j.train.weights[[j]]=ReformatWeights(PCVeval_overQnum(CVk_j.train[[j]]))
-
-  for(i in 1:3){
-    CVk_j.train.weights[[j]][[i]]=round(CVk_j.train.weights[[j]][[i]], digits = 4)
-  }
-
-  ###  Calculate CVk-j probabilistic outcomes
-  CVk_j.probSequences=EvalSeqSubject(CVk_j.train.weights[[j]], CVk_j.test[[j]], 1)
-
-  for(i in 1:Number.k.obs){
-    CVk_j.probClasses.Convg[[i]]=convg(CVk_j.probSequences[[i]], 0.75)
-  }
-
-  for(i in 1:Number.k.obs){
-    CVk_j.probClasses[i]=CVk_j.probClasses.Convg[[i]][[3]]
-  }
-
-  ####  Calculate Accuracy of probablistic classes
-  CVk_j.data.accuracy[j]=length(which(CVk_j.probClasses==CVk_j.test[[j]]$SupOutNum))/Number.k.obs
-
-  ####  Calculate Accuracy of traditional Classes
-  CVk_j.data.accuracy.traditional[j]=length(which(CVk_j.test[[j]]$sumClassNum==CVk_j.test[[j]]$SupOutNum))/Number.k.obs
-}
-
-####  Output Accuracy Values
-CVk.accuracy=mean(CVk_j.data.accuracy)
-accuracy.ksets[k.index]=CVk.accuracy
-
-CVk.accuracy.traditional=mean(CVk_j.data.accuracy.traditional)
-traditional.accuracy.ksets[k.index]=CVk.accuracy.traditional
-
-N.obs.k[k.index]=Number.k.obs*(k.setVal-1)
-
-#-------------------------------------------------------------------------#
-####	REMOVE	 ####
-#-------------------------------------------------------------------------#
-
 
 
 

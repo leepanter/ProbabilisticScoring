@@ -48,7 +48,57 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 #-------------------------------------------------------------------------#
 #-------------------------------------------------------------------------#
 
-####	Sample-Length Analysis  ####
+####	Sample-length Analysis Train only ####
+len.train=c()
+N=2495
+k=5:2490
+len.k=length(k)
+
+for(i in 1:len.k){
+  len.train[i]=floor(N/(k[i]))*(k[i]-1)
+}
+
+min.train=min(len.train)
+min.index.train=which(len.train==min.train)
+
+max.train=max(len.train)
+max.index.train=which(len.train==max.train)
+
+uniq.len.train=unique(len.train)
+
+index.len.train=list()
+
+len.train.uniq.k=length(uniq.len.train)
+
+
+
+for(i in 1:len.train.uniq.k){
+  index.len.train[[i]]=which(len.train==sort(uniq.len.train)[i])
+}
+
+set.train.info=list()
+k.sets.train=list()
+N.obs.training.set=c()
+
+for(i in 1:len.train.uniq.k){
+  N.obs.training.set[[i]]=sort(uniq.len.train)[i]
+  k.sets.train[[i]]=k[index.len.train[[i]]]
+}
+
+set.train.info=list(N.obs.training.set, k.sets.train)
+
+even.probs.vector.train=c()
+
+for(i in 1:len.train.uniq.k){
+  even.probs.vector.train[i]=set.train.info[[2]][[i]][1]
+}
+
+df.train.set.info=data.frame(as.numeric(even.probs.vector.train),
+                             N.obs.training.set)
+colnames(df.train.set.info)=c("df.k.sets.train", "N.obs.training.set")
+
+
+####	Sample-Length Analysis  test/train####
 len.train=c()
 len.test=c()
 N=2495
@@ -262,7 +312,7 @@ rm(full.data.probSequences); rm(full.data.probClasses)
 
 rm(accuracy.threshold.argument); rm(thresholdAccuracy.vector_fulldata)
 
-rm(df.set.info); rm(df.test.set.info); rm(df.train.set.info);
+rm(df.set.info); rm(df.test.set.info);
 rm(index.len.test); rm(k.sets.test);
 rm(k.sets.train); rm(p); rm(set.test.info);
 rm(set.train.info); rm(even.probs.vector.test); rm(even.probs.vector.train);
