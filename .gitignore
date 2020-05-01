@@ -19,3 +19,6 @@ Scripts/cvAnalysis/GCloudUpdate/MasterCVanalysis.R
 Scripts/cvAnalysis/GCloudUpdate/MasterCVAnalysis2.R
 Scripts/cvAnalysis/JSON.R
 Scripts/cvAnalysis/JSON.R
+Data/datin.Rdata
+Data/phq9Subset.Rdata
+Scripts/DataManagement/PHQ9/phq9Subset.Rdata
