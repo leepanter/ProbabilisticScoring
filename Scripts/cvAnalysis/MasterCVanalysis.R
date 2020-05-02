@@ -58,7 +58,7 @@ df.set.info=df.train.set.info
 colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
 sample.vec.k.sets=df.set.info$df.k.sets
 sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
+N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
 N.set.arg=sort(c(N.set.arg,1247, 1248))
 
 

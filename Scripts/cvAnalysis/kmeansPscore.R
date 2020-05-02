@@ -12,8 +12,8 @@ library(tidyverse)
 library(cluster)
 library(dendextend)
 library(ggplot2)
-packageurl <- "https://cran.r-project.org/src/contrib/Archive/kohonen/kohonen_2.0.19.tar.gz"
-install.packages(packageurl, repos = NULL, type = "source")
+# packageurl <- "https://cran.r-project.org/src/contrib/Archive/kohonen/kohonen_2.0.19.tar.gz"
+# install.packages(packageurl, repos = NULL, type = "source")
 library(kohonen)
 
 
@@ -56,27 +56,82 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 dat=phq9
 dat.kmeans=dat[,4:12]
 
+
+# Eda for Class ids
+table.sum.class = dat %>% group_by(sumClassString) %>% tally()
+table.sum.class
+
+# KMEANS Int -> factor function
+kmeans.convert=function(in.arg){
+  if(in.arg==1){
+    out.arg="C2"
+  } else if(in.arg==2){
+    out.arg="C1"
+  } else{out.arg="C3"}
+  return(out.arg)
+}
+
+pscore.convert=function(in.arg){
+  out.arg=NA
+  if(is.na(in.arg)){
+    out.arg="NA"
+  } else {
+      if(in.arg==1){
+        out.arg="C2"
+      } else if(in.arg==2){
+        out.arg="C1"
+      } else {
+        out.arg="C3"
+      }
+    }
+  return(out.arg)
+}
+
+#-------------------------------------------------------------------------#
 # K Means  ----------------------------------------------------------------
+#-------------------------------------------------------------------------#
+
+# function to compute total within-cluster sum of square
+wss <- function(k) {
+  kmeans(dat.kmeans, k, nstart = 10 )$tot.withinss
+}
+
+# Compute and plot wss for k = 1 to k = 15
+k.values <- 1:15
+
+# extract wss for 2-15 clusters
+wss_values <- map_dbl(k.values, wss)
+
+# plot(k.values, wss_values,
+#      type="b", pch = 19, frame = FALSE,
+#      xlab="Number of clusters K",
+#      ylab="Total within-clusters sum of squares")
+
 
 k.means.out1=kmeans(dat.kmeans, centers=3, iter.max = 50, nstart = 100)
 k.means.out=kmeans(dat.kmeans, centers=3, iter.max = 1000, nstart = 2000)
 
 dat$kmeans=k.means.out$cluster
+
+table.kmeans = dat %>% group_by(kmeans) %>% tally()
+table.kmeans
+
 kmeans.factor=c()
 for(i in 1:2495){
   if(dat$kmeans[i]==1){
-    kmeans.factor[i]="C2"
+    kmeans.factor[i]="C3"
   } else if(dat$kmeans[i]==2){
     kmeans.factor[i]="C1"
-  } else{kmeans.factor[i]="C3"}
+  } else{kmeans.factor[i]="C2"}
 }
-
 dat$kmeans.factor=kmeans.factor
 
-accuracy.traditional.comp.kmeans=length(which(dat$kmeans.factor==dat$sumClassString))/2495
+table.kmeans.factor = dat %>% group_by(kmeans.factor) %>% tally()
+table.kmeans.factor
 
-phq9$kmeans=dat$kmeans
-phq9$kmeans.factor=dat$kmeans.factor
+
+# phq9$kmeans=dat$kmeans
+# phq9$kmeans.factor=dat$kmeans.factor
 
 # fviz_cluster(k.means.out, data = dat.kmeans)
 #
@@ -114,25 +169,164 @@ phq9$kmeans.factor=dat$kmeans.factor
 
 
 
+
+
+# Heirarchical Clustering -------------------------------------------------
+
+d=dist(dat.kmeans)
+hc1=hclust(d, method = "complete")
+# plot(hc1)
+sub_grp=cutree(hc1, k=3)
+table(sub_grp)
+
+dat=dat %>%
+  mutate(hcluster = sub_grp)
+
+hcluster.factor=c()
+for(i in 1:2495){
+  if(dat$hcluster[i]==1){
+    hcluster.factor[i]="C3"
+  } else if(dat$hcluster[i]==2){
+    hcluster.factor[i]="C1"
+  } else{hcluster.factor[i]="C2"}
+}
+dat$hcluster.factor=hcluster.factor
+
+
+table.hclust.factor = dat %>% group_by(hcluster.factor) %>% tally()
+table.hclust.factor
+
+
+
+#-------------------------------------------------------------------------#
+# SOM Clustering ----------------------------------------------------------
+#-------------------------------------------------------------------------#
+
+dat.som=scale(dat.kmeans)
+
+#-------------------------------------------------------------------------#
+# 12 X 9 grid
+#-------------------------------------------------------------------------#
+
+#plot(som.out108, type = 'changes')
+#plot(som.out108)
+#plot(som.out108, type = 'count')
+#plot(hclust(dist(som.out108$codes)))
+
+# seeds 220
+
+
+set.seed(2220)
+out.grid108=somgrid(xdim = 12, ydim=9, topo = "rectangular")
+som.out108=som(dat.som, grid = out.grid108, rlen = 1000)
+# dat$somOut.108=som.out108$unit.classif
+somOut.108=som.out108$unit.classif
+class.cuts108=cutree(hclust(dist(som.out108$codes)),3)
+
+ones108=which(class.cuts108==1)
+twos108=which(class.cuts108==2)
+threes108=which(class.cuts108==3)
+
+classify.cuts=function(in.cut){
+    if(in.cut %in% ones108){
+      out.class="C1"
+    }  else if (in.cut %in% twos108){
+      out.class="C3"
+    } else {out.class="C2"}
+  return(out.class)
+}
+
+
+class.som108=c()
+for(i in 1:2495){
+  class.som108[i]=classify.cuts(som.out108$unit.classif[i])
+}
+
+dat$class.som108=as.factor(class.som108)
+
+table.som108=dat %>% group_by(class.som108) %>% tally()
+table.som108
+
+
+plot(som.out108, type = 'codes', bgcol = rainbow(3)[class.cuts108])
+add.cluster.boundaries(som.out108, class.cuts108)
+
+mean.total.table=aggregate(x=dat$qTot,
+                  by=list(som.out108[["unit.classif"]]),
+                  FUN=mean)
+
+median.total.table=aggregate(x=dat$qTot,
+                             by=list(som.out108[["unit.classif"]]),
+                              FUN=median)
+
+
+#-------------------------------------------------------------------------#
+#good seeds: 3, 1110
+
+set.seed(1110)
+out.grid=somgrid(xdim = 15, ydim= 15, topo = "hexagonal")
+
+som.out=som(dat.som, grid = out.grid,
+            rlen=1000)
+# dat$somOut=som.out$unit.classif
+somOut=som.out$unit.classif
+class.cuts=cutree(hclust(dist(som.out$codes)),3)
+
+ones=  which(class.cuts==1)
+twos=  which(class.cuts==2)
+threes=which(class.cuts==3)
+
+classify.cuts1515=function(in.cut){
+  if(in.cut %in% ones){
+    out.class="C1"
+  }  else if (in.cut %in% twos){
+    out.class="C3"
+  } else {out.class="C2"}
+  return(out.class)
+}
+
+class.som=c()
+for(i in 1:2495){
+  class.som[i]=classify.cuts1515(som.out$unit.classif[i])
+}
+
+dat$class.som=as.factor(class.som)
+
+table.som=dat %>% group_by(class.som) %>% tally()
+table.som
+
+plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
+add.cluster.boundaries(som.out, class.cuts)
+plot(som.out, type = 'changes')
+
+mean.total.table=aggregate(x=dat$qTot,
+                           by=list(som.out[["unit.classif"]]),
+                           FUN=mean)
+
+median.total.table=aggregate(x=dat$qTot,
+                             by=list(som.out[["unit.classif"]]),
+                             FUN=median)
+
+
+
+
 #-------------------------------------------------------------------------#
 # Kmeans CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-# number.samples=100
-# sample.length=number.samples+2
-# df.set.info=df.train.set.info
-# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
-# sample.vec.k.sets=df.set.info$df.k.sets
-# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-# N.set.arg=sort(sample(sample.vec.k.sets, sample.length, replace = FALSE))
-# N.set.arg=sort(c(N.set.arg,1247, 1248))
+number.samples=25
+sample.length=number.samples+2
+df.set.info=df.train.set.info
+colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+sample.vec.k.sets=df.set.info$df.k.sets
+sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
+N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-df.set.info=df.k.final
-colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
-
-sample.length=100
-N.set.arg=df.set.info$df.k.sets
-
+# df.set.info=df.k.final
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+# sample.length=100
+# N.set.arg=df.set.info$df.k.sets
 
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
@@ -140,7 +334,7 @@ N.obs.k=c()
 boot.sample.i=list()
 
 for(i in 1:sample.length){
-  boot.sample.i[[i]]=CVsplit(phq9, N.set.arg[i])
+  boot.sample.i[[i]]=CVsplit(dat, N.set.arg[i])
 }
 
 # Initialized Global Environment Empties
@@ -182,199 +376,123 @@ P.score.probClass=list()
 for(i in 1:sample.length){
   P.score.probClass.i=list()
   for(j in 1:N.j[i]){
-    P.score.probClass.i.j
+    P.score.probClass.i.j=list()
     for(k in 1:boot.sample.i[[i]][[3]]){
-      P.score.probClass.i.j[[k]]=convg(P.score.sequences[[i]][[j]][[k]], 0.75)
+      P.score.probClass.i.j[[k]]=convg(P.score.sequences[[i]][[j]][[k]], 0.75)[[3]]
     }
     P.score.probClass.i[[j]]=P.score.probClass.i.j
   }
   P.score.probClass[[i]]=P.score.probClass.i
 }
 
-outcome.Pscore=list()
-outcome.kmeans=list()
+
+
+len.i=c()
 for(i in 1:sample.length){
-  outcome.Pscore.i=list()
-  outcome.kmeans.i=list()
+  len.i[i]=length(boot.sample.i[[i]][[2]])
+}
+
+
+for(i in 1:sample.length){
+  outcome.pscore.i=c()
+  outcome.pscore.num.i=c()
   for(j in 1:N.j[i]){
-    outcome.Pscore.i.j=c()
-    outcome.kmeans.i.j=c()
-    for(k in 1:boot.sample.i[[i]][[3]]){
-      outcome.Pscore.i.j[k]=P.score.probClass[[i]][[j]][[k]][[3]]
-      outcome.kmeans.i.j[k]=boot.sample.i[[i]][[2]][[j]][k,17]
-    }
-    outcome.Pscore.i[[j]]=outcome.Pscore.i.j
-    outcome.kmeans.i[[j]]=outcome.kmeans.i.j
+    outcome.pscore.i.j=c()
+    outcome.pscore.num.i.j=c()
+    for(k in 1:length(P.score.probClass[[i]][[j]])){
+      outcome.pscore.i.j[k]=pscore.convert(P.score.probClass[[i]][[j]][[k]])
+      }
+    boot.sample.i[[i]][[2]][[j]]$pscore.factor=NA
+    boot.sample.i[[i]][[2]][[j]]$pscore.factor=outcome.pscore.i.j
   }
-  outcome.Pscore[[i]]=outcome.Pscore.i
-  outcome.kmeans[[i]]=outcome.kmeans.i
 }
 
-unlist.outcome.Pscore=list()
-unlist.outcome.kmeans=list()
-average.class.denom=c()
+
+
+pscore.i=list()
+tradit.i=list()
+kmeans.i=list()
+hclust.i=list()
+som108.i=list()
+sommap.i=list()
 for(i in 1:sample.length){
-  unlist.outcome.Pscore[[i]]=unlist(outcome.Pscore[[i]])
-  unlist.outcome.kmeans[[i]]=unlist(outcome.kmeans[[i]])
-  average.class.denom[i]=length(unlist.outcome.Pscore[[i]])
+  pscore.i.j=c()
+  tradit.i.j=c()
+  kmeans.i.j=c()
+  hclust.i.j=c()
+  som108.i.j=c()
+  sommap.i.j=c()
+  for(j in 1:N.j[i]){
+    pscore.i.j=append(pscore.i.j,
+                      boot.sample.i[[i]][[2]][[j]][["pscore.factor"]])
+    tradit.i.j=append(tradit.i.j,
+                      boot.sample.i[[i]][[2]][[j]][["SupOutString"]])
+    kmeans.i.j=append(kmeans.i.j,
+                      boot.sample.i[[i]][[2]][[j]][["kmeans.factor"]])
+    hclust.i.j=append(hclust.i.j,
+                      boot.sample.i[[i]][[2]][[j]][["hcluster.factor"]])
+    som108.i.j=append(som108.i.j,
+                      as.character(boot.sample.i[[i]][[2]][[j]][["class.som108"]]))
+    sommap.i.j=append(sommap.i.j,
+                      as.character(boot.sample.i[[i]][[2]][[j]][["class.som"]]))
+  }
+  pscore.i[[i]]=pscore.i.j
+  tradit.i[[i]]=tradit.i.j
+  kmeans.i[[i]]=kmeans.i.j
+  hclust.i[[i]]=hclust.i.j
+  som108.i[[i]]=som108.i.j
+  sommap.i[[i]]=sommap.i.j
 }
 
+acc.pscore.kmeans=c()
+acc.tradit.kmeans=c()
+acc.pscore.hclust=c()
+acc.tradit.hclust=c()
+acc.pscore.som108=c()
+acc.tradit.som108=c()
+acc.pscore.sommap=c()
+acc.tradit.sommap=c()
+length.train=c()
 
-accuracy.outcome.kmeans=c()
 for(i in 1:sample.length){
-  accuracy.outcome.kmeans[i]=length(which(unlist.outcome.kmeans[[i]]==unlist.outcome.Pscore[[i]]))/average.class.denom[i]
+  acc.pscore.kmeans[i]=length(which(kmeans.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.kmeans[i]=length(which(kmeans.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+
+  acc.pscore.hclust[i]=length(which(hclust.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.hclust[i]=length(which(hclust.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+
+
+  acc.pscore.som108[i]=length(which(som108.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som108[i]=length(which(som108.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+
+  acc.pscore.sommap[i]=length(which(sommap.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.sommap[i]=length(which(sommap.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+
+  length.train[i]=dim(boot.sample.i[[i]][[1]][[1]])[1]
 }
 
-training.set.length=c()
-for(i in 1:sample.length){
-  training.set.length[i]=dim(boot.sample.i[[i]][[1]][[1]])
-}
+accuracy.df=data.frame(length.train,
+                       acc.pscore.kmeans,
+                       acc.tradit.kmeans,
+                       acc.pscore.hclust,
+                       acc.tradit.hclust,
+                       acc.pscore.som108,
+                       acc.tradit.som108,
+                       acc.pscore.sommap,
+                       acc.tradit.sommap)
 
-plot(accuracy.outcome.kmeans~training.set.length)
-
-
-
-
-N.obs.k=c()
-for(k in 1:n.minus.one+1){
-  N.obs.k[k]=length(boot.sample.i[[k]][[1]])
-}
-
-accuracy.df=data.frame(N.obs.k, accuracy.ksets)
-
-
-accuracy.lm=lm(accuracy.ksets~N.obs.k, data = accuracy.df)
-(accuracy.lms=summary(accuracy.lm))
-
-accuracy.plot=ggplot(accuracy.df, aes(x=N.obs.k, y=accuracy.ksets))+
-  xlab("Observations in Traing Set")+
-  ylab("Accuracy of Prob.Scoring")+
-  geom_abline(intercept = as.numeric(coef(accuracy.lm))[[1]],
-              slope=as.numeric(coef(accuracy.lm))[[2]])+
-  geom_point()
-
-accuracy.plot
-
-zeros=rep(0, times=n.minus.one+1)
-ones=rep(1, times=n.minus.one+1)
-ID=as.factor(c(ones, zeros))
-N.obs.train.k.lmFE=rep(N.obs.k, times=2)
-accuracy.out.lmFE=c(accuracy.ksets,traditional.accuracy.ksets)
-accuracy.df.lmFE=data.frame(N.obs.train.k.lmFE, ID, accuracy.out.lmFE)
-
-accuracy.lmFE=lm(accuracy.out.lmFE~ID+N.obs.train.k.lmFE+ID:N.obs.train.k.lmFE,
-                 data = accuracy.df.lmFE)
-(accuracy.lmFEs=summary(accuracy.lmFE))
-
-accuracy.df.lmFE.re=reshape::melt(accuracy.df.lmFE, id.vars=c("N.obs.train.k.lmFE","ID"))
-
-trad.intercept=as.numeric(coef(accuracy.lmFE))[1]+as.numeric(coef(accuracy.lmFE))[2]
-trad.slope=as.numeric(coef(accuracy.lmFE))[3]+as.numeric(coef(accuracy.lmFE))[4]
-
-prob.intercept=as.numeric(coef(accuracy.lmFE))[1]
-prob.slope=as.numeric(coef(accuracy.lmFE))[3]
-
-
-p=ggplot2::ggplot(accuracy.df.lmFE.re, aes(x = N.obs.train.k.lmFE, y = accuracy.out.lmFE,
-                                           group = ID))+
-  geom_point()+
-  geom_abline(intercept = trad.intercept, slope = trad.slope)+
-  geom_abline(intercept = prob.intercept, slope = prob.slope)
-
-
+p=ggplot(accuracy.df, aes(x=length.train))+
+  geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=18)+
+  geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=15)+
+  geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=18)+
+  geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=15)+
+  geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=18)+
+  geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=15)+
+  geom_point(aes(y=acc.pscore.sommap,     color="seagreen"), shape=18)+
+  geom_point(aes(y=acc.tradit.sommap,  color="saddlebrown"), shape=15)+
+  theme(legend.position = "none")
 p
 
 
-
-# Heirarchical Clustering -------------------------------------------------
-
-d=dist(dat.kmeans)
-hc1=hclust(d, method = "complete")
-plot(hc1)
-sub_grp=cutree(hc1, k=3)
-table(sub_grp)
-
-dat=dat %>%
-    mutate(hcluster = sub_grp)
-
-hcluster.factor=c()
-for(i in 1:2495){
-  if(dat$hcluster[i]==1){
-    hcluster.factor[i]="C3"
-  } else if(dat$hcluster[i]==2){
-    hcluster.factor[i]="C1"
-  } else{hcluster.factor[i]="C2"}
-}
-
-dat$hcluster.factor=hcluster.factor
-
-length(which(dat$hcluster.factor==dat$SupOutString))/2495
-
-
-
-
-
-#-------------------------------------------------------------------------#
-# SOM Clustering ----------------------------------------------------------
-#-------------------------------------------------------------------------#
-
-dat.som=scale(dat.kmeans)
-
-out.grid=somgrid(xdim = 12, ydim=9, topo = "rectangular")
-
-som.out=som(dat.som, grid = out.grid)
-
-plot(som.out, type = 'changes')
-
-plot(som.out)
-plot(som.out, type = 'mapping')
-plot(som.out, type = 'count')
-plot(som.out, type = 'dist.neighbours')
-plot(som.out, type = 'codes')
-plot(som.out, type = 'quality')
-
-dat$somOut.108=som.out$unit.classif
-somOut.108=som.out$unit.classif
-
-
-plot(hclust(dist(som.out$codes)))
-class.cuts=cutree(hclust(dist(som.out$codes)),3)
-plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
-add.cluster.boundaries(som.out, class.cuts)
-
-#-------------------------------------------------------------------------#
-#good seeds: 3
-dat.som=scale(dat.kmeans)
-set.seed(3)
-out.grid=somgrid(xdim = 10, ydim= 10, topo = "rectangular")
-
-som.out=som(dat.som, grid = out.grid,
-            rlen=1000)
-
-plot(som.out, type = 'changes')
-
-plot(som.out)
-plot(som.out, type = 'mapping')
-plot(som.out, type = 'count')
-plot(som.out, type = 'dist.neighbours')
-plot(som.out, type = 'codes')
-plot(som.out, type = 'quality')
-
-
-dat$somOut.108=som.out$unit.classif
-somOut.108=som.out$unit.classif
-
-
-plot(hclust(dist(som.out$codes)))
-class.cuts=cutree(hclust(dist(som.out$codes)),3)
-plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
-add.cluster.boundaries(som.out, class.cuts)
-
-mydata <- som.out$codes
-wss <- (nrow(mydata)-1)*sum(apply(mydata,2,var))
-for (i in 2:15) {
-  wss[i] <- sum(kmeans(mydata, centers=i)$withinss)
-}
-plot(wss)
 
 
