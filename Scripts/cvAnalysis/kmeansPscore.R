@@ -14,7 +14,7 @@ library(dendextend)
 library(ggplot2)
 # packageurl <- "https://cran.r-project.org/src/contrib/Archive/kohonen/kohonen_2.0.19.tar.gz"
 # install.packages(packageurl, repos = NULL, type = "source")
-library(kohonen)
+# library(kohonen)
 
 
 # Set Working Directory
@@ -170,8 +170,9 @@ table.kmeans.factor
 
 
 
-
+#-------------------------------------------------------------------------#
 # Heirarchical Clustering -------------------------------------------------
+#-------------------------------------------------------------------------#
 
 d=dist(dat.kmeans)
 hc1=hclust(d, method = "complete")
@@ -196,116 +197,26 @@ dat$hcluster.factor=hcluster.factor
 table.hclust.factor = dat %>% group_by(hcluster.factor) %>% tally()
 table.hclust.factor
 
+# Hcluster #2 ------------------------------------------------------------#
+d2=dist(dat.kmeans, method="manhattan")
+hc2=hclust(d2, method = "complete")
+sub_grp2=cutree(hc2, k=3)
+table(sub_grp2)
 
-
-#-------------------------------------------------------------------------#
-# SOM Clustering ----------------------------------------------------------
-#-------------------------------------------------------------------------#
-
-dat.som=scale(dat.kmeans)
-
-#-------------------------------------------------------------------------#
-# 12 X 9 grid
-#-------------------------------------------------------------------------#
-
-#plot(som.out108, type = 'changes')
-#plot(som.out108)
-#plot(som.out108, type = 'count')
-#plot(hclust(dist(som.out108$codes)))
-
-# seeds 220
-
-
-set.seed(2220)
-out.grid108=somgrid(xdim = 12, ydim=9, topo = "rectangular")
-som.out108=som(dat.som, grid = out.grid108, rlen = 1000)
-# dat$somOut.108=som.out108$unit.classif
-somOut.108=som.out108$unit.classif
-class.cuts108=cutree(hclust(dist(som.out108$codes)),3)
-
-ones108=which(class.cuts108==1)
-twos108=which(class.cuts108==2)
-threes108=which(class.cuts108==3)
-
-classify.cuts=function(in.cut){
-    if(in.cut %in% ones108){
-      out.class="C1"
-    }  else if (in.cut %in% twos108){
-      out.class="C3"
-    } else {out.class="C2"}
-  return(out.class)
-}
-
-
-class.som108=c()
+hcluster.factor2=c()
 for(i in 1:2495){
-  class.som108[i]=classify.cuts(som.out108$unit.classif[i])
+  if(sub_grp2[i]==1){
+    hcluster.factor2[i]="C3"
+  } else if(sub_grp2[i]==2){
+    hcluster.factor2[i]="C1"
+  } else{hcluster.factor2[i]="C2"}
 }
-
-dat$class.som108=as.factor(class.som108)
-
-table.som108=dat %>% group_by(class.som108) %>% tally()
-table.som108
+dat$hcluster.factor2=hcluster.factor2
 
 
-plot(som.out108, type = 'codes', bgcol = rainbow(3)[class.cuts108])
-add.cluster.boundaries(som.out108, class.cuts108)
+table.hclust.factor2 = dat %>% group_by(hcluster.factor2) %>% tally()
+table.hclust.factor2
 
-mean.total.table=aggregate(x=dat$qTot,
-                  by=list(som.out108[["unit.classif"]]),
-                  FUN=mean)
-
-median.total.table=aggregate(x=dat$qTot,
-                             by=list(som.out108[["unit.classif"]]),
-                              FUN=median)
-
-
-#-------------------------------------------------------------------------#
-#good seeds: 3, 1110
-
-set.seed(1110)
-out.grid=somgrid(xdim = 15, ydim= 15, topo = "hexagonal")
-
-som.out=som(dat.som, grid = out.grid,
-            rlen=1000)
-# dat$somOut=som.out$unit.classif
-somOut=som.out$unit.classif
-class.cuts=cutree(hclust(dist(som.out$codes)),3)
-
-ones=  which(class.cuts==1)
-twos=  which(class.cuts==2)
-threes=which(class.cuts==3)
-
-classify.cuts1515=function(in.cut){
-  if(in.cut %in% ones){
-    out.class="C1"
-  }  else if (in.cut %in% twos){
-    out.class="C3"
-  } else {out.class="C2"}
-  return(out.class)
-}
-
-class.som=c()
-for(i in 1:2495){
-  class.som[i]=classify.cuts1515(som.out$unit.classif[i])
-}
-
-dat$class.som=as.factor(class.som)
-
-table.som=dat %>% group_by(class.som) %>% tally()
-table.som
-
-plot(som.out, type = 'codes', bgcol = rainbow(3)[class.cuts])
-add.cluster.boundaries(som.out, class.cuts)
-plot(som.out, type = 'changes')
-
-mean.total.table=aggregate(x=dat$qTot,
-                           by=list(som.out[["unit.classif"]]),
-                           FUN=mean)
-
-median.total.table=aggregate(x=dat$qTot,
-                             by=list(som.out[["unit.classif"]]),
-                             FUN=median)
 
 
 
@@ -413,15 +324,15 @@ pscore.i=list()
 tradit.i=list()
 kmeans.i=list()
 hclust.i=list()
-som108.i=list()
-sommap.i=list()
+#som108.i=list()
+#sommap.i=list()
 for(i in 1:sample.length){
   pscore.i.j=c()
   tradit.i.j=c()
   kmeans.i.j=c()
   hclust.i.j=c()
-  som108.i.j=c()
-  sommap.i.j=c()
+  #som108.i.j=c()
+  #sommap.i.j=c()
   for(j in 1:N.j[i]){
     pscore.i.j=append(pscore.i.j,
                       boot.sample.i[[i]][[2]][[j]][["pscore.factor"]])
@@ -429,29 +340,27 @@ for(i in 1:sample.length){
                       boot.sample.i[[i]][[2]][[j]][["SupOutString"]])
     kmeans.i.j=append(kmeans.i.j,
                       boot.sample.i[[i]][[2]][[j]][["kmeans.factor"]])
-    hclust.i.j=append(hclust.i.j,
-                      boot.sample.i[[i]][[2]][[j]][["hcluster.factor"]])
-    som108.i.j=append(som108.i.j,
-                      as.character(boot.sample.i[[i]][[2]][[j]][["class.som108"]]))
-    sommap.i.j=append(sommap.i.j,
-                      as.character(boot.sample.i[[i]][[2]][[j]][["class.som"]]))
+    hclust.i.j=append(hclust.i.j,boot.sample.i[[i]][[2]][[j]][["hcluster.factor"]])
+    #som108.i.j=append(som108.i.j,as.character(boot.sample.i[[i]][[2]][[j]][["class.som108"]]))
+    #sommap.i.j=append(sommap.i.j,
+                      #as.character(boot.sample.i[[i]][[2]][[j]][["class.som"]]))
   }
   pscore.i[[i]]=pscore.i.j
   tradit.i[[i]]=tradit.i.j
   kmeans.i[[i]]=kmeans.i.j
   hclust.i[[i]]=hclust.i.j
-  som108.i[[i]]=som108.i.j
-  sommap.i[[i]]=sommap.i.j
+  #som108.i[[i]]=som108.i.j
+  #sommap.i[[i]]=sommap.i.j
 }
 
 acc.pscore.kmeans=c()
 acc.tradit.kmeans=c()
 acc.pscore.hclust=c()
 acc.tradit.hclust=c()
-acc.pscore.som108=c()
-acc.tradit.som108=c()
-acc.pscore.sommap=c()
-acc.tradit.sommap=c()
+#acc.pscore.som108=c()
+#acc.tradit.som108=c()
+#acc.pscore.sommap=c()
+#acc.tradit.sommap=c()
 length.train=c()
 
 for(i in 1:sample.length){
@@ -462,11 +371,11 @@ for(i in 1:sample.length){
   acc.tradit.hclust[i]=length(which(hclust.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
 
 
-  acc.pscore.som108[i]=length(which(som108.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som108[i]=length(which(som108.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
-
-  acc.pscore.sommap[i]=length(which(sommap.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.sommap[i]=length(which(sommap.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+  # acc.pscore.som108[i]=length(which(som108.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  # acc.tradit.som108[i]=length(which(som108.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
+  #
+  # acc.pscore.sommap[i]=length(which(sommap.i[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  # acc.tradit.sommap[i]=length(which(sommap.i[[i]]==tradit.i[[i]]))/length(tradit.i[[i]])
 
   length.train[i]=dim(boot.sample.i[[i]][[1]][[1]])[1]
 }
@@ -476,20 +385,21 @@ accuracy.df=data.frame(length.train,
                        acc.tradit.kmeans,
                        acc.pscore.hclust,
                        acc.tradit.hclust,
-                       acc.pscore.som108,
-                       acc.tradit.som108,
-                       acc.pscore.sommap,
-                       acc.tradit.sommap)
+                       # acc.pscore.som108,
+                       # acc.tradit.som108,
+                       # acc.pscore.sommap,
+                       # acc.tradit.sommap
+                       )
 
 p=ggplot(accuracy.df, aes(x=length.train))+
   geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=18)+
   geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=15)+
   geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=18)+
   geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=15)+
-  geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=18)+
-  geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=15)+
-  geom_point(aes(y=acc.pscore.sommap,     color="seagreen"), shape=18)+
-  geom_point(aes(y=acc.tradit.sommap,  color="saddlebrown"), shape=15)+
+  #geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=18)+
+  #geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=15)+
+  #geom_point(aes(y=acc.pscore.sommap,     color="seagreen"), shape=18)+
+  #geom_point(aes(y=acc.tradit.sommap,  color="saddlebrown"), shape=15)+
   theme(legend.position = "none")
 p
 
