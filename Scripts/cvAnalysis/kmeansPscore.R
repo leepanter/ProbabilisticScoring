@@ -314,7 +314,7 @@ median.total.table=aggregate(x=dat$qTot,
 # Kmeans CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-number.samples=25
+number.samples=100
 sample.length=number.samples+2
 df.set.info=df.train.set.info
 colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")

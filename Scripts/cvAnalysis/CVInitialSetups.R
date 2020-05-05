@@ -188,29 +188,102 @@ k.training.values=sort(df.train.set.info$df.k.sets.train)[1:10]
 
 df.set.info=data.frame(k, len.train, len.test)
 
-# p=ggplot(df.set.info, aes(x=k))+
-#   geom_point(aes(y=len.train), color="tan4")+
-#   geom_point(aes(y=len.test), color="tomato")
-# p
-#
-# p=ggplot(df.train.set.info, aes(x=df.k.sets.train))+
-#   geom_point(aes(y=N.obs.training.set))+
-#   xlim(0,2500)+
-#   geom_hline(yintercept = 1996, color="blue")+
-#   geom_vline(xintercept = 5, color="blue")+
-#   geom_hline(yintercept = 2320, color="red")+
-#   geom_vline(xintercept=233, color="red")
-# p
-#
-#
-# p=ggplot(df.test.set.info, aes(x=df.k.sets.test))+
-#   geom_point(aes(y=N.obs.testing.set))+
-#   xlim(0,2500)+
-#   geom_hline(yintercept = 499, color="blue")+
-#   geom_vline(xintercept = 5, color="blue")+
-#   geom_hline(yintercept = 10, color="red")+
-#   geom_vline(xintercept=233, color="red")
-# p
+df.temp=df.set.info
+
+df.temp.ones=subset(df.temp, len.test==1)
+(min.k.one=df.temp.ones[which.min(df.temp.ones$k),])
+(max.k.one=df.temp.ones[which.max(df.temp.ones$k),])
+
+df.temp.twos=subset(df.temp, len.test==2)
+(min.k.two=df.temp.twos[which.min(df.temp.twos$k),])
+(max.k.two=df.temp.twos[which.max(df.temp.twos$k),])
+
+
+
+p=ggplot(df.set.info, aes(x=k))+
+  geom_point(aes(y=len.train),
+             color="darkslategrey")+
+  geom_point(aes(y=len.test),
+             color="cornflowerblue")+
+  geom_segment(aes(x=0, xend=832, y=1662, yend=1662,
+                   color="darkgoldenrod",
+                   linetype="twodash"))+
+  geom_segment(aes(x=832, xend=832, y=2, yend=1662,
+                   color="darkgoldenrod",
+                   linetype="twodash"))+
+  geom_point(aes(x=832, y=1662,
+                 color="darkgoldenrod"))+
+  geom_point(aes(x=0, y=1662,
+                 color="darkgoldenrod"))+
+  geom_point(aes(x=832, y=2,
+                 color="darkgoldenrod"))+
+  geom_segment(aes(x=0, xend=832, y=1662, yend=1662,
+                   color="darkgoldenrod",
+                   linetype="twodash"))+
+  geom_segment(aes(x=1247, xend=1247, y=1249, yend=2492,
+                   color="darkgoldenrod",
+                   linetype="twodash"))+
+  geom_segment(aes(x=0, xend=1247, y=2492, yend=2492,
+                   color="darkgoldenrod",
+                   linetype="twodash"))+
+  geom_point(aes(x=1247, y=2492,color="darkgoldenrod"))+
+  geom_point(aes(x=0, y=2492,color="darkgoldenrod"))+
+  geom_point(aes(x=1247, y=0,color="darkgoldenrod"))+
+
+  geom_segment(aes(x=0, xend=1248, y=1247, yend=1247,
+                   color="firebrick",
+                   linetype="longdash"))+
+  geom_segment(aes(x=2490, xend=2490, y=1, yend=2489,
+                   color="firebrick",
+                   linetype="longdash"))+
+  geom_point(aes(x=2490, y=2489,
+                 color="firebrick"))+
+  geom_point(aes(x=0, y=2489,
+                 color="firebrick"))+
+  geom_point(aes(x=1248, y=1,
+                 color="firebrick"))+
+  geom_segment(aes(x=0, xend=1248, y=1247, yend=1247,
+                   color="firebrick",
+                   linetype="longdash"))+
+  geom_segment(aes(x=1248, xend=2490, y=2489, yend=2489,
+                   color="firebrick",
+                   linetype="longdash"))+
+  geom_segment(aes(x=1248, xend=1248, y=1, yend=1247,
+                   color="firebrick",
+                   linetype="longdash"))+
+  geom_point(aes(x=2490, y=2489,color="firebrick"))+
+  geom_point(aes(x=2490, y=0,color="firebrick"))+
+  geom_point(aes(x=1248, y=1247,color="firebrick"))+
+  geom_point(aes(x=0, y=1247,color="firebrick"))+
+  geom_point(aes(x=0, y=1,color="firebrick"))+
+  geom_point(aes(x=0, y=2,color="darkgoldenrod"))+
+  ylab("Number of Observations in Set")+
+  theme(legend.position = "none")
+
+
+
+p
+
+
+
+p=ggplot(df.train.set.info, aes(x=df.k.sets.train))+
+  geom_point(aes(y=N.obs.training.set))+
+  xlim(0,2500)+
+  geom_hline(yintercept = 1996, color="blue")+
+  geom_vline(xintercept = 5, color="blue")+
+  geom_hline(yintercept = 2320, color="red")+
+  geom_vline(xintercept=233, color="red")
+p
+
+
+p=ggplot(df.test.set.info, aes(x=df.k.sets.test))+
+  geom_point(aes(y=N.obs.testing.set))+
+  xlim(0,2500)+
+  geom_hline(yintercept = 499, color="blue")+
+  geom_vline(xintercept = 5, color="blue")+
+  geom_hline(yintercept = 10, color="red")+
+  geom_vline(xintercept=233, color="red")
+p
 
 k.final=sort(df.train.set.info$df.k.sets.train)[1:100]
 df.train.set.info=df.train.set.info[order(df.train.set.info$df.k.sets.train),]
@@ -224,10 +297,12 @@ df.k.final=data.frame(k.final, N.obs.train.final, N.obs.test.final)
 colnames(df.k.final)=c("k", "N.obs.train", "N.obs.test")
 
 
-# p=ggplot(df.k.final, aes(x=k))+
-#   geom_point(aes(y=N.obs.train), color="tan4")+
-#   geom_point(aes(y=N.obs.test), color="tomato")
-# p
+p=ggplot(df.k.final, aes(x=k))+
+  geom_point(aes(y=N.obs.train), color="darkslategrey")+
+  geom_point(aes(y=N.obs.test), color="cornflowerblue")+
+  geom_hline(yintercept = 1, color="red")+
+  geom_vline(xintercept = 1247, color="red")
+p
 
 
 #-------------------------------------------------------------------------#
