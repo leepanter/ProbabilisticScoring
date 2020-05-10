@@ -398,7 +398,7 @@ X.3.4.9=c()
 
 # var.weight.i[[Nsetval]][[class]][[response]][[qnumber]]
 
-for(i in 1:n.minus.one+1){
+for(i in 1:sample.length){
   X.1.2.3[i]=var.weight.i[[i]][[1]][[2]][3]
   X.1.2.6[i]=var.weight.i[[i]][[1]][[2]][6]
   X.1.2.9[i]=var.weight.i[[i]][[1]][[2]][9]
@@ -437,7 +437,7 @@ df.var.X=data.frame(rbind(X.1.2.3,
                           X.3.4.6,
                           X.3.4.9))
 
-colnames(df.var.X)=N.set.arg
+colnames(df.var.X)=length.train.boot.weights
 class.id=c(rep("1", times=6),
            rep("2", times=6),
            rep("3", times=6))
@@ -448,24 +448,11 @@ df.var.X$response=response
 df.var.X$qnum=qnum
 df.var.re=melt(df.var.X, id=c("class.id","response","qnum"))
 colnames(df.var.re)=c("class.id", "response", "qnum", "train.count", "variation")
+df.var.re=df.var.re[order(df.var.re$train.count),]
 p=ggplot(df.var.re, aes(x=train.count, y=variation))+
-  geom_point(aes(shape=class.id, color=qnum))+
-  geom_line()
+   geom_point(aes(shape=class.id, color=qnum))
 p
 
-
-# We will now classify new observations based upon the weights generated on various sample sizes
-
-subject.evaluated.sequence=list()
-for(i in 1:sample.length){
-  subject.evaluated.sequence.Nsetarg=list()
-  for(j in 1:N.set.arg[i]){
-
-  }
-
-
-    EvalSeqSubject(mean.weight.i[[i]], boot.sample.test.i, boot.sample.Nset.i[[i]])
-}
 
 #-------------------------------------------------------------------------#
 ####	End Script	 ####

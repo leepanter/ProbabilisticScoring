@@ -12,6 +12,7 @@ library(tidyverse)
 library(cluster)
 library(dendextend)
 library(ggplot2)
+library(ape)
 # packageurl <- "https://cran.r-project.org/src/contrib/Archive/kohonen/kohonen_2.0.19.tar.gz"
 # install.packages(packageurl, repos = NULL, type = "source")
 # library(kohonen)
@@ -176,9 +177,16 @@ fviz_cluster(k.means.out, data = dat.kmeans)
 
 d=dist(dat.kmeans)
 hc1=hclust(d, method = "complete")
+plot(as.phylo(hc1), type = "unrooted", cex = 0.6, no.margin = TRUE)
 # plot(hc1)
 sub_grp=cutree(hc1, k=3)
 table(sub_grp)
+colors = c("red", "blue", "green")
+plot(as.phylo(hc1),
+     type = "fan",
+     tip.color = colors[sub_grp],
+     cex = 0.7)
+
 
 dat=dat %>%
   mutate(hcluster = sub_grp)
@@ -197,11 +205,21 @@ dat$hcluster.factor=hcluster.factor
 table.hclust.factor = dat %>% group_by(hcluster.factor) %>% tally()
 table.hclust.factor
 
+plot(as.phylo(hc), type = "unrooted", cex = 0.6,
+     no.margin = TRUE)
+
 # Hcluster #2 ------------------------------------------------------------#
 d2=dist(dat.kmeans, method="manhattan")
 hc2=hclust(d2, method = "complete")
 sub_grp2=cutree(hc2, k=3)
 table(sub_grp2)
+
+colors = c("red", "blue", "green")
+plot(as.phylo(hc2),
+     type = "fan",
+     tip.color = colors[sub_grp2],
+     cex = 0.7)
+
 
 hcluster.factor2=c()
 for(i in 1:2495){

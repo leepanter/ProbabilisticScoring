@@ -264,7 +264,7 @@ Implying that the some observations may be left out of the CV process.
 - Accuracy comparisons of Probabilistic Scoring and Traditional Scoring classifications were obtained on 100 different values of K using the CV algorithm previously outlined.
 - The simulated outcome generated using this method was implemented in the process to obtain the optimal convergence confidence level in section 2.3
   
-### Probabilistic Algorithm Simmulations
+### Probabilistic Outcome Simmulations
 - Motivating Principle: The Pscoring algorithm incorperates more information contained in the data than anything else, therefore it should generate the most appropriate estimates
 - Motivating Principle: The Pscoring algorithm can estimate multiple amounts of inherently different estimates for the same observations based upon different training sets. 
 - The process:
@@ -287,37 +287,174 @@ Implying that the some observations may be left out of the CV process.
     \end{eqnarray*}
 - The method makes the assumption that estimates of average weights are stable enough to produce reasonably consistent estimates
 - \textbf{Figure 3:}
-- ![](variance plot.jpeg)
+- ![](VariancePlot.jpg)
 - \textbf{ Figure 3 Caption:} Variance of average weight values for several question number/class ID combinations plotted against training data count length
 - \textbf{Figure 4:}
-- ![](mean plot.jpeg)
+- ![](MeanPlot.jpg)
 - \textbf{Figure 4 Caption:} Mean value of the average weight estimates for several question number/class ID combinations plotted against training data count length
-<!-- - It is important to realize that training sample length has a slightly different definition from those training sets defined in the ordinary CV algorithm -->
 - Stability of the average estimate value, as training sample increases, in combination with a dramatic decrease in variance as training sample size increases are indications that the average weight values are capable of producing stable outcome estimates
   
 
 ### Unsupervised Learning Classifications
 
-- Using unsupervised learning techniques to gather trends in 
+- Using unsupervised learning techniques to deduce trends in the PHQ9 is a powerful tool 
+- The general algorithm we will exploit in the following fitting processes
+  - Use an unsupervised method to cluster PHQ9 observations, preferably make as few assumptions as possible
+  - Use the hierarchical aspects of the outcome classes (the fact that Depression classifications increase in magnitude) to group clusters into three clusters representing a simulated outcome classification for the observations contained within the cluster.
+  - Input the simulated outcome classifications into the CV algorithm and obtain estimates for both Traditional Scoring and Probabilistic Scoring accuracies
 
-#### Kmeans 
+#### Kmeans and Heirarchical Clustering
+
+- Kmeans
+  - The proper number of clusters in the Kmeans algorithm can be determined with the use of an elbow plot
+  - \textbf{Figure 4:}
+  - ![](ElbowPlot.jpeg)
+  - \textbf{Figure 4 Caption:} A plot depicting the total within sum of squares vs the number of clusters chosen for the algorithm
+  - The elbow plot demonstrates that the data has a natural tendency to form three clusters, and therefore, no intermediate mapping is necessary.
+
+- Hierarchical Clustering
+  - A similar process was completed using two approached to Hierarchical clustering
+  - The first distinguishes observations based upon Euclidean distance.  A circular dendogram, with corresponding classifications is displayed in \textbf{Figure 5} [@STHDA_2020]
+  - \textbf{Figure 5:}
+  - ![](Hclust1Dend.jpeg){width=25%}
+  - \textbf{Figure 5 Caption:} Circular dendogram with three-category classifications
+  - The second heirarchical clustering technique distinguishes observations based upon Manhattan distance.  A circular dendogram, with corresponding classifications is displayed in \textbf{Figure 6} [@STHDA_2020]
+  - \textbf{Figure 6:}
+  - ![](Hclust2Dend.jpeg){width=25%}
+  - \textbf{Figure 6 Caption:} Circular dendogram with three-category classifications
 
 
-  
-\textbf{Assumptions of the method, including experimental design and target population}
+#### Self Organizing Maps
 
-\textbf{Were any pre-filtering or pre-processing steps applied to the data?}
+- Self-organizing maps (SOMs) require a pre-specified structure (generally a lattice structure) to which observations are clustered based upon projected proximity 
+- Some advantages of using a SOM over Kmeans, or Principle Components Analysis are:
+  - Non-linearity. The SOM algorithm has no underlying assumptions restricting model structure
+  - Topological preservation. SOMs preserve ordering properties found in higer dimentsions, when mapped to the projection space, therefore order (hierarchy) is preserved
+  - Inferential potential.  SOM visualization methods are extremely useful and meaningful.
+- SOMs have standard pre-processing procedures that dictate standardization of observations prior to training.
+- Three SOMs lattice structures were fit in this analysis.  Each of these lattice structures was also fit with both the Euclidean and Manhattan metrics that determine the relationship between mapped observations in the projection space.
+- The SOM lattice Structures implemented are:
+  - 12 X 9 rectangular topology
+  - 15 X 15 heagonal topology
+  - 3 X 9 rectangular topology
+- Plots of each of these mappings are found in \textbf{Figures  - }
 
-***
+
+- \textbf{Figure 7:}
+
+\begin{center}
+  \includegraphics[width=0.25\textwidth]{KeySom.jpeg}
+\end{center}
+- \textbf{Figure 7 Caption}: Color coding key for question magnitude representation within each output lattice cluster
+
+
+- \textbf{Figure 8:}
+- ![](Som1.jpg){width=25%}
+- \textbf{Figure 8 Caption: Euclidean Norm, 12 X 9-rectangular topology SOM}
+
+<!-- - \textbf{Figure 9:} -->
+<!-- - ![](Som1tx.jpg){width=25%} -->
+<!-- - \textbf{Figure 9 Caption: Manhattan Norm, 12 X 9-rectangual topology SOM} -->
+
+<!-- - \textbf{Figure 10:} -->
+<!-- - ![](Som2.jpg){width=25%} -->
+<!-- - \textbf{Figure 10 Caption: Euclidean Norm, 15 X 15-hexagonal topology SOM} -->
+
+<!-- - \textbf{Figure 11:} -->
+<!-- - ![](Som2tx.jpg){width=25%} -->
+<!-- - \textbf{Figure 11 Caption: Manhattan Norm, 15 X 15-hexagonal topology SOM} -->
+
+<!-- - \textbf{Figure 12:} -->
+<!-- - ![](Som3.jpg){width=25%} -->
+<!-- - \textbf{Figure 12 Caption: Euclidean Norm, 3 X 9-rectangular topology SOM} -->
+
+<!-- - \textbf{Figure 13:} -->
+<!-- - ![](Som3tx.jpg){width=25%} -->
+<!-- - \textbf{Figure 13 Caption: Manhattan Norm, 3 X 9-rectangual topology SOM} -->
+
+*** 
 
 # Analysis and Results
 
-- \textbf{Results of analysis conducted}
-- \textbf{Interpretations and "walk-throughs" of results \& findings}
+## Inferential Outcome Simulation
+
+- \textbf{Figure XX:}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{Sup1Graph.jpg}
+\end{center}
+- \textbf{Figure XX Caption:} displays estimated accuracy values for probabilistic scoring classifications and traditional scoring classifications across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+- \textbf{Table 1:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  8.844e-1 &  2.902e-2  &  3.048e1  & <2e-16   \\                             
+\hline
+ID = Pscore                    & -1.409e-1 &  4.104e-2  & -3.433e0  & 8.840e-4 \\
+\hline
+\#Train Obs                    &  1.019e-6 &  1.197e-5  &  8.850e-2 & 9.323e-1 \\
+\hline
+(ID = Pscore):(\#Train Obs) &  1.020e-5 &  1.692e-5  &  6.030e-1 & 5.481e-1 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table 1 Caption:} summary table for linear regrssion trend lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+
+- After simulating an outcome using the Inferential Simulation method outlined in section (2.4.1) we compared the accuracy of probabilistic scoring and traditional scoring classification methods against this outcome for 50 different definitions of training sample length.
+- The results of this comparison show that traditional scoring classification is more accurate than probabilistic scoring for all values simmulated
+- The results indicated that probabilistic scoring accuracy grew at a faster rate than traditional scoring accuracy; howvever these results lacked significance (p=0.5581)
+
+
+## Probabilistic Simulations
+
+- \textbf{Figure XX:}
+\begin{center}
+  \includegraphics[width=0.5\textwidth]{Sup2Graph.jpg}
+\end{center}
+- \textbf{Figure XX Caption:} displays estimated accuracy values for probabilistic scoring classifications and traditional scoring classifications across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+- \textbf{Table 1:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  8.864e-1 &  2.503e-2  &  3.541e1  & <2e-16   \\                             
+\hline
+ID = Traditional               & -8.453e-2 &  3.540e-2  & -2.388e0  & 1.891e-2 \\
+\hline
+\#Train Obs                    &  3.026e-5 &  1.032e-5  &  2.932e0  & 4.210e-3 \\
+\hline
+(ID = Traditional):(\#Train Obs) &  -2.956e-5 &  1.460e-5  &  -2.025e0 & 4.562e-2 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table 1 Caption:} summary table for linear regrssion trend lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+
+- After simulating an outcome using the Probabilistic Simulation method outlined in section (2.4.2) we compared the accuracy of probabilistic scoring and traditional scoring classification methods against this outcome for 50 different definitions of training sample length.
+- The results of this comparison show that probabilistic scoring classification is more accurate than traditional scoring for all values simmulated
+- The results indicated that probabilistic scoring accuracy grew at a faster rate than traditional scoring accuracy, and that this effect is supported by evidence in the data simulated (p=0.00421)
+
+
+
+
+
+
+
+
+<!-- - \textbf{Results of analysis conducted} -->
+<!-- - \textbf{Interpretations and "walk-throughs" of results \& findings} -->
 
 ***
 
 # Discussion
+
+
+
 
 - \textbf{Discussion of Results (separate from Results section)}
 - \textbf{Have you addressed your client's goals?}

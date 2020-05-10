@@ -25,7 +25,6 @@ p=ggplot(dat.temp, aes(x=SumofAnswers))+
 
 p
 
-
 number.samples=100
 sample.length=number.samples+2
 df.set.info=df.train.set.info
@@ -105,7 +104,9 @@ pHclust=ggplot(df.in1, aes(x=TrainLen))+
 
 pHclust
 
-
-
-
-str(df.in)
+df.temp=data.frame(k, len.train, len.test)
+twos=which(df.temp$len.test==2)
+y.min.two=df.temp$len.train[min(twos)]
+x.min.two=df.temp$k[min(twos)]
+y.max.two=df.temp$len.train[max(twos)]
+x.max.two=df.temp$k[max(twos)]

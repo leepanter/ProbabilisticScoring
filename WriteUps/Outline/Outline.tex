@@ -762,7 +762,7 @@ Simmulations}\label{probabilistic-algorithm-simmulations}}
 \item
   \textbf{Figure 3:}
 \item
-  \includegraphics{variance plot.jpeg}
+  \includegraphics{VariancePlot.jpg}
 \item
   \textbf{ Figure 3 Caption:} Variance of average weight values for
   several question number/class ID combinations plotted against training
@@ -770,11 +770,11 @@ Simmulations}\label{probabilistic-algorithm-simmulations}}
 \item
   \textbf{Figure 4:}
 \item
-  \includegraphics{mean plot.jpeg}
+  \includegraphics{MeanPlot.jpg}
 \item
   \textbf{Figure 4 Caption:} Mean value of the average weight estimates
   for several question number/class ID combinations plotted against
-  training data count length 
+  training data count length
 \item
   Stability of the average estimate value, as training sample increases,
   in combination with a dramatic decrease in variance as training sample
@@ -789,27 +789,253 @@ Classifications}\label{unsupervised-learning-classifications}}
 \begin{itemize}
 \tightlist
 \item
-  Using unsupervised learning techniques to gather trends in
+  Using unsupervised learning techniques to deduce trends in the PHQ9 is
+  a powerful tool
+\item
+  The general algorithm we will exploit in the following fitting
+  processes
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Use an unsupervised method to cluster PHQ9 observations, preferably
+    make as few assumptions as possible
+  \item
+    Use the hierarchical aspects of the outcome classes (the fact that
+    Depression classifications increase in magnitude) to group clusters
+    into three clusters representing a simulated outcome classification
+    for the observations contained within the cluster.
+  \item
+    Input the simulated outcome classifications into the CV algorithm
+    and obtain estimates for both Traditional Scoring and Probabilistic
+    Scoring accuracies
+  \end{itemize}
 \end{itemize}
 
-\hypertarget{kmeans}{%
-\paragraph{Kmeans}\label{kmeans}}
+\hypertarget{kmeans-and-heirarchical-clustering}{%
+\paragraph{Kmeans and Heirarchical
+Clustering}\label{kmeans-and-heirarchical-clustering}}
 
-\textbf{Assumptions of the method, including experimental design and target population}
+\begin{itemize}
+\tightlist
+\item
+  Kmeans
 
-\textbf{Were any pre-filtering or pre-processing steps applied to the data?}
+  \begin{itemize}
+  \tightlist
+  \item
+    The proper number of clusters in the Kmeans algorithm can be
+    determined with the use of an elbow plot
+  \item
+    \textbf{Figure 4:}
+  \item
+    \includegraphics{ElbowPlot.jpeg}
+  \item
+    \textbf{Figure 4 Caption:} A plot depicting the total within sum of
+    squares vs the number of clusters chosen for the algorithm
+  \item
+    The elbow plot demonstrates that the data has a natural tendency to
+    form three clusters, and therefore, no intermediate mapping is
+    necessary.
+  \end{itemize}
+\item
+  Hierarchical Clustering
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A similar process was completed using two approached to Hierarchical
+    clustering
+  \item
+    The first distinguishes observations based upon Euclidean distance.
+    A circular dendogram, with corresponding classifications is
+    displayed in \textbf{Figure 5} {[}5{]}
+  \item
+    \textbf{Figure 5:}
+  \item
+    \includegraphics[width=0.25\textwidth,height=\textheight]{Hclust1Dend.jpeg}
+  \item
+    \textbf{Figure 5 Caption:} Circular dendogram with three-category
+    classifications
+  \item
+    The second heirarchical clustering technique distinguishes
+    observations based upon Manhattan distance. A circular dendogram,
+    with corresponding classifications is displayed in \textbf{Figure 6}
+    {[}5{]}
+  \item
+    \textbf{Figure 6:}
+  \item
+    \includegraphics[width=0.25\textwidth,height=\textheight]{Hclust2Dend.jpeg}
+  \item
+    \textbf{Figure 6 Caption:} Circular dendogram with three-category
+    classifications
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{self-organizing-maps}{%
+\paragraph{Self Organizing Maps}\label{self-organizing-maps}}
+
+\begin{itemize}
+\item
+  Self-organizing maps (SOMs) require a pre-specified structure
+  (generally a lattice structure) to which observations are clustered
+  based upon projected proximity
+\item
+  Some advantages of using a SOM over Kmeans, or Principle Components
+  Analysis are:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Non-linearity. The SOM algorithm has no underlying assumptions
+    restricting model structure
+  \item
+    Topological preservation. SOMs preserve ordering properties found in
+    higer dimentsions, when mapped to the projection space, therefore
+    order (hierarchy) is preserved
+  \item
+    Inferential potential. SOM visualization methods are extremely
+    useful and meaningful.
+  \end{itemize}
+\item
+  SOMs have standard pre-processing procedures that dictate
+  standardization of observations prior to training.
+\item
+  Three SOMs lattice structures were fit in this analysis. Each of these
+  lattice structures was also fit with both the Euclidean and Manhattan
+  metrics that determine the relationship between mapped observations in
+  the projection space.
+\item
+  The SOM lattice Structures implemented are:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    12 X 9 rectangular topology
+  \item
+    15 X 15 heagonal topology
+  \item
+    3 X 9 rectangular topology
+  \end{itemize}
+\item
+  Plots of each of these mappings are found in \textbf{Figures  - }
+\item
+  \textbf{Figure 7:}
+\end{itemize}
+
+\begin{center}
+  \includegraphics[width=0.25\textwidth]{KeySom.jpeg}
+\end{center}
+
+\begin{itemize}
+\item
+  \textbf{Figure 7 Caption}: Color coding key for question magnitude
+  representation within each output lattice cluster
+\item
+  \textbf{Figure 8:}
+\item
+  \includegraphics[width=0.25\textwidth,height=\textheight]{Som1.jpg}
+\item
+  \textbf{Figure 8 Caption: Euclidean Norm, 12 X 9-rectangular topology SOM}
+\end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \hypertarget{analysis-and-results}{%
 \section{Analysis and Results}\label{analysis-and-results}}
 
+\hypertarget{inferential-outcome-simulation}{%
+\subsection{Inferential Outcome
+Simulation}\label{inferential-outcome-simulation}}
+
 \begin{itemize}
-\tightlist
 \item
-  \textbf{Results of analysis conducted}
+  \textbf{Figure XX:}
+
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{Sup1Graph.jpg}
+  \end{center}
 \item
-  \textbf{Interpretations and "walk-throughs" of results \& findings}
+  \textbf{Figure XX Caption:} displays estimated accuracy values for
+  probabilistic scoring classifications and traditional scoring
+  classifications across 50 values of training set definitions. Also
+  plotted are Linear Regression trend lines for each estimation method's
+  accuracy estimates.
+\item
+  \textbf{Table 1:}
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+  \hline
+  \hline
+  Intercept                      &  8.844e-1 &  2.902e-2  &  3.048e1  & <2e-16   \\                             
+  \hline
+  ID = Pscore                    & -1.409e-1 &  4.104e-2  & -3.433e0  & 8.840e-4 \\
+  \hline
+  \#Train Obs                    &  1.019e-6 &  1.197e-5  &  8.850e-2 & 9.323e-1 \\
+  \hline
+  (ID = Pscore):(\#Train Obs) &  1.020e-5 &  1.692e-5  &  6.030e-1 & 5.481e-1 \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \textbf{Table 1 Caption:} summary table for linear regrssion trend
+  lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+\item
+  After simulating an outcome using the Inferential Simulation method
+  outlined in section (2.4.1) we compared the accuracy of probabilistic
+  scoring and traditional scoring classification methods against this
+  outcome for 50 different definitions of training sample length.
+\item
+  The results of this comparison show that traditional scoring
+  classification is more accurate than probabilistic scoring for all
+  values simmulated
+\item
+  The results indicated that probabilistic scoring accuracy grew at a
+  faster rate than traditional scoring accuracy; howvever these results
+  lacked significance (p=0.5581)
+\end{itemize}
+
+\hypertarget{probabilistic-simulations}{%
+\subsection{Probabilistic Simulations}\label{probabilistic-simulations}}
+
+\begin{itemize}
+\item
+  \textbf{Figure XX:}
+
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{Sup2Graph.jpg}
+  \end{center}
+\item
+  \textbf{Figure XX Caption:} displays estimated accuracy values for
+  probabilistic scoring classifications and traditional scoring
+  classifications across 50 values of training set definitions. Also
+  plotted are Linear Regression trend lines for each estimation method's
+  accuracy estimates.
+\item
+  \textbf{Table 1:}
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+  \hline
+  \hline
+  Intercept                      &  8.864e-1 &  2.503e-2  &  3.541e1  & <2e-16   \\                             
+  \hline
+  ID = Traditional               & -8.453e-2 &  3.540e-2  & -2.388e0  & 1.891e-2 \\
+  \hline
+  \#Train Obs                    &  3.026e-5 &  1.032e-5  &  2.932e0  & 4.210e-3 \\
+  \hline
+  (ID = Traditional):(\#Train Obs) &  -2.956e-5 &  1.460e-5  &  -2.025e0 & 4.562e-2 \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \textbf{Table 1 Caption:} summary table for linear regrssion trend
+  lines fit to accuracy estimate values displayed in \textbf{Figure XX}
 \end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
@@ -868,6 +1094,9 @@ patient health questionnaire (phq) and gad-7 measures.
 \leavevmode\hypertarget{ref-kroenke16spitzer}{}%
 4. Kroenke K Spitzer, rl \& williams, jb (2001). The phq-9.
 \emph{Journal of General Internal Medicine} 16: 606--613.
+
+\leavevmode\hypertarget{ref-STHDA_2020}{}%
+5. (2020) \emph{Sthdacom}.
 
 
 \end{document}
