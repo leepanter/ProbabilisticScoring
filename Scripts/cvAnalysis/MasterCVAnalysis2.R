@@ -317,32 +317,33 @@ for(i in 1:sample.length){
 plot(accuracy.Sup3~length.train.boot.weights)
 plot(accuracy.trad~length.train.boot.weights)
 
-df=data.frame(length.boot.weights, accuracy.Sup3, accuracy.trad)
+df=data.frame(length.train.boot.weights, accuracy.Sup3, accuracy.trad)
 
 write.csv(df, file = "/Users/lee/Desktop/df_acc_100_sup2.csv")
 
-df2=read.csv(file = "/Users/lee/Desktop/df_acc_100_sup22.csv")
+#df2=read.csv(file = "/Users/lee/Desktop/df_acc_100_sup22.csv")
+df2=df
 str(df2)
 df2$ID=as.factor(df2$ID)
 colnames(df2)=c("TrainLength", "Accuracy", "Model")
-lmod=lm(Accuracy~TrainLength*Model, data=df2)
+
+zeros=rep(0, times=sample.length)
+ones=rep(1, times=sample.length)
+ID=c(zeros, ones)
+len.train=c(length.train.boot.weights,length.train.boot.weights)
+accuracy=c(accuracy.Sup3,accuracy.trad)
+df2=data.frame(len.train, as.factor(ID), accuracy)
+
+lmod=lm(accuracy~len.train*ID, data=df2)
 (lmods=summary(lmod))
 
-p=ggplot(df, aes(x=length.boot.weights))+
+p=ggplot(df, aes(x=length.train.boot.weights))+
   geom_point(aes(y=accuracy.Sup3))+
   geom_point(aes(y=accuracy.trad))+
   geom_abline(intercept = coef(lmod)[1], slope = coef(lmod)[2])+
   geom_abline(intercept = coef(lmod)[1]+coef(lmod)[3], slope = coef(lmod)[2]+coef(lmod)[4])
 p
 
-
-plot(accuracy.Sup3~length.boot.weights,
-     xlab="Training Data Length",
-     ylab = "Accuracy vs Probabilistically Outcom SUP2")
-abline(a=lmods$coefficients[1,1], b=lmods$coefficients[2,1])
-
-
-acc.trad=c()
 
 
 

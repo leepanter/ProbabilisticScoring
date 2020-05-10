@@ -64,7 +64,7 @@ boot.sample.i=list()
 
 df.set.info=df.k.final
 colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
-sample.length=25
+sample.length=50
 N.set.arg=sample(df.set.info$df.k.sets, sample.length, replace = FALSE)
 
 
