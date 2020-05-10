@@ -315,6 +315,10 @@ median.total.table3=aggregate(x=dat$qTot,
                              by=list(som.out3[["unit.classif"]]),
                              FUN=median)
 
+median.total.table3test=aggregate(x=dat$Q1,
+                              by=list(som.out3[["unit.classif"]]),
+                              FUN=median)
+median.total.table3test
 #-------------------------------------------------------------------------#
 ####  3X9 Mapping, with taxicab metric
 #-------------------------------------------------------------------------#
@@ -368,7 +372,7 @@ median.total.table3.tx=aggregate(x=dat$qTot,
 # SOM CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-number.samples=100
+number.samples=50
 sample.length=number.samples+2
 df.set.info=df.train.set.info
 colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
@@ -446,6 +450,21 @@ for(i in 1:sample.length){
   len.i[i]=length(boot.sample.i[[i]][[2]])
 }
 
+pscore.convert=function(in.arg){
+  out.arg=NA
+  if(is.na(in.arg)){
+    out.arg="NA"
+  } else {
+    if(in.arg==1){
+      out.arg="C2"
+    } else if(in.arg==2){
+      out.arg="C1"
+    } else {
+      out.arg="C3"
+    }
+  }
+  return(out.arg)
+}
 
 for(i in 1:sample.length){
   outcome.pscore.i=c()
@@ -523,18 +542,18 @@ length.train=c()
 
 
 for(i in 1:sample.length){
-  acc.pscore.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.pscore.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.pscore.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.pscore.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.pscore.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.pscore.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
-  acc.tradit.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))length(pscore.i[[i]])
+  acc.pscore.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.pscore.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.pscore.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.pscore.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.pscore.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.pscore.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
   length.train[i]=dim(boot.sample.i[[i]][[1]][[1]])[1]
 }
 
@@ -552,20 +571,61 @@ accuracy.df.som=data.frame(length.train,
                        acc.pscore.som3.tx,
                        acc.tradit.som3.tx)
 
-p=ggplot(accuracy.df, aes(x=length.train))+
-  geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=15)+
-  geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=18)+
-  geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=15)+
-  geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=18)+
-  geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=15)+
-  geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=18)+
-  geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=15)+
-  geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=18)+
-  geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=15)+
-  geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=18)+
-  geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=15)+
-  geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=18)+
+p1=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som1, color="firebrick"), shape=15)+
+  geom_point(aes(y=acc.pscore.som1, color="blue"), shape=18)+
+  theme(legend.position = "none")
+p1
+
+p1.tx=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som1.tx, color="hotpink4"), shape=15)+
+  geom_point(aes(y=acc.pscore.som1.tx, color="mediumpurple"), shape=18)+
+  theme(legend.position = "none")
+p1.tx
+
+p2=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som2, color="firebrick"), shape=15)+
+  #geom_point(aes(y=acc.pscore.som2, color="blue"), shape=18)+
+  geom_point(aes(y=acc.pscore.som2.tx, color="mediumpurple"), shape=18)+
+  theme(legend.position = "none")
+p2
+
+p2.tx=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som2.tx, color="hotpink4"), shape=15)+
+  geom_point(aes(y=acc.pscore.som2.tx, color="mediumpurple"), shape=18)+
+  theme(legend.position = "none")
+p2.tx
+
+p3=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som3, color="firebrick"), shape=15)+
+  #geom_point(aes(y=acc.pscore.som3, color="blue"), shape=18)+
+  geom_point(aes(y=acc.pscore.som3.tx, color="mediumpurple"), shape=18)+
+  theme(legend.position = "none")
+p3
+
+p3.tx=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som3.tx, color="hotpink4"), shape=15)+
+  geom_point(aes(y=acc.pscore.som3.tx, color="mediumpurple"), shape=18)+
+  theme(legend.position = "none")
+p3.tx
+
+
+
+p=ggplot(accuracy.df.som, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som1,    color="firebrick"), shape=15)+
+  geom_point(aes(y=acc.pscore.som1), shape=18)+
+  geom_point(aes(y=acc.tradit.som2,     color="hotpink4"), shape=15)+
+  geom_point(aes(y=acc.pscore.som2,     color="hotpink4"), shape=18)+
+  geom_point(aes(y=acc.tradit.som3,         color="blue"), shape=15)+
+  geom_point(aes(y=acc.pscore.som3,         color="blue"), shape=18)+
+  geom_point(aes(y=acc.tradit.som1.tx, color="mediumpurple"), shape=15)+
+  geom_point(aes(y=acc.pscore.som1.tx, color="mediumpurple"), shape=18)+
+  geom_point(aes(y=acc.tradit.som2.tx,      color="orchid2"), shape=15)+
+  geom_point(aes(y=acc.pscore.som2.tx,      color="orchid2"), shape=18)+
+  geom_point(aes(y=acc.tradit.som3.tx, color="deepskyblue4"), shape=15)+
+  geom_point(aes(y=acc.pscore.som3.tx, color="deepskyblue4"), shape=18)+
   theme(legend.position = "none")
 p
+
 
 

@@ -1,0 +1,873 @@
+\documentclass[12pt,]{article}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+\else % if luatex or xelatex
+  \ifxetex
+    \usepackage{mathspec}
+  \else
+    \usepackage{fontspec}
+  \fi
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\usepackage[margin=1.0in]{geometry}
+\usepackage{hyperref}
+\hypersetup{unicode=true,
+            pdftitle={Final Project Outline},
+            pdfauthor={Lee Panter},
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{5}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+%%% Use protect on footnotes to avoid problems with footnotes in titles
+\let\rmarkdownfootnote\footnote%
+\def\footnote{\protect\rmarkdownfootnote}
+
+%%% Change title format to be more compact
+\usepackage{titling}
+
+% Create subtitle command for use in maketitle
+\providecommand{\subtitle}[1]{
+  \posttitle{
+    \begin{center}\large#1\end{center}
+    }
+}
+
+\setlength{\droptitle}{-2em}
+
+  \title{Final Project Outline}
+    \pretitle{\vspace{\droptitle}\centering\huge}
+  \posttitle{\par}
+    \author{Lee Panter}
+    \preauthor{\centering\large\emph}
+  \postauthor{\par}
+    \date{}
+    \predate{}\postdate{}
+  
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{enumitem}
+\usepackage{graphicx}
+\usepackage{array}
+\usepackage{epsfig}
+\usepackage{color}
+\usepackage{multirow}
+\usepackage{amsrefs}
+\usepackage{placeins}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
+\usepackage{multicol}
+\usepackage{comment}
+\usepackage{multirow}
+\usepackage{indentfirst}
+\usepackage{listings}
+\usepackage{setspace}
+\usepackage{wrapfig}
+\usepackage[right]{lineno}
+
+
+%\doublespacing
+\setlength\parindent{15pt}
+\setlength{\parskip}{3mm plus 1mm minus 1mm}
+
+\lstset{frame=tb,
+language=R,
+aboveskip=3mm,
+belowskip=3mm,
+showstringspaces=false,
+columns=flexible,
+numbers=none,
+keywordstyle=\color{blue},
+numberstyle=\tiny\color{gray},
+commentstyle=\color{dkgreen},
+stringstyle=\color{mauve},
+breaklines=true,
+breakatwhitespace=true,
+tabsize=3
+}
+
+\begin{document}
+\maketitle
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\tableofcontents
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\newpage
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+\hypertarget{background-context-necessary-for-project}{%
+\subsection{Background \& Context necessary for
+project}\label{background-context-necessary-for-project}}
+
+\begin{itemize}
+\tightlist
+\item
+  The Patient Health Questionnaire-Nine (PHQ9)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Self-administered module
+  \item
+    Can be administed by medical staff
+  \item
+    Nine questions, answers correspond to the frequency with which
+    respondents feel certain feelings
+  \item
+    Used for screening, monitoring, and grading severity of depressive
+    symptoms related to nine criteria outlined by the Diagnostic and
+    Statistical Manual of Mental Health Disorders (DSM-IV) {[}1{]}
+  \item
+    Developed by Dr.~Robert J. Spitzer, Dr.~Janet B.W. Williams,
+    Dr.~Kurt Kroenke in 1999 with a grant from Pfizer {[}2{]}
+  \item
+    Response sets are classified into a discrete set of categories
+    corresponding to depression symptom magnitude
+  \item
+    Three categories corresponding to: ``Not clinically Depressed'',
+    ``Sub-threshold Depression'', and ``Major Depression'' will be used
+    for this analysis
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{data}{%
+\subsection{Data}\label{data}}
+
+\hypertarget{data-origin}{%
+\subsubsection{Data Origin:}\label{data-origin}}
+
+\begin{itemize}
+\tightlist
+\item
+  Federally Qualified Health Research Center in Montana {[}3{]}
+\item
+  Collected over six month timeframe
+\item
+  Tablet-administered PHQ9s and Quick Diagnostic Panels (QDPs)
+\end{itemize}
+
+\hypertarget{data-properties}{%
+\subsubsection{Data Properties:}\label{data-properties}}
+
+\begin{itemize}
+\tightlist
+\item
+  Technically a Randomized Control Design based upon assignment of QDPs,
+  but observational based upon PHQ9 data
+\item
+  2495 observations
+\item
+  286 variables: PHQ9 data, QDP variables, Control variables,
+  Demographic variables, Record-keeping (time, date, etc) variables
+\item
+  De-identified, and left without validation outcome measurement
+\item
+  No theoretically ``correct'' classification
+\item
+  Each observation contains integer-value responses (0-3) for the nine
+  PHQ9 questions
+\item
+  No missing data
+\item
+  Original test was administered sequentially, with all questions being
+  asked
+\item
+  Some respondents had taken the QDP first
+\end{itemize}
+
+\hypertarget{classification-methods}{%
+\subsection{Classification Methods}\label{classification-methods}}
+
+\hypertarget{traditional-classification}{%
+\subsubsection{Traditional
+Classification}\label{traditional-classification}}
+
+\begin{itemize}
+\tightlist
+\item
+  Traditional classification class representations:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(\mathbf{C}^{TR}=\left(C_{1}^{TR}, C_{2}^{TR},C_{3}^{TR} \right)\)
+  \end{itemize}
+\item
+  Assign numerical quantities to each response (0-3) for questions
+  (1-9).
+
+  \begin{itemize}
+  \tightlist
+  \item
+    An answer set corresponding to observation \(i=1,\ldots,N\) is
+    represented as
+  \item
+    \(\mathbf{A}_{i} = \left \{a_{q}\right \}_{q=1}^{9}\) where
+    \(i=1,\ldots, N\) and
+    \(a_{q}\in\left \{ 0,1,2,3 \right \} \ \text{for} \ q=1,\ldots,9\)
+  \end{itemize}
+\item
+  Calculate sum of assigned numerical quantities (0-27)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The sum of an answer set provided in observation \(i=1,\ldots,N\) is
+    represented by:
+  \item
+    \(S_{i} = \sum_{q=1}^{9} a_{q}\)
+  \end{itemize}
+\item
+  Use sum to classify observation
+\item
+  Depression classes are distinguished by ``threshold values''
+
+  \begin{itemize}
+  \tightlist
+  \item
+    let
+    \(\alpha_{1}, \ \alpha_{2} \ \in \left \{ 0, \ldots, 27 \right \}\)
+    with \(\alpha_{1} \leq \alpha_{2}\) be threshold values
+  \item
+    We can define the Traditional class representations \(C_{c}^{TR}\)
+    for \(c=1,2,3\) as Level sets according to:
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \(C_{1}^{TR}=\left \{i \ \Big | \ S_{i} < \alpha_{1} \right \}\)
+    \item
+      \(C_{2}^{TR}=\left \{i \ \Big | \ \alpha_{1} \leq S_{i} < \alpha_{2} \right \}\)
+    \item
+      \(C_{3}^{TR}=\left \{i \ \Big | \ \alpha_{2} \leq S_{i} \right \}\)
+    \end{itemize}
+  \end{itemize}
+\item
+  for this analysis, threshold values are: \(\alpha_{1}=7\) and
+  \(\alpha_{2}=10\)
+\item
+  88\% accurate {[}4{]}
+\item
+  12\% FP/FN causes issues with Clinical Fatigue, patient concern, and
+  healthcare system burdens
+\item
+  Outcomes provide limited information
+\item
+  Need to take the entire PHQ9 in order to achieve results
+\end{itemize}
+
+\hypertarget{probabilistic-classification}{%
+\subsubsection{Probabilistic
+Classification}\label{probabilistic-classification}}
+
+\begin{itemize}
+\tightlist
+\item
+  Possible benefits:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Reduced test-taking requirements (early convergence)
+  \item
+    Increased relatability with other Mental Health disorders, and
+    better result integration in general
+  \item
+    Not dependent on numerical assignments: integer differences of
+    outcomes less influential.
+  \item
+    Training-sample accuracy increase possibility
+  \end{itemize}
+\item
+  The algorithm:
+
+  \begin{itemize}
+  \item
+    Probabilistic classification class representation
+
+    \begin{itemize}
+    \tightlist
+    \item
+      \(\mathbf{C}^{PR}=(C_{1}^{PR},C_{2}^{PR},C_{3}^{PR})\)
+    \end{itemize}
+  \item
+    Let the question number be represented by:
+    \(Q=q\in\left \{ 1,2,\ldots, 9 \right \}\)
+  \item
+    Let the provided answer to a particular question be representy by:
+    \(A=a \in\left \{ 0,1,2,3 \right \}\)
+  \item
+    Given training set, a set of weights is calculated using the
+    formula: \[
+    W_{AQ}^{C^{PR}} = \frac{P\left(Q=q \  \Big | \ C^{TR}=c \right) }{P \left( Q = q   \right) } \tag{1.3.2 - 1} \label{1.3.2-1}
+    \]
+  \item
+    Suppose that \(\mathbf{A}_{i}=\{ a_{q}\}_{q=1}^{9}\) represents a
+    set of answers to the PHQ9, contained in observation \(i\).
+  \item
+    For a provided confidence threshold value \(\gamma \in (0,1)\), the
+    probabilistic scoring sequence is given recursively by:
+    \begin{align*}
+    \left(P_{0}^{(1)},P_{0}^{(2)},P_{0}^{(3)} \right) &= \left( \frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right) \\[0.5em]
+    \left(P_{q+1}^{(1)},P_{q+1}^{(2)},P_{q+1}^{(3)} \right) &= \frac{\left(P_{q}^{(1)}W_{a_{q}}^{(1)}, P_{q}^{(2)}W_{a_{q}}^{(2)}, P_{q}^{(3)}W_{a_{q}}^{(3)}\right) }{\sum_{j=1}^{3}  P_{q}^{j}W_{a_{q}q}^{(j)}} \tag{1.3.2 - 2} \label{1.3.2 - 2}
+    \end{align*}
+  \item
+    If we define: \[j_{q}^{*}= \underset{j}{max} \  P_{q}^{(j)}\] and
+    \[q^{*}=\underset{q}{min} \ \left \{q : P^{*}_{q} > \gamma    \right \} \]
+    then (provided that \(q^{*}\) exists), the probabilistic scoring
+    classification is:
+    \[j_{q^{*}}^{*}=\underset{j}{max} \ P_{q^{*}}^{j}\] more
+    specifically, it is: \[C^{PR}_{j_{q^{*}}^{*}}\]
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{consultation-goals-and-deliverables}{%
+\subsection{Consultation goals and
+deliverables}\label{consultation-goals-and-deliverables}}
+
+\hypertarget{clients-specified-goals}{%
+\subsubsection{Client's Specified
+Goals:}\label{clients-specified-goals}}
+
+\begin{quote}
+``\ldots{}mathematically prove that probabilistic scoring is more
+accurate than conventional scoring''
+\end{quote}
+
+\begin{quote}
+``\ldots{}mathematically prove that probabilistic scoring derived from a
+conventional scored validation dataset is essentially as accurate as
+using the original validation dataset and therefore still more accurate
+than conventional scoring''
+\end{quote}
+
+\hypertarget{analysis-goals}{%
+\subsubsection{Analysis Goals:}\label{analysis-goals}}
+
+\begin{itemize}
+\tightlist
+\item
+  Compare Probabilistic Scoring accuracy to Conventional Scoring
+  accuracy measured against simulated responses generated using
+  information in PHQ9 data.
+\item
+  Determine how accuracy comparisons vary as a function of training
+  sample size.
+\end{itemize}
+
+\hypertarget{deliverables}{%
+\subsubsection{Deliverables:}\label{deliverables}}
+
+\begin{itemize}
+\tightlist
+\item
+  Presentable results. Evidence of outcomes that can be shown to
+  potential clients with the purpose of demonstrating the practical
+  advantages of Probabilistic Scoring.
+\item
+  Relationship Diagrams. Visualizations that can be utilized to show
+  informational gain when Probabilistic Scoring is implemented.
+  Particular interest in relating outcomes to specific question answers.
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{model-and-methods}{%
+\section{Model and Methods}\label{model-and-methods}}
+
+\hypertarget{quantifying-accuracy}{%
+\subsection{Quantifying Accuracy}\label{quantifying-accuracy}}
+
+\begin{itemize}
+\tightlist
+\item
+  Accuracy as a function of model value and validation outcome
+  \[\text{Accuracy} = f(\mathbf{y}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(y_{i}=\hat{y}_{i} \right)\]
+
+  \begin{itemize}
+  \tightlist
+  \item
+    where \(\mathbf{y}=\left(y_{1}, \ldots, y_{N}\right)\) is the
+    validation outcome
+  \item
+    \(\mathbf{\hat{y}}=\left(\hat{y}_{1},\ldots, \hat{y}_{N} \right)\)
+    is the model value
+  \item
+    \(I\left(y_{i}=\hat{y}_{i} \right)=\begin{cases} 0 &\mbox{if} \quad y_{i} \neq \hat{y}_{i} \\ 1 &\mbox{if} \quad y_{i} = \hat{y}_{i} \\ \end{cases}\)
+  \end{itemize}
+\item
+  Accuracy as a function of model value and \textit{simmulated}
+  validation outcome
+  \[\tilde{\text{Accuracy}} = f(\mathbf{\tilde{y}}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(\tilde{y}_{i}=\hat{y}_{i} \right)\]
+
+  \begin{itemize}
+  \tightlist
+  \item
+    where
+    \(\mathbf{\tilde{y}}=\left(\tilde{y}_{1}, \ldots, \tilde{y}_{N} \right)\)
+    is the simmulated validation outcome
+  \end{itemize}
+\item
+  Simmulated accuracy calculation can be performed for Traditional and
+  Probabilistic Classifications, and then compared: \begin{align*}
+  \tilde{Accuracy_{TR}} &\sim \tilde{Accuracy_{PR}} \\[0.5em]
+  f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{TR} \right)  &\sim f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{PR} \right) \tag{2.1-1} \label{2.1-1}
+  \end{align*}
+\item
+  This analysis will focus on estimating various values of
+  \(\tilde{accuracy}\) using multiple methods of generating values of
+  \(\tilde{\mathbf{y}}\)
+\end{itemize}
+
+\hypertarget{cross-validation-processing}{%
+\subsection{Cross Validation
+Processing:}\label{cross-validation-processing}}
+
+\begin{itemize}
+\tightlist
+\item
+  Estimating \(\tilde{Accuracy}\) using Cross Validation allows us to
+  obtain an average-stabilized estimate of both Pscore and traditional
+  classifications simmultanneuously, and to establish the relationship
+  between training sample size and accuracy
+\item
+  For a fixed value of \(K \in \left \{ 2, \ldots, N-1 \right \}\) we
+  partition the full data set into \(K\) equal subsets, each of which
+  has \(N_{K}\) observations sampled randomly without replacement from
+  the original data, where:
+  \[N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor\]
+\item
+  We now have \(K\) distinct data sets that have been subset from the
+  original data, that we will combine into test-train pairs
+\item
+  There are \(K\) different ways in which \(K-1\) data sets can be
+  chosen from \(K\) sets when order does not matter, for each of these
+  \(K\) combinations we create a train-test combination by combining the
+  \(K-1\) selected sets to form the training set, and the remaing set to
+  form the test set.
+\item
+  We will denote these train/test pairs
+  \[\left(TR, TE \right)^{k}_{j}=\left(TR_{j}^{k}, TE_{j}^{k} \right) \]
+  for \(j=1, \ldots, K\)
+\item
+  From the definition of \(N_{K}\), and the fact that each training set
+  is a union of \(\left(K-1 \right)\) sets of length \(N_{K}\), we can
+  establish a relationship between training set length
+  (\(|TR_{j}^{k}|\)-the number of observations in the jth training set)
+  and the value of \(K\) from which the original test-train partitions
+  were originally formed:
+  \[|TR_{j}^{k}|=(K-1)N_{K}=(K-1)\Big \lfloor \frac{N}{K} \Big \rfloor\]
+\item
+  Similarly, we may define the length of the test set:
+  \[|TE_{j}^{k}|=N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor\]
+\item
+  noting that:
+  \[\Big \lfloor \frac{N}{K} \Big \rfloor \leq \frac{N}{K}\] We have
+  \begin{align*}
+  |TR_{j}^{K}| + |TE_{j}^{K}| &= (k-1)\Big \lfloor \frac{N}{K} \Big \rfloor + \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+  &= K \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+  &\leq K \frac{N}{K} = N
+  \end{align*} Implying that the some observations may be left out of
+  the CV process.
+\item
+  We are interested in establishing a relationship between
+  \(|TR_{j}^{k}|\) and \(\tilde{accuracy}\), idealistically represented
+  by:
+  \[\tilde{accuracy}\left( |TE_{j}^{k}|  \right) = \tilde{accuracy}\left( \Big \lfloor \frac{N}{K} \Big \rfloor  \right) \]
+  This formula establishes a connection between the value of \(K\) and
+  \(\tilde{accuracy}\). Demonstrating that by calculating the value of
+  \(\tilde{accuracy}\) at varying the value of \(K\), we may establish
+  the relationship between \(\tilde{accuracy}\) and \(|TR_{j}^{k}|\)
+  (i.e.~Training Sample Length).
+\item
+  We can calculate the calculate the classification accuracy for each
+  train-test pairing within a specific value of K.
+  \[\tilde{accuracy}\left(TR, TE \right)_{j}^{k}= \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \]
+\item
+  and we will use the average of these values to represent the accuracy
+  at a particular K-value \begin{eqnarray*}
+    \tilde{accuracy}\left(TR, TE \right)^{k} &= \tilde{accuracy}_{m}\left(TR, TE \right)_{\bullet}^{k} \\
+    &=\frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \right \}
+  \end{eqnarray*}
+\item
+  This process can be applied to Traditional and Probabilistic Scoring
+  methods: \begin{eqnarray*}
+    \tilde{accuracy}_{m}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i}^{m} \right) \right \}
+  \end{eqnarray*} where \(m\in\left \{ Pscore, \ Tscore \right \}\),
+  \(\hat{y}^{Pscore}\) is a Probabilistic Scoring generated outcome, and
+  \(\hat{y}^{Tscore}\) is a Traditional Scoring generate outcome
+\item
+  It will also be applied to a multitude of different simulated
+  validation outcomes \begin{eqnarray*}
+    \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}^{h}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{m} \right) \right \}
+  \end{eqnarray*} where \(h \in \left \{ 1,2,3,4,5 \right \}\)
+\item
+  Since notation is obviously extremely cumbersome, indices displayed
+  will be limited only to those relevant.
+\item
+  \textbf{Figure 1}
+\item
+  \includegraphics{/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/KvsTrainlen.jpeg}
+\item
+  \textbf{Figure 1 Caption:} Training and Test set observation counts vs
+  K
+\item
+  We see that the possible training set observation counts using the CV
+  method outlined above on the data provided range between 1247 and 2492
+  observations.
+\item
+  The figure also shows that for K-values greater than 1248, test set
+  sizes are confined to one.
+\item
+  Training set sizes were selected for analysis by sampling 50 or more
+  different values of K from k=5 to k=2490.
+\item
+  Plots of comparing accuracies in the form of \eqref{2.1-1} are shown
+  for each value of K selected as the value of training set length
+  corresponding to K increases
+\item
+  It was assumed that subsets taken from the data which were sampled
+  randomly without replacement are at least partially representative of
+  the population as a whole.
+\item
+  It was assumed (incorrectly) for this analysis that test-set accuracy
+  evaluations are comparable at all values of K.
+\end{itemize}
+
+\hypertarget{optimal-convergence-criterion}{%
+\subsection{Optimal Convergence
+Criterion}\label{optimal-convergence-criterion}}
+
+\begin{itemize}
+\tightlist
+\item
+  The Pscore algorithm requires the specification of a confidence level
+  for termination.
+\item
+  For the purposes of this analysis, a confidence level of 0.75 was
+  chosen.
+\item
+  This value optimized probabilistic scoring classification accuracy of
+  the first simulated validation outcome (see below) when the Pscoring
+  weights were trained on the full data set.
+\end{itemize}
+
+\hypertarget{simulated-validation-outcomes}{%
+\subsection{Simulated Validation
+Outcomes}\label{simulated-validation-outcomes}}
+
+\hypertarget{inferential-simulations}{%
+\subsubsection{Inferential Simulations}\label{inferential-simulations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Change traditional classification based upon the following
+  assumptions:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Depression Classifications are a hierarchy, so outcomes for group 1
+    are lower than group 2,\ldots{}etc
+  \item
+    The 12 percent misclassification is due to the traditional scoring
+    algorithm mis-classifying observations into a proximal class. Group
+    1 into group 2, group 3 into group 2 or group 2 into either group 1
+    or 2
+  \item
+    Within each class there is a spectrum of conditions, and transitions
+    between classes are essentially continuous.
+  \end{itemize}
+\item
+  Based on the number of observations with the same traditional
+  sum-score.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Let \(\mathbb{S}^{PR}_{T}=\left \{ i\ \Big | \ S_{i}=T \right \}\)
+    for \(i=1,\ldots, N\) and \(T=0, 1,\ldots, 27\) where
+    \(S_{i} = \sum_{q=1}^{9} a_{q}\)
+  \item
+    Then the number of observations with the same traditional sum-score
+    (\(S_{i}\)) is the value: \(|\mathbb{S}^{PR}_{T}|\)
+  \end{itemize}
+\item
+  Based upon distance from a threshold value. Meaning that observations
+  which are closer to a threshold value are more likely to be
+  mis-classified (switched)
+
+  \begin{itemize}
+  \tightlist
+  \item
+    If we suppose that
+    \(\alpha_{1} \leq \alpha_{2} \in \ \left \{ 0,1,\ldots, 27 \right \}\)
+    are threshold values. The distance to the nearest threshold value of
+    an observation \(i\) that is classified into traditional sum value
+    \(S_{i}\) is:
+    \[D_{i} = \underset{k=1,2}{min}\left \{ \Big | \alpha_{k}-S_{i}   \Big | \right \}\]
+  \end{itemize}
+\item
+  The final probability of a traditional classification being altered in
+  its representation in the simulated outcome data set then follows:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(P\left(C_{i}^{TR} \neq \tilde{C}_{i}^{1} \right) \propto \frac{|\mathbb{S}^{PR}_{T}|}{D_{i}}\)
+  \item
+    Proportionality constants were chosen so that the total difference
+    between Traditional Scoring classification and simmulated outcome
+    was 12\%
+  \end{itemize}
+\item
+  \textbf{Figure 2:}
+\item
+  \includegraphics{/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFlips.jpeg}
+\item
+  \textbf{Figure 2 Caption:} Figure depicts observational distributions
+  as classified by traditional methods, and how the first simulated
+  validation outcome induced change
+\item
+  Simmulated validation outcomes generated using this method depended
+  only on information relevant to the observation for which the outcome
+  was being simmulated
+\item
+  Pairing of simmulated validation outcomes performed with full-data
+\item
+  Accuracy comparisons of Probabilistic Scoring and Traditional Scoring
+  classifications were obtained on 100 different values of K using the
+  CV algorithm previously outlined.
+\item
+  The simulated outcome generated using this method was implemented in
+  the process to obtain the optimal convergence confidence level in
+  section 2.3
+\end{itemize}
+
+\hypertarget{probabilistic-algorithm-simmulations}{%
+\subsubsection{Probabilistic Algorithm
+Simmulations}\label{probabilistic-algorithm-simmulations}}
+
+\begin{itemize}
+\tightlist
+\item
+  Motivating Principle: The Pscoring algorithm incorperates more
+  information contained in the data than anything else, therefore it
+  should generate the most appropriate estimates
+\item
+  Motivating Principle: The Pscoring algorithm can estimate multiple
+  amounts of inherently different estimates for the same observations
+  based upon different training sets.
+\item
+  The process:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Separate data into K-CV sets, and combine into train-test pairings
+    as before in the CV analysis \[(TR, TE)_{j}^{K}\] where
+    \(j =1, \ldots, K\)
+  \item
+    For each training set, calculate the corresponding set of Pscore
+    weights
+    \[TR_{j}^{K} \ \rightarrow \text{equation} \ \eqref{1.3.2-1} \ \rightarrow \  W_{AQj}^{C}\]
+
+    \begin{itemize}
+    \tightlist
+    \item
+      K train-test pairs means there will be K distinct estimates of the
+      training weights
+    \end{itemize}
+  \item
+    Calculate a representative weight set for the value of K by
+    averaging over the K weight values
+    \[W_{AQk}^{C}=\frac{1}{K}\sum_{j=1}^{K} W_{AQj}^{C}\]
+  \item
+    For each of the K test sets use the calculated, representative
+    weights to Probabilistically Classify a corresponding set of
+    \textit{simulated validation outcomes}
+    \[\left(W_{AQk}^{C}, TE_{j}^{k}\right)  \ \rightarrow \ \text{equation} \ \eqref{1.3.2 - 2} \ \rightarrow \   \tilde{y}_{j}^2{k}\]
+  \item
+    The outcomes generated using this method depend on information
+    obtained from a training set used to generate Pscore weights which
+    were used in its classifications.\\
+  \item
+    Each simulated outcome will therefore be paired with data that was
+    simulated using the same set of information. (i.e.~categorized using
+    the same training data).
+  \item
+    The values of the simmulated outcome specific to training sample
+    within each K value are then substituted into the CV algorithm for
+    \(\tilde{y}^{h}\) \begin{eqnarray*}
+      \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{\tilde{accuracy}_{m}^{h} \left(TR, TE)_{j}^{k}   \right)   \right \} \\
+      &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} \left \{ I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{m} \right) \right \}   \right \}
+    \end{eqnarray*}
+  \end{itemize}
+\item
+  The method makes the assumption that estimates of average weights are
+  stable enough to produce reasonably consistent estimates
+\item
+  \textbf{Figure 3:}
+\item
+  \includegraphics{variance plot.jpeg}
+\item
+  \textbf{ Figure 3 Caption:} Variance of average weight values for
+  several question number/class ID combinations plotted against training
+  data count length
+\item
+  \textbf{Figure 4:}
+\item
+  \includegraphics{mean plot.jpeg}
+\item
+  \textbf{Figure 4 Caption:} Mean value of the average weight estimates
+  for several question number/class ID combinations plotted against
+  training data count length 
+\item
+  Stability of the average estimate value, as training sample increases,
+  in combination with a dramatic decrease in variance as training sample
+  size increases are indications that the average weight values are
+  capable of producing stable outcome estimates
+\end{itemize}
+
+\hypertarget{unsupervised-learning-classifications}{%
+\subsubsection{Unsupervised Learning
+Classifications}\label{unsupervised-learning-classifications}}
+
+\begin{itemize}
+\tightlist
+\item
+  Using unsupervised learning techniques to gather trends in
+\end{itemize}
+
+\hypertarget{kmeans}{%
+\paragraph{Kmeans}\label{kmeans}}
+
+\textbf{Assumptions of the method, including experimental design and target population}
+
+\textbf{Were any pre-filtering or pre-processing steps applied to the data?}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{analysis-and-results}{%
+\section{Analysis and Results}\label{analysis-and-results}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Results of analysis conducted}
+\item
+  \textbf{Interpretations and "walk-throughs" of results \& findings}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Discussion of Results (separate from Results section)}
+\item
+  \textbf{Have you addressed your client's goals?}
+\item
+  \textbf{Are there any caveats to your analysis?}
+\item
+  \textbf{What are the next steps from such an analysis?}
+\item
+  \textbf{Recommended resources}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{appendix}{%
+\section{Appendix}\label{appendix}}
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{Necessary code or solftware instructions to carry our your analysis.}\\
+\item
+  \textbf{Include any resources you have referred to or found helpful}
+\item
+  \textbf{If appropriate, include other deliverables}
+\end{itemize}
+
+\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+
+\hypertarget{references}{%
+\section{References}\label{references}}
+
+\bibliography{Bib_AccRefSheet}
+
+\hypertarget{refs}{}
+\leavevmode\hypertarget{ref-kroenke2002phq}{}%
+1. Kroenke K, Spitzer RL (2002) The phq-9: A new depression diagnostic
+and severity measure. \emph{Psychiatric annals} 32: 509--515.
+
+\leavevmode\hypertarget{ref-kroenke2010instruction}{}%
+2. Kroenke K, Spitzer R (2010) Instruction manual: Instructions for
+patient health questionnaire (phq) and gad-7 measures.
+
+\leavevmode\hypertarget{ref-MalikMoreEf}{}%
+3. Malik A More effective and cost effective use of the phq-9.
+
+\leavevmode\hypertarget{ref-kroenke16spitzer}{}%
+4. Kroenke K Spitzer, rl \& williams, jb (2001). The phq-9.
+\emph{Journal of General Internal Medicine} 16: 606--613.
+
+
+\end{document}

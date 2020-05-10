@@ -1,0 +1,341 @@
+---
+title: "Final Project Outline"
+author:
+- Lee Panter
+csl: mathematical-biosciences-and-engineering.csl
+output:
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header: Rmarkdown_preamble.tex
+    keep_tex: yes
+    number_sections: yes
+geometry: margin=1.0in
+fontsize: 12pt
+bibliography: Bib_AccRefSheet.bib
+---
+
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+
+
+<!-- ####	 Set Working Directory	 ####   -->
+```{r, echo=FALSE}
+WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline"
+setwd(WD)
+```
+<!------------------------------------------------------------------------------>
+***
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\tableofcontents
+***
+
+\newpage
+
+<!------------------------------------------------------------------------------>
+***
+
+# Introduction
+
+## Background & Context necessary for project
+  
+- The Patient Health Questionnaire-Nine (PHQ9)
+  - Self-administered module
+  - Can be administed by medical staff
+  - Nine questions, answers correspond to the frequency with which respondents feel certain feelings
+  - Used for screening, monitoring, and grading severity of depressive symptoms related to nine criteria outlined by the Diagnostic and Statistical Manual of Mental Health Disorders (DSM-IV) [@kroenke2002phq]
+  - Developed by Dr. Robert J. Spitzer, Dr. Janet B.W. Williams, Dr. Kurt Kroenke in 1999 with a grant from Pfizer [@kroenke2010instruction]
+  - Response sets are classified into a discrete set of categories corresponding to depression symptom magnitude
+  - Three categories corresponding to: "Not clinically Depressed", "Sub-threshold Depression", and "Major Depression" will be used for this analysis
+  
+## Data
+
+### Data Origin: 
+  - Federally Qualified Health Research Center in Montana [@MalikMoreEf]
+  - Collected over six month timeframe
+  - Tablet-administered PHQ9s and Quick Diagnostic Panels (QDPs)
+
+### Data Properties:
+  - Technically a Randomized Control Design based upon assignment of QDPs, but observational based upon PHQ9 data
+  - 2495 observations
+  - 286 variables: PHQ9 data, QDP variables, Control variables, Demographic variables, Record-keeping (time, date, etc) variables
+  - De-identified, and left without validation outcome measurement
+  - No theoretically "correct" classification
+  - Each observation contains integer-value responses (0-3) for the nine PHQ9 questions
+  - No missing data
+  - Original test was administered sequentially, with all questions being asked
+  - Some respondents had taken the QDP first
+
+
+## Classification Methods 
+
+
+### Traditional Classification
+  - Traditional classification class representations:
+    - $\mathbf{C}^{TR}=\left(C_{1}^{TR}, C_{2}^{TR},C_{3}^{TR}   \right)$
+  - Assign numerical quantities to each response (0-3) for questions (1-9).
+    - An answer set corresponding to observation $i=1,\ldots,N$ is represented as
+    - $\mathbf{A}_{i} = \left \{a_{q}\right \}_{q=1}^{9}$
+    where $i=1,\ldots, N$ and $a_{q}\in\left \{ 0,1,2,3 \right \} \ \text{for} \ q=1,\ldots,9$
+  - Calculate sum of assigned numerical quantities (0-27)
+    - The sum of an answer set provided in observation $i=1,\ldots,N$ is represented by:
+    - $S_{i} = \sum_{q=1}^{9} a_{q}$
+  - Use sum to classify observation
+  - Depression classes are distinguished by "threshold values"
+    - let $\alpha_{1}, \ \alpha_{2} \ \in  \left \{ 0, \ldots, 27 \right \}$ with $\alpha_{1} \leq \alpha_{2}$ be threshold values
+    - We can define the Traditional class representations $C_{c}^{TR}$ for $c=1,2,3$ as Level sets according to:
+      - $C_{1}^{TR}=\left \{i \ \Big | \ S_{i} < \alpha_{1}  \right \}$
+      - $C_{2}^{TR}=\left \{i \ \Big | \ \alpha_{1} \leq S_{i} < \alpha_{2}  \right \}$
+      - $C_{3}^{TR}=\left \{i \ \Big | \ \alpha_{2} \leq S_{i}  \right \}$
+  - for this analysis, threshold values are: $\alpha_{1}=7$ and $\alpha_{2}=10$
+  - 88% accurate [@kroenke16spitzer]
+  - 12% FP/FN causes issues with Clinical Fatigue, patient concern, and healthcare system burdens
+  - Outcomes provide limited information
+  - Need to take the entire PHQ9 in order to achieve results
+  
+###  Probabilistic Classification
+- Possible benefits:
+  - Reduced test-taking requirements (early convergence)
+  - Increased relatability with other Mental Health disorders, and better result integration in general
+  - Not dependent on numerical assignments: integer differences of outcomes less influential.
+  - Training-sample accuracy increase possibility
+- The algorithm:
+  - Probabilistic classification class representation
+    - $\mathbf{C}^{PR}=(C_{1}^{PR},C_{2}^{PR},C_{3}^{PR})$
+  - Let the question number be represented by: $Q=q\in\left \{  1,2,\ldots, 9 \right \}$
+  - Let the provided answer to a particular question be representy by: $A=a \in\left \{ 0,1,2,3 \right \}$
+  - Given training set, a set of weights is calculated using the formula:
+  \[
+    W_{AQ}^{C^{PR}} = \frac{P\left(Q=q \  \Big | \ C^{TR}=c \right) }{P \left( Q = q   \right) } \tag{1.3.2 - 1} \label{1.3.2-1}
+  \]
+  - Suppose that $\mathbf{A}_{i}=\{ a_{q}\}_{q=1}^{9}$ represents a set of answers to the PHQ9, contained in observation $i$.
+  - For a provided confidence threshold value $\gamma \in (0,1)$, the probabilistic scoring sequence is given recursively by:
+  \begin{align*}
+\left(P_{0}^{(1)},P_{0}^{(2)},P_{0}^{(3)} \right) &= \left( \frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right) \\[0.5em]
+    \left(P_{q+1}^{(1)},P_{q+1}^{(2)},P_{q+1}^{(3)} \right) &= \frac{\left(P_{q}^{(1)}W_{a_{q}}^{(1)}, P_{q}^{(2)}W_{a_{q}}^{(2)}, P_{q}^{(3)}W_{a_{q}}^{(3)}\right) }{\sum_{j=1}^{3}  P_{q}^{j}W_{a_{q}q}^{(j)}} \tag{1.3.2 - 2} \label{1.3.2 - 2}
+  \end{align*}
+    
+  - If we define:
+    $$j_{q}^{*}= \underset{j}{max} \  P_{q}^{(j)}$$
+    and
+    $$q^{*}=\underset{q}{min} \ \left \{q : P^{*}_{q} > \gamma    \right \} $$
+    then (provided that $q^{*}$ exists), the probabilistic scoring classification is:
+    $$j_{q^{*}}^{*}=\underset{j}{max} \ P_{q^{*}}^{j}$$
+  more specifically, it is:
+  $$C^{PR}_{j_{q^{*}}^{*}}$$
+  
+
+## Consultation goals and deliverables
+
+### Client's Specified Goals: 
+
+> "...mathematically prove that probabilistic scoring is more accurate than conventional scoring"
+
+> "...mathematically prove that probabilistic scoring derived from a conventional scored validation dataset is essentially as accurate as using the original validation dataset and therefore still more accurate than conventional scoring"
+
+### Analysis Goals:
+  - Compare Probabilistic Scoring accuracy to Conventional Scoring accuracy measured against simulated responses generated using information in PHQ9 data.
+  - Determine how accuracy comparisons vary as a function of training sample size.
+  
+### Deliverables:
+  - Presentable results.  Evidence of outcomes that can be shown to potential clients with the purpose of demonstrating the practical advantages of Probabilistic Scoring. 
+  - Relationship Diagrams.  Visualizations that can be utilized to show informational gain when Probabilistic Scoring is implemented.  Particular interest in relating outcomes to specific question answers.
+  
+
+  
+
+***
+
+# Model and Methods
+
+## Quantifying Accuracy
+- Accuracy as a function of model value and validation outcome
+  $$\text{Accuracy} = f(\mathbf{y}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(y_{i}=\hat{y}_{i} \right)$$
+  - where $\mathbf{y}=\left(y_{1}, \ldots, y_{N}\right)$ is the validation outcome
+  - $\mathbf{\hat{y}}=\left(\hat{y}_{1},\ldots, \hat{y}_{N}   \right)$ is the model value
+  - $I\left(y_{i}=\hat{y}_{i} \right)=\begin{cases} 0 &\mbox{if} \quad  y_{i} \neq \hat{y}_{i} \\ 1 &\mbox{if} \quad  y_{i} = \hat{y}_{i} \\ \end{cases}$
+- Accuracy as a function of model value and \textit{simmulated} validation outcome
+  $$\tilde{\text{Accuracy}} = f(\mathbf{\tilde{y}}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(\tilde{y}_{i}=\hat{y}_{i} \right)$$
+  - where $\mathbf{\tilde{y}}=\left(\tilde{y}_{1}, \ldots, \tilde{y}_{N}   \right)$ is the simmulated validation outcome
+- Simmulated accuracy calculation can be performed for Traditional and Probabilistic Classifications, and then compared:
+\begin{align*}
+\tilde{Accuracy_{TR}} &\sim \tilde{Accuracy_{PR}} \\[0.5em]
+f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{TR} \right)  &\sim f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{PR} \right) \tag{2.1-1} \label{2.1-1}
+\end{align*} 
+- This analysis will focus on estimating various values of $\tilde{accuracy}$ using multiple methods of generating values of $\tilde{\mathbf{y}}$
+
+
+## Cross Validation Processing:
+
+- Estimating $\tilde{Accuracy}$ using Cross Validation allows us to obtain an average-stabilized estimate of both Pscore and traditional classifications simmultanneuously, and to establish the relationship between training sample size and accuracy
+- For a fixed value of $K \in \left \{  2, \ldots, N-1 \right \}$ we partition the full data set into $K$ equal subsets, each of which has $N_{K}$ observations sampled randomly without replacement from the original data, where:
+  $$N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor$$
+- We now have $K$ distinct data sets that have been subset from the original data, that we will combine into test-train pairs 
+- There are $K$ different ways in which $K-1$ data sets can be chosen from $K$ sets when order does not matter, for each of these $K$ combinations we create a train-test combination by combining the $K-1$ selected sets to form the training set, and the remaing set to form the test set.
+- We will denote these train/test pairs
+  $$\left(TR, TE \right)^{k}_{j}=\left(TR_{j}^{k}, TE_{j}^{k} \right) $$ 
+  for $j=1, \ldots, K$
+- From the definition of $N_{K}$, and the fact that each training set is a union of $\left(K-1 \right)$ sets of length $N_{K}$, we can establish a relationship between training set length ($|TR_{j}^{k}|$-the number of observations in the jth training set) and the value of $K$ from which the original test-train partitions were originally formed:
+  $$|TR_{j}^{k}|=(K-1)N_{K}=(K-1)\Big \lfloor \frac{N}{K} \Big \rfloor$$
+- Similarly, we may define the length of the test set:
+  $$|TE_{j}^{k}|=N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor$$
+- noting that: 
+$$\Big \lfloor \frac{N}{K} \Big \rfloor \leq \frac{N}{K}$$
+We have
+\begin{align*}
+|TR_{j}^{K}| + |TE_{j}^{K}| &= (k-1)\Big \lfloor \frac{N}{K} \Big \rfloor + \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+&= K \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+&\leq K \frac{N}{K} = N
+\end{align*}
+Implying that the some observations may be left out of the CV process.
+- We are interested in establishing a relationship between $|TR_{j}^{k}|$ and $\tilde{accuracy}$, idealistically represented by:
+  $$\tilde{accuracy}\left( |TE_{j}^{k}|  \right) = \tilde{accuracy}\left( \Big \lfloor \frac{N}{K} \Big \rfloor  \right) $$
+  This formula establishes a connection between the value of $K$ and $\tilde{accuracy}$.  Demonstrating that by calculating the value of $\tilde{accuracy}$ at varying the value of $K$, we may establish the relationship between $\tilde{accuracy}$ and $|TR_{j}^{k}|$ (i.e. Training Sample Length).
+- We can calculate the calculate the classification accuracy for each train-test pairing within a specific value of K.
+  $$\tilde{accuracy}\left(TR, TE \right)_{j}^{k}= \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) $$
+- and we will use the average of these values to represent the accuracy at a particular K-value
+  \begin{eqnarray*}
+    \tilde{accuracy}\left(TR, TE \right)^{k} &= \tilde{accuracy}_{m}\left(TR, TE \right)_{\bullet}^{k} \\
+    &=\frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \right \}
+  \end{eqnarray*}
+- This process can be applied to Traditional and Probabilistic Scoring methods:
+  \begin{eqnarray*}
+    \tilde{accuracy}_{m}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i}^{m} \right) \right \}
+  \end{eqnarray*}
+  where $m\in\left \{ Pscore, \ Tscore    \right \}$, $\hat{y}^{Pscore}$ is a Probabilistic Scoring generated outcome, and $\hat{y}^{Tscore}$ is a Traditional Scoring generate outcome
+- It will also be applied to a multitude of different simulated validation outcomes
+    \begin{eqnarray*}
+    \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}^{h}\left(TR, TE \right)_{j}^{k}\right \} \\
+    &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{m} \right) \right \}
+  \end{eqnarray*}
+  where $h \in \left \{ 1,2,3,4,5 \right \}$
+- Since notation is obviously extremely cumbersome, indices displayed will be limited only to those relevant.
+- \textbf{Figure 1}
+- ![](/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/KvsTrainlen.jpeg)
+- \textbf{Figure 1 Caption:} Training and Test set observation counts vs K
+- We see that the possible training set observation counts using the CV method outlined above on the data provided range between 1247 and 2492 observations.
+- The figure also shows that for K-values greater than 1248, test set sizes are confined to one.
+- Training set sizes were selected for analysis by sampling 50 or more different values of K from k=5 to k=2490.
+- Plots of comparing accuracies in the form of \eqref{2.1-1} are shown for each value of K selected as the value of training set length corresponding to K increases
+- It was assumed that subsets taken from the data which were sampled randomly without replacement are at least partially representative of the population as a whole.
+- It was assumed (incorrectly) for this analysis that test-set accuracy evaluations are comparable at all values of K.
+
+
+## Optimal Convergence Criterion 
+- The Pscore algorithm requires the specification of a confidence level for termination.
+- For the purposes of this analysis, a confidence level of 0.75 was chosen.
+- This value optimized probabilistic scoring classification accuracy of the first simulated validation outcome (see below) when the Pscoring weights were trained on the full data set.
+
+## Simulated Validation Outcomes
+
+### Inferential Simulations
+- Change traditional classification based upon the following assumptions:
+  - Depression Classifications are a hierarchy, so outcomes for group 1 are lower than group 2,...etc
+  - The 12 percent misclassification is due to the traditional scoring algorithm mis-classifying observations into a proximal class.  Group 1 into group 2, group 3 into group 2 or group 2 into either group 1 or 2
+  - Within each class there is a spectrum of conditions, and transitions between classes are essentially continuous.
+- Based on the number of observations with the same traditional sum-score.
+  - Let $\mathbb{S}^{PR}_{T}=\left \{ i\ \Big | \ S_{i}=T \right \}$ for $i=1,\ldots, N$ and $T=0, 1,\ldots, 27$ where $S_{i} = \sum_{q=1}^{9} a_{q}$
+  - Then the number of observations with the same traditional sum-score ($S_{i}$) is the value: $|\mathbb{S}^{PR}_{T}|$
+- Based upon distance from a threshold value.  Meaning that observations which are closer to a threshold value are more likely to be mis-classified (switched)
+  - If we suppose that $\alpha_{1} \leq \alpha_{2} \in \ \left \{ 0,1,\ldots, 27 \right \}$ are threshold values.  The distance to the nearest threshold value of an observation $i$ that is classified into traditional sum value $S_{i}$ is:
+  $$D_{i} = \underset{k=1,2}{min}\left \{ \Big | \alpha_{k}-S_{i}   \Big | \right \}$$
+- The final probability of a traditional classification being altered in its representation in the simulated outcome data set then follows:
+  - $P\left(C_{i}^{TR} \neq \tilde{C}_{i}^{1} \right) \propto \frac{|\mathbb{S}^{PR}_{T}|}{D_{i}}$
+  - Proportionality constants were chosen so that the total difference between Traditional Scoring classification and simmulated outcome was 12\%
+- \textbf{Figure 2:}
+- ![](/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFlips.jpeg)
+- \textbf{Figure 2 Caption:} Figure depicts observational distributions as classified by traditional methods, and how the first simulated validation outcome induced change
+- Simmulated validation outcomes generated using this method depended only on information relevant to the observation for which the outcome was being simmulated
+- Pairing of simmulated validation outcomes performed with full-data
+- Accuracy comparisons of Probabilistic Scoring and Traditional Scoring classifications were obtained on 100 different values of K using the CV algorithm previously outlined.
+- The simulated outcome generated using this method was implemented in the process to obtain the optimal convergence confidence level in section 2.3
+  
+### Probabilistic Algorithm Simmulations
+- Motivating Principle: The Pscoring algorithm incorperates more information contained in the data than anything else, therefore it should generate the most appropriate estimates
+- Motivating Principle: The Pscoring algorithm can estimate multiple amounts of inherently different estimates for the same observations based upon different training sets. 
+- The process:
+  - Separate data into K-CV sets, and combine into train-test pairings as before in the CV analysis
+      $$(TR, TE)_{j}^{K}$$
+      where $j =1, \ldots, K$
+  - For each training set, calculate the corresponding set of Pscore weights
+    $$TR_{j}^{K} \ \rightarrow \text{equation} \ \eqref{1.3.2-1} \ \rightarrow \  W_{AQj}^{C}$$
+    - K train-test pairs means there will be K distinct estimates of the training weights
+  - Calculate a representative weight set for the value of K by averaging over the K weight values
+    $$W_{AQk}^{C}=\frac{1}{K}\sum_{j=1}^{K} W_{AQj}^{C}$$
+  - For each of the K test sets use the calculated, representative weights to Probabilistically Classify a corresponding set of \textit{simulated validation outcomes} 
+    $$\left(W_{AQk}^{C}, TE_{j}^{k}\right)  \ \rightarrow \ \text{equation} \ \eqref{1.3.2 - 2} \ \rightarrow \   \tilde{y}_{j}^2{k}$$
+  - The outcomes generated using this method depend on information obtained from a training set used to generate Pscore weights which were used in its classifications.  
+  - Each simulated outcome will therefore be paired with data that was simulated using the same set of information. (i.e. categorized using the same training data). 
+  - The values of the simmulated outcome specific to training sample within each K value are then substituted into the CV algorithm for $\tilde{y}^{h}$
+    \begin{eqnarray*}
+      \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{\tilde{accuracy}_{m}^{h} \left(TR, TE)_{j}^{k}   \right)   \right \} \\
+      &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} \left \{ I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{m} \right) \right \}   \right \}
+    \end{eqnarray*}
+- The method makes the assumption that estimates of average weights are stable enough to produce reasonably consistent estimates
+- \textbf{Figure 3:}
+- ![](variance plot.jpeg)
+- \textbf{ Figure 3 Caption:} Variance of average weight values for several question number/class ID combinations plotted against training data count length
+- \textbf{Figure 4:}
+- ![](mean plot.jpeg)
+- \textbf{Figure 4 Caption:} Mean value of the average weight estimates for several question number/class ID combinations plotted against training data count length
+<!-- - It is important to realize that training sample length has a slightly different definition from those training sets defined in the ordinary CV algorithm -->
+- Stability of the average estimate value, as training sample increases, in combination with a dramatic decrease in variance as training sample size increases are indications that the average weight values are capable of producing stable outcome estimates
+  
+
+### Unsupervised Learning Classifications
+
+- Using unsupervised learning techniques to gather trends in 
+
+#### Kmeans 
+
+
+  
+\textbf{Assumptions of the method, including experimental design and target population}
+
+\textbf{Were any pre-filtering or pre-processing steps applied to the data?}
+
+***
+
+# Analysis and Results
+
+- \textbf{Results of analysis conducted}
+- \textbf{Interpretations and "walk-throughs" of results \& findings}
+
+***
+
+# Discussion
+
+- \textbf{Discussion of Results (separate from Results section)}
+- \textbf{Have you addressed your client's goals?}
+- \textbf{Are there any caveats to your analysis?}
+- \textbf{What are the next steps from such an analysis?}
+- \textbf{Recommended resources}
+
+***
+
+# Appendix
+
+- \textbf{Necessary code or solftware instructions to carry our your analysis.}  
+- \textbf{Include any resources you have referred to or found helpful}
+- \textbf{If appropriate, include other deliverables}
+
+***
+
+# References
+
+\bibliography{Bib_AccRefSheet}
+

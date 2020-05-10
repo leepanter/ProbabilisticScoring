@@ -56,20 +56,20 @@ source(file="/Users/lee/Documents/GitHub/ProbabilisticScoring/Scripts/cvAnalysis
 ## This portion of code will subsample the given data.  Each subsample will include all colums of data, and the number of rows in each sub-sample will range from one to 2495.  Each subsample will be stored in its own list item so that a subsample distribution of weights may be generated in the following step.
 
 
-# number.samples=100
-# sample.length=number.samples+2
-# df.set.info=df.train.set.info
-# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
-# sample.vec.k.sets=df.set.info$df.k.sets
-# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-# N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
-# N.set.arg=sort(c(N.set.arg,1247, 1248))
+number.samples=50
+sample.length=number.samples+2
+df.set.info=df.train.set.info
+colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+sample.vec.k.sets=df.set.info$df.k.sets
+sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
+N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-df.set.info=df.k.final
-colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
-
-sample.length=100
-N.set.arg=df.set.info$df.k.sets
+# df.set.info=df.k.final
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+#
+# sample.length=100
+# N.set.arg=df.set.info$df.k.sets
 
 boot.sample.i=list()
 for(i in 1:sample.length){
@@ -293,20 +293,45 @@ for(i in 1:sample.length){
   Class.out.Sup3_sample[[i]]=unlist(Class.out.Sup3[[i]])
 }
 
+trad.class=list()
+for(i in 1:52){
+  trad.class.i=list()
+  for(j in 1:length(boot.sample.i[[i]][[2]])){
+    trad.class.i=append(trad.class.i,
+                        boot.sample.i[[i]][[2]][[j]][["sumClassNum"]])
+  }
+  trad.class[[i]]=trad.class.i
+}
+
 accuracy.Sup3=c()
+accuracy.trad=c()
 for(i in 1:sample.length){
   accuracy.Sup3[i]=length(which(Class.out.Pscore_sample[[i]]==Class.out.Sup3_sample[[i]]))/length(Class.out.Sup3_sample[[i]])
+  accuracy.trad[i]=length(which(Class.out.Pscore_sample[[i]]==trad.class[[i]]))/length(trad.class[[i]])
 }
 
 
 plot(accuracy.Sup3~length.boot.weights)
+plot(accuracy.trad~length.boot.weights)
 
-df=data.frame(accuracy.Sup3, length.boot.weights)
+df=data.frame(length.boot.weights, accuracy.Sup3, accuracy.trad)
 
 write.csv(df, file = "/Users/lee/Desktop/df_acc_100_sup2.csv")
 
-lmod=lm(accuracy.Sup3~length.boot.weights, data = df)
-lmods=summary(lmod)
+df2=read.csv(file = "/Users/lee/Desktop/df_acc_100_sup22.csv")
+str(df2)
+df2$ID=as.factor(df2$ID)
+colnames(df2)=c("TrainLength", "Accuracy", "Model")
+lmod=lm(Accuracy~TrainLength*Model, data=df2)
+(lmods=summary(lmod))
+
+p=ggplot(df, aes(x=length.boot.weights))+
+  geom_point(aes(y=accuracy.Sup3))+
+  geom_point(aes(y=accuracy.trad))+
+  geom_abline(intercept = coef(lmod)[1], slope = coef(lmod)[2])+
+  geom_abline(intercept = coef(lmod)[1]+coef(lmod)[3], slope = coef(lmod)[2]+coef(lmod)[4])
+p
+
 
 plot(accuracy.Sup3~length.boot.weights,
      xlab="Training Data Length",
@@ -314,6 +339,7 @@ plot(accuracy.Sup3~length.boot.weights,
 abline(a=lmods$coefficients[1,1], b=lmods$coefficients[2,1])
 
 
+acc.trad=c()
 
 
 

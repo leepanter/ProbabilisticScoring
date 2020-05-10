@@ -102,10 +102,10 @@ k.values <- 1:15
 # extract wss for 2-15 clusters
 wss_values <- map_dbl(k.values, wss)
 
-# plot(k.values, wss_values,
-#      type="b", pch = 19, frame = FALSE,
-#      xlab="Number of clusters K",
-#      ylab="Total within-clusters sum of squares")
+plot(k.values, wss_values,
+     type="b", pch = 19, frame = FALSE,
+     xlab="Number of clusters K",
+     ylab="Total within-clusters sum of squares")
 
 
 k.means.out1=kmeans(dat.kmeans, centers=3, iter.max = 50, nstart = 100)
@@ -130,11 +130,11 @@ table.kmeans.factor = dat %>% group_by(kmeans.factor) %>% tally()
 table.kmeans.factor
 
 
-# phq9$kmeans=dat$kmeans
-# phq9$kmeans.factor=dat$kmeans.factor
+phq9$kmeans=dat$kmeans
+phq9$kmeans.factor=dat$kmeans.factor
 
-# fviz_cluster(k.means.out, data = dat.kmeans)
-#
+fviz_cluster(k.means.out, data = dat.kmeans)
+
 # pQ1=ggplot(dat, aes(x=Q1, y=qTot, color=kmeans.factor))+
 #   geom_point()
 # pQ1
@@ -225,7 +225,7 @@ table.hclust.factor2
 # Kmeans CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-number.samples=100
+number.samples=50
 sample.length=number.samples+2
 df.set.info=df.train.set.info
 colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
