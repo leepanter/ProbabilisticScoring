@@ -24,7 +24,7 @@
 \usepackage[margin=1.0in]{geometry}
 \usepackage{hyperref}
 \hypersetup{unicode=true,
-            pdftitle={Final Project Outline},
+            pdftitle={ Final Project Outline},
             pdfauthor={Lee Panter},
             pdfborder={0 0 0},
             breaklinks=true}
@@ -74,7 +74,7 @@
 
 \setlength{\droptitle}{-2em}
 
-  \title{Final Project Outline}
+  \title{\vspace{3in} Final Project Outline}
     \pretitle{\vspace{\droptitle}\centering\huge}
   \posttitle{\par}
     \author{Lee Panter}
@@ -105,7 +105,6 @@
 \usepackage{wrapfig}
 \usepackage[right]{lineno}
 
-
 %\doublespacing
 \setlength\parindent{15pt}
 \setlength{\parskip}{3mm plus 1mm minus 1mm}
@@ -129,17 +128,13 @@ tabsize=3
 \begin{document}
 \maketitle
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
+\newpage
 
 \setcounter{secnumdepth}{4}
 \setcounter{tocdepth}{4}
 \tableofcontents
 
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
-
 \newpage
-
-\begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
 
 \hypertarget{introduction}{%
 \section{Introduction}\label{introduction}}
@@ -158,7 +153,7 @@ project}\label{background-context-necessary-for-project}}
   \item
     Self-administered module
   \item
-    Can be administed by medical staff
+    Can be administer by medical staff
   \item
     Nine questions, answers correspond to the frequency with which
     respondents feel certain feelings
@@ -190,7 +185,7 @@ project}\label{background-context-necessary-for-project}}
 \item
   Federally Qualified Health Research Center in Montana {[}3{]}
 \item
-  Collected over six month timeframe
+  Collected over six month time frame
 \item
   Tablet-administered PHQ9s and Quick Diagnostic Panels (QDPs)
 \end{itemize}
@@ -227,6 +222,29 @@ project}\label{background-context-necessary-for-project}}
 \hypertarget{classification-methods}{%
 \subsection{Classification Methods}\label{classification-methods}}
 
+\begin{itemize}
+\tightlist
+\item
+  Let \(i=1, 2, \ldots, N=2495\) represent a particular observation from
+  the PHQ9 data\\
+\item
+  and let \(q=1, \ 2, \ldots, 9\) represent a specific question within
+  each response sequence\\
+\item
+  each response, to each qustion in an oberservation sequence will be
+  denoted \(A_{iq}=a_{iq}\) where the random variable \(A_{iq}\) is
+  associated with the outcome \(a_{iq}\)\\
+\item
+  In referring to an arbitrary (fixed) observation \(I=i^{*}\) we will
+  use the shortened notation:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    \(A_{i^{*}q}=A_{q}=k\) where \(k\in \{ 0,\ 1, \ 2, \ 3 \}\)
+  \end{itemize}
+\end{itemize}
+
 \hypertarget{traditional-classification}{%
 \subsubsection{Traditional
 Classification}\label{traditional-classification}}
@@ -234,42 +252,23 @@ Classification}\label{traditional-classification}}
 \begin{itemize}
 \tightlist
 \item
-  Traditional classification class representations:
+  The traditional classification of observation \(i\) will be denoted:
+  \[C_{i}^{TR} \in \mathbf{C}_{i}^{TR}=\left(1_{i}^{TR}, \ 2_{i}^{TR}, \ 3_{i}^{TR} \right)\]
+\item
+  The sum of an answer set provided in observation \(i\) is represented
+  by:
 
   \begin{itemize}
   \tightlist
   \item
-    \(\mathbf{C}^{TR}=\left(C_{1}^{TR}, C_{2}^{TR},C_{3}^{TR} \right)\)
+    \(S_{i} = \sum_{q=1}^{9} a_{iq}\)
   \end{itemize}
 \item
-  Assign numerical quantities to each response (0-3) for questions
-  (1-9).
-
-  \begin{itemize}
-  \tightlist
-  \item
-    An answer set corresponding to observation \(i=1,\ldots,N\) is
-    represented as
-  \item
-    \(\mathbf{A}_{i} = \left \{a_{q}\right \}_{q=1}^{9}\) where
-    \(i=1,\ldots, N\) and
-    \(a_{q}\in\left \{ 0,1,2,3 \right \} \ \text{for} \ q=1,\ldots,9\)
-  \end{itemize}
+  the value of \(S_{i}\) is used to assign a traditional classification
+  to observation \(i\)
 \item
-  Calculate sum of assigned numerical quantities (0-27)
-
-  \begin{itemize}
-  \tightlist
-  \item
-    The sum of an answer set provided in observation \(i=1,\ldots,N\) is
-    represented by:
-  \item
-    \(S_{i} = \sum_{q=1}^{9} a_{q}\)
-  \end{itemize}
-\item
-  Use sum to classify observation
-\item
-  Depression classes are distinguished by ``threshold values''
+  Depression classification outcomes are distinguished by ``threshold
+  values''
 
   \begin{itemize}
   \tightlist
@@ -278,17 +277,17 @@ Classification}\label{traditional-classification}}
     \(\alpha_{1}, \ \alpha_{2} \ \in \left \{ 0, \ldots, 27 \right \}\)
     with \(\alpha_{1} \leq \alpha_{2}\) be threshold values
   \item
-    We can define the Traditional class representations \(C_{c}^{TR}\)
-    for \(c=1,2,3\) as Level sets according to:
+    We can define the Traditional Classification outcome sets as
+    \(C^{TR}\) for \(C=1,2,3\) using Level sets according to:
 
     \begin{itemize}
     \tightlist
     \item
-      \(C_{1}^{TR}=\left \{i \ \Big | \ S_{i} < \alpha_{1} \right \}\)
+      \(1^{TR}=\left \{i \ \Big | \ S_{i} < \alpha_{1} \right \}\)
     \item
-      \(C_{2}^{TR}=\left \{i \ \Big | \ \alpha_{1} \leq S_{i} < \alpha_{2} \right \}\)
+      \(2^{TR}=\left \{i \ \Big | \ \alpha_{1} \leq S_{i} < \alpha_{2} \right \}\)
     \item
-      \(C_{3}^{TR}=\left \{i \ \Big | \ \alpha_{2} \leq S_{i} \right \}\)
+      \(3^{TR}=\left \{i \ \Big | \ \alpha_{2} \leq S_{i} \right \}\)
     \end{itemize}
   \end{itemize}
 \item
@@ -331,42 +330,102 @@ Classification}\label{probabilistic-classification}}
   The algorithm:
 
   \begin{itemize}
+  \tightlist
   \item
-    Probabilistic classification class representation
+    The probabilistic classification of observation \(i\) will be
+    denoted:
+    \[C_{i}^{PR} \in \mathbf{C}_{i}^{PR}=(1_{i}^{PR}, \ 2_{i}^{PR}, \ 3_{i}^{PR})\]
+  \item
+    Given a set of training observations \(\mathbf{S}_{Train}\) of
+    length \(|N_{train}|\), we may characterize the probability of
+    certain events within that training set:
+
+    \begin{itemize}
+    \item
+      The probability that a response value of
+      \(k \in \left \{ 0, 1, 2, 3 \right \}\) is provided to question
+      \(Q=q\) where \(q\in\left \{1,\ldots,9\right \}\) is given by:
+      \[P\left(A_{q}=k \right) = \frac{1}{|N_{train}|}\sum_{i=1}^{|N_{train}|} \mathbb{I}\left(A_{iq}=k \right)\]
+      where \[\mathbb{I}\left(A_{iq} = k \right)=
+      \begin{cases}
+        0 &\mbox{if} \quad  a_{iq} \neq k \\
+        1 &\mbox{if} \quad  a_{iq}=k \\  
+      \end{cases}
+      \]
+    \item
+      The probability that an observation is assigned (via traditional
+      classification) into into traditional classification class
+      \(C^{TR}=j\) where \(j \in \left \{ 1, \ 2, \ 3 \right \}\) is
+      given by:
+      \[P\left( C^{TR} = j \right) = \frac{1}{|N_{Train}|} \sum_{i=1}^{|N_{train}|} \mathbb{I}\left(C_{i}^{TR}=j \right)\]
+      where \[\mathbb{I}\left(C_{i}^{TR}=j \right)
+      \begin{cases}
+        0 &\mbox{if} \quad  j \neq c \\
+        1 &\mbox{if} \quad  j = c \\  
+      \end{cases}
+      \]
+    \item
+      The probability that an observation's response value is
+      \(k \in \left \{ 0, 1, 2, 3 \right \}\) in question \(Q=q\) and
+      that same observation also has been assigned into traditional
+      classification class \(C^{TR}=j\) is given by:
+      \[P\left(A_{q} = k \bigcap C^{TR}=j  \right) =  \frac{1}{|j^{TR*}|} \sum_{i \in j^{TR*}} \mathbb{I} \left(A_{iq}=k \right) \]
+      where we are defining the level set:
+      \[j^{TR*}= \left \{  i \in \mathbf{S}_{Train} \Big | i \in j^{TR} \right \}\]
+      for \(j=1,2,3\)
+
+      and the value \(|j^{TR*}|\) represents the number of elements in
+      \(j^{TR*}\)
+    \end{itemize}
+  \end{itemize}
+\item
+  These probabilities allow us to define a weight parameter
+  corresponding to each 108 distinct combination of
+
+  \begin{itemize}
+  \tightlist
+  \item
+    question number: \(Q=q \in \left \{ 1, \ 2, \ldots, 9 \right \}\)
+  \item
+    response value: \(A_{q} = k \in \left \{ 0, 1, 2, 3 \right \}\)
+  \item
+    traditional classification: \(C^{TR} = j\) \begin{align*}
+     \mathbf{W}_{A_{q}}^{j^{TR}} &= \frac{P\left(A_{q}=k \ \Big | \ C^{TR}= j  \right) }{P\left(A_{q}=k \right) } \tag{EQ-XX} \\[0.5em]
+     &= \frac{ P\left(A_{q}=k \ \bigcap \ C^{TR}= j \right) }{P\left(A_{q}=k \right) P\left( C^{TR}= j \right)} \\[0.5em]
+     &= \frac{\frac{1}{|j^{TR*}|} \sum_{i \in j^{TR*}} \mathbb{I} \left(A_{iq}=k \right)}{\left( \frac{1}{|N_{train}|}\sum_{i=1}^{|N_{train}|} \mathbb{I}\left(A_{iq}=k \right) \right) \left( \frac{1}{|N_{Train}|} \sum_{i=1}^{|N_{train}|} \mathbb{I}\left(C_{i}^{TR}=j \right) \right)  } \\[0.5em]
+     &= \left(\frac{|N_{Train}|^{2}}{|j^{TR*}|} \right) \left(\frac{ \sum_{i \in j^{TR*}} \mathbb{I} \left(A_{iq}=k \right)}{\left( \sum_{i=1}^{|N_{train}|} \mathbb{I}\left(A_{iq}=k \right) \right) \left( \sum_{i=1}^{|N_{train}|} \mathbb{I}\left(C_{i}^{TR}=j \right) \right)}   \right)  
+     \end{align*}
+  \end{itemize}
+\item
+  Using the weights, we may now calculate the probabilistic
+  classification score:
+
+  \begin{itemize}
+  \tightlist
+  \item
+    A pre-specified confidence threshold value \(\gamma \in (0,1)\)
+    determines the stopping point of the algoritm which proceeds
+    recursively according to the framework:
 
     \begin{itemize}
     \tightlist
     \item
-      \(\mathbf{C}^{PR}=(C_{1}^{PR},C_{2}^{PR},C_{3}^{PR})\)
+      Let
+      \(\mathbf{C}_{(q)}^{PR}=\left(1_{(q)}^{PR}, \ 2_{(q)}^{PR}, \ 3_{(q)}^{PR} \right)\)
+      represent the \(q^{th}\) iteration of the probabilistic
+      re-weighting algorithm, for \(q=1, \ldots, 9\)\\
+      \begin{align*}
+      \left(1_{(0)}^{PR}, \ 2_{(0)}^{PR}, \ 3_{(0)}^{PR} \right) &= \left( \frac{1}{3}, \  \frac{1}{3}, \ \frac{1}{3}\right) \\[0.5em]
+      \left(1_{(q+1)}^{PR}, \ 2_{(q+1)}^{PR}, \ 3_{(q+1)}^{PR} \right) &= \frac{\left(1_{(q)}^{PR}W_{A_{q}}^{1^{TR}}, \ 2_{(q)}^{PR}W_{A_{q}}^{2^{TR}}, \ 2_{(q)}^{PR}W_{A_{q}}^{2^{TR}} \right) }{\sum_{j=1}^{3} j_{(q)}^{PR}W_{A_{q}}^{j^{TR}}} \tag{EQ-XX} \label{1.3.2 - 2}
+      \end{align*}\\
+      for \(q=1, 2, \ldots, 9\)
     \end{itemize}
   \item
-    Let the question number be represented by:
-    \(Q=q\in\left \{ 1,2,\ldots, 9 \right \}\)
-  \item
-    Let the provided answer to a particular question be representy by:
-    \(A=a \in\left \{ 0,1,2,3 \right \}\)
-  \item
-    Given training set, a set of weights is calculated using the
-    formula: \[
-    W_{AQ}^{C^{PR}} = \frac{P\left(Q=q \  \Big | \ C^{TR}=c \right) }{P \left( Q = q   \right) } \tag{1.3.2 - 1} \label{1.3.2-1}
-    \]
-  \item
-    Suppose that \(\mathbf{A}_{i}=\{ a_{q}\}_{q=1}^{9}\) represents a
-    set of answers to the PHQ9, contained in observation \(i\).
-  \item
-    For a provided confidence threshold value \(\gamma \in (0,1)\), the
-    probabilistic scoring sequence is given recursively by:
-    \begin{align*}
-    \left(P_{0}^{(1)},P_{0}^{(2)},P_{0}^{(3)} \right) &= \left( \frac{1}{3}, \frac{1}{3}, \frac{1}{3}\right) \\[0.5em]
-    \left(P_{q+1}^{(1)},P_{q+1}^{(2)},P_{q+1}^{(3)} \right) &= \frac{\left(P_{q}^{(1)}W_{a_{q}}^{(1)}, P_{q}^{(2)}W_{a_{q}}^{(2)}, P_{q}^{(3)}W_{a_{q}}^{(3)}\right) }{\sum_{j=1}^{3}  P_{q}^{j}W_{a_{q}q}^{(j)}} \tag{1.3.2 - 2} \label{1.3.2 - 2}
-    \end{align*}
-  \item
-    If we define: \[j_{q}^{*}= \underset{j}{max} \  P_{q}^{(j)}\] and
-    \[q^{*}=\underset{q}{min} \ \left \{q : P^{*}_{q} > \gamma    \right \} \]
+    If we define: \[j_{q}^{*}= \underset{j}{max} \  j_{q}^{PR}\] and
+    \[q^{*}=\underset{q}{min} \ \left \{q : j^{*}_{q} > \gamma    \right \} \]
     then (provided that \(q^{*}\) exists), the probabilistic scoring
     classification is:
-    \[j_{q^{*}}^{*}=\underset{j}{max} \ P_{q^{*}}^{j}\] more
-    specifically, it is: \[C^{PR}_{j_{q^{*}}^{*}}\]
+    \[j_{q^{*}}^{*PR}=\underset{j}{max} \ j_{q^{*}}^{PR}\]
   \end{itemize}
 \end{itemize}
 
@@ -445,7 +504,7 @@ than conventional scoring''
     \(I\left(y_{i}=\hat{y}_{i} \right)=\begin{cases} 0 &\mbox{if} \quad y_{i} \neq \hat{y}_{i} \\ 1 &\mbox{if} \quad y_{i} = \hat{y}_{i} \\ \end{cases}\)
   \end{itemize}
 \item
-  Accuracy as a function of model value and \textit{simmulated}
+  Accuracy as a function of model value and \textit{simulated}
   validation outcome
   \[\tilde{\text{Accuracy}} = f(\mathbf{\tilde{y}}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(\tilde{y}_{i}=\hat{y}_{i} \right)\]
 
@@ -454,13 +513,13 @@ than conventional scoring''
   \item
     where
     \(\mathbf{\tilde{y}}=\left(\tilde{y}_{1}, \ldots, \tilde{y}_{N} \right)\)
-    is the simmulated validation outcome
+    is the simulated validation outcome
   \end{itemize}
 \item
-  Simmulated accuracy calculation can be performed for Traditional and
+  Simulated accuracy calculation can be performed for Traditional and
   Probabilistic Classifications, and then compared: \begin{align*}
   \tilde{Accuracy_{TR}} &\sim \tilde{Accuracy_{PR}} \\[0.5em]
-  f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{TR} \right)  &\sim f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{PR} \right) \tag{2.1-1} \label{2.1-1}
+  f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{TR} \right)  &\sim f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}^{PR} \right) \tag{EQ-XX} \label{2.1-1}
   \end{align*}
 \item
   This analysis will focus on estimating various values of
@@ -477,34 +536,40 @@ Processing:}\label{cross-validation-processing}}
 \item
   Estimating \(\tilde{Accuracy}\) using Cross Validation allows us to
   obtain an average-stabilized estimate of both Pscore and traditional
-  classifications simmultanneuously, and to establish the relationship
+  classifications simultaneously, and to establish the relationship
   between training sample size and accuracy
 \item
-  For a fixed value of \(K \in \left \{ 2, \ldots, N-1 \right \}\) we
+  For a fixed value of \(K \in \left \{ 1, 2, \ldots, N \right \}\) we
   partition the full data set into \(K\) equal subsets, each of which
   has \(N_{K}\) observations sampled randomly without replacement from
   the original data, where:
   \[N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor\]
 \item
   We now have \(K\) distinct data sets that have been subset from the
-  original data, that we will combine into test-train pairs
+  original data, which we will combine into test-train pairs
 \item
   There are \(K\) different ways in which \(K-1\) data sets can be
-  chosen from \(K\) sets when order does not matter, for each of these
-  \(K\) combinations we create a train-test combination by combining the
-  \(K-1\) selected sets to form the training set, and the remaing set to
-  form the test set.
+  chosen from \(K\) sets when order does not matter: \begin{align*}
+  \binom{k}{k-1} &= \frac{k!}{(k-1)!(k-(k-1))!}\\[0.5em]
+  &= \frac{k!}{(k-1)!}\\[0.5em]
+  &= k
+  \end{align*}
+\item
+  for each of these \(K\) combinations we create a train-test
+  combination by combining the \(K-1\) selected sets to form the
+  training set, and the remaining set to form the test set.
 \item
   We will denote these train/test pairs
-  \[\left(TR, TE \right)^{k}_{j}=\left(TR_{j}^{k}, TE_{j}^{k} \right) \]
-  for \(j=1, \ldots, K\)
+  \[\left(TR, TE \right)^{K}_{j}=\left(TR_{j}^{K}, TE_{j}^{K} \right) \]
+  where K will represent the partition number value for the original
+  separations and \(j=1, \ldots, K\)
 \item
   From the definition of \(N_{K}\), and the fact that each training set
   is a union of \(\left(K-1 \right)\) sets of length \(N_{K}\), we can
-  establish a relationship between training set length
-  (\(|TR_{j}^{k}|\)-the number of observations in the jth training set)
-  and the value of \(K\) from which the original test-train partitions
-  were originally formed:
+  establish a relationship between training set length, i.e.
+  \(|TR_{j}^{k}|\) the number of observations in the \(j^{th}\) training
+  set and the value of \(K\) from which the original test-train
+  partitions were formed:\\
   \[|TR_{j}^{k}|=(K-1)N_{K}=(K-1)\Big \lfloor \frac{N}{K} \Big \rfloor\]
 \item
   Similarly, we may define the length of the test set:
@@ -516,35 +581,37 @@ Processing:}\label{cross-validation-processing}}
   |TR_{j}^{K}| + |TE_{j}^{K}| &= (k-1)\Big \lfloor \frac{N}{K} \Big \rfloor + \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
   &= K \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
   &\leq K \frac{N}{K} = N
-  \end{align*} Implying that the some observations may be left out of
-  the CV process.
+  \end{align*} Implying that observations will be left out of the
+  sampling process in the selection of subsets. This is due to the
+  definition of the subsample sizes chosen using the floor function
+  which is not injective on real valued domains.\\
 \item
   We are interested in establishing a relationship between
   \(|TR_{j}^{k}|\) and \(\tilde{accuracy}\), idealistically represented
-  by:
-  \[\tilde{accuracy}\left( |TE_{j}^{k}|  \right) = \tilde{accuracy}\left( \Big \lfloor \frac{N}{K} \Big \rfloor  \right) \]
-  This formula establishes a connection between the value of \(K\) and
-  \(\tilde{accuracy}\). Demonstrating that by calculating the value of
-  \(\tilde{accuracy}\) at varying the value of \(K\), we may establish
-  the relationship between \(\tilde{accuracy}\) and \(|TR_{j}^{k}|\)
-  (i.e.~Training Sample Length).
+  by: \[
+  \tilde{accuracy}\left( |TE_{j}^{k}|  \right) = \tilde{accuracy}\left( \Big \lfloor \frac{N}{K} \Big \rfloor  \right) \tag{EQ-XX} 
+  \] This formula establishes a connection between the value of \(K\)
+  and \(\tilde{accuracy}\). Demonstrating that by calculating the value
+  of \(\tilde{accuracy}\) at varying the value of \(K\), we may
+  establish the relationship between \(\tilde{accuracy}\) and
+  \(|TR_{j}^{k}|\) (i.e.~Training Sample Length).
 \item
   We can calculate the calculate the classification accuracy for each
   train-test pairing within a specific value of K.
   \[\tilde{accuracy}\left(TR, TE \right)_{j}^{k}= \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \]
 \item
   and we will use the average of these values to represent the accuracy
-  at a particular K-value \begin{eqnarray*}
+  at a particular K-value \begin{align*}
     \tilde{accuracy}\left(TR, TE \right)^{k} &= \tilde{accuracy}_{m}\left(TR, TE \right)_{\bullet}^{k} \\
     &=\frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}\left(TR, TE \right)_{j}^{k}\right \} \\
     &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \right \}
-  \end{eqnarray*}
+  \end{align*}
 \item
   This process can be applied to Traditional and Probabilistic Scoring
-  methods: \begin{eqnarray*}
+  methods: \begin{align*}
     \tilde{accuracy}_{m}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}\left(TR, TE \right)_{j}^{k}\right \} \\
     &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i}^{m} \right) \right \}
-  \end{eqnarray*} where \(m\in\left \{ Pscore, \ Tscore \right \}\),
+  \end{align*} where \(m\in\left \{ Pscore, \ Tscore \right \}\),
   \(\hat{y}^{Pscore}\) is a Probabilistic Scoring generated outcome, and
   \(\hat{y}^{Tscore}\) is a Traditional Scoring generate outcome
 \item
@@ -552,17 +619,17 @@ Processing:}\label{cross-validation-processing}}
   validation outcomes \begin{eqnarray*}
     \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{m}^{h}\left(TR, TE \right)_{j}^{k}\right \} \\
     &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{m} \right) \right \}
-  \end{eqnarray*} where \(h \in \left \{ 1,2,3,4,5 \right \}\)
+  \end{eqnarray*} where the values of \(h\) will be outlined in
+  \textbf{Section XX}.
 \item
-  Since notation is obviously extremely cumbersome, indices displayed
-  will be limited only to those relevant.
+  Since notation is obviously cumbersome, indices displayed will be
+  limited only to those relevant.
 \item
-  \textbf{Figure 1}
+  \textbf{Figure XX}
 \item
   \includegraphics{/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/KvsTrainlen.jpeg}
 \item
-  \textbf{Figure 1 Caption:} Training and Test set observation counts vs
-  K
+  \textbf{Figure XX:} Training and Test set observation counts vs K
 \item
   We see that the possible training set observation counts using the CV
   method outlined above on the data provided range between 1247 and 2492
@@ -571,8 +638,8 @@ Processing:}\label{cross-validation-processing}}
   The figure also shows that for K-values greater than 1248, test set
   sizes are confined to one.
 \item
-  Training set sizes were selected for analysis by sampling 50 or more
-  different values of K from k=5 to k=2490.
+  Training set sizes were selected for analysis by sampling 50 different
+  values of K from k=5 to k=2490.
 \item
   Plots of comparing accuracies in the form of \eqref{2.1-1} are shown
   for each value of K selected as the value of training set length
@@ -581,9 +648,6 @@ Processing:}\label{cross-validation-processing}}
   It was assumed that subsets taken from the data which were sampled
   randomly without replacement are at least partially representative of
   the population as a whole.
-\item
-  It was assumed (incorrectly) for this analysis that test-set accuracy
-  evaluations are comparable at all values of K.
 \end{itemize}
 
 \hypertarget{optimal-convergence-criterion}{%
@@ -614,8 +678,7 @@ Outcomes}\label{simulated-validation-outcomes}}
 \begin{itemize}
 \tightlist
 \item
-  Change traditional classification based upon the following
-  assumptions:
+  Theoretical assumptions made:
 
   \begin{itemize}
   \tightlist
@@ -670,8 +733,8 @@ Outcomes}\label{simulated-validation-outcomes}}
     \(P\left(C_{i}^{TR} \neq \tilde{C}_{i}^{1} \right) \propto \frac{|\mathbb{S}^{PR}_{T}|}{D_{i}}\)
   \item
     Proportionality constants were chosen so that the total difference
-    between Traditional Scoring classification and simmulated outcome
-    was 12\%
+    between Traditional Scoring classification and simulated outcome was
+    12\%
   \end{itemize}
 \item
   \textbf{Figure 2:}
@@ -682,11 +745,11 @@ Outcomes}\label{simulated-validation-outcomes}}
   as classified by traditional methods, and how the first simulated
   validation outcome induced change
 \item
-  Simmulated validation outcomes generated using this method depended
+  Simulated validation outcomes generated using this method depended
   only on information relevant to the observation for which the outcome
-  was being simmulated
+  was being simulated
 \item
-  Pairing of simmulated validation outcomes performed with full-data
+  Pairing of simulated validation outcomes performed with full-data
 \item
   Accuracy comparisons of Probabilistic Scoring and Traditional Scoring
   classifications were obtained on 100 different values of K using the
@@ -694,17 +757,17 @@ Outcomes}\label{simulated-validation-outcomes}}
 \item
   The simulated outcome generated using this method was implemented in
   the process to obtain the optimal convergence confidence level in
-  section 2.3
+  \textbf{Section XX}
 \end{itemize}
 
-\hypertarget{probabilistic-algorithm-simmulations}{%
-\subsubsection{Probabilistic Algorithm
-Simmulations}\label{probabilistic-algorithm-simmulations}}
+\hypertarget{probabilistic-outcome-simulations}{%
+\subsubsection{Probabilistic Outcome
+Simulations}\label{probabilistic-outcome-simulations}}
 
 \begin{itemize}
 \tightlist
 \item
-  Motivating Principle: The Pscoring algorithm incorperates more
+  Motivating Principle: The Pscoring algorithm incorporates more
   information contained in the data than anything else, therefore it
   should generate the most appropriate estimates
 \item
@@ -749,7 +812,7 @@ Simmulations}\label{probabilistic-algorithm-simmulations}}
     simulated using the same set of information. (i.e.~categorized using
     the same training data).
   \item
-    The values of the simmulated outcome specific to training sample
+    The values of the simulated outcome specific to training sample
     within each K value are then substituted into the CV algorithm for
     \(\tilde{y}^{h}\) \begin{eqnarray*}
       \tilde{accuracy}_{m}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{\tilde{accuracy}_{m}^{h} \left(TR, TE)_{j}^{k}   \right)   \right \} \\
@@ -812,9 +875,9 @@ Classifications}\label{unsupervised-learning-classifications}}
   \end{itemize}
 \end{itemize}
 
-\hypertarget{kmeans-and-heirarchical-clustering}{%
-\paragraph{Kmeans and Heirarchical
-Clustering}\label{kmeans-and-heirarchical-clustering}}
+\hypertarget{kmeans-and-hierarchical-clustering}{%
+\paragraph{Kmeans and Hierarchical
+Clustering}\label{kmeans-and-hierarchical-clustering}}
 
 \begin{itemize}
 \tightlist
@@ -858,7 +921,7 @@ Clustering}\label{kmeans-and-heirarchical-clustering}}
     \textbf{Figure 5 Caption:} Circular dendogram with three-category
     classifications
   \item
-    The second heirarchical clustering technique distinguishes
+    The second hierarchical clustering technique distinguishes
     observations based upon Manhattan distance. A circular dendogram,
     with corresponding classifications is displayed in \textbf{Figure 6}
     {[}5{]}
@@ -879,10 +942,10 @@ Clustering}\label{kmeans-and-heirarchical-clustering}}
 \item
   Self-organizing maps (SOMs) require a pre-specified structure
   (generally a lattice structure) to which observations are clustered
-  based upon projected proximity
+  based upon projected proximity {[}6{]}
 \item
-  Some advantages of using a SOM over Kmeans, or Principle Components
-  Analysis are:
+  Some advantages of using a SOM over Kmeans, or Hierarchical Clustering
+  are:
 
   \begin{itemize}
   \tightlist
@@ -891,11 +954,11 @@ Clustering}\label{kmeans-and-heirarchical-clustering}}
     restricting model structure
   \item
     Topological preservation. SOMs preserve ordering properties found in
-    higer dimentsions, when mapped to the projection space, therefore
-    order (hierarchy) is preserved
+    higher dimensions, when mapped to the projection space, therefore
+    order (hierarchy) is preserved {[}6{]}
   \item
     Inferential potential. SOM visualization methods are extremely
-    useful and meaningful.
+    useful and meaningful. {[}7{]}
   \end{itemize}
 \item
   SOMs have standard pre-processing procedures that dictate
@@ -913,21 +976,27 @@ Clustering}\label{kmeans-and-heirarchical-clustering}}
   \item
     12 X 9 rectangular topology
   \item
-    15 X 15 heagonal topology
+    15 X 15 hexagonal topology
   \item
     3 X 9 rectangular topology
   \end{itemize}
 \item
-  Plots of each of these mappings are found in \textbf{Figures  - }
+  We have chosen to display the most accurate versions of the SOMs
+  constructed. We will display those SOMs that have been determined to
+  be most accurate (on average) in regards to either probabilistic
+  scoring or traditional scoring.
+\item
+  Further information on the remaining SOMs can be found in
+  \textbf{Appendix Section (XX)}
+\item
+  Plots of each of these mappings are found in \textbf{Figures XX - XX}
+  below
 \item
   \textbf{Figure 7:}
-\end{itemize}
 
-\begin{center}
+  \begin{center}
   \includegraphics[width=0.25\textwidth]{KeySom.jpeg}
-\end{center}
-
-\begin{itemize}
+  \end{center}
 \item
   \textbf{Figure 7 Caption}: Color coding key for question magnitude
   representation within each output lattice cluster
@@ -962,7 +1031,7 @@ Simulation}\label{inferential-outcome-simulation}}
   plotted are Linear Regression trend lines for each estimation method's
   accuracy estimates.
 \item
-  \textbf{Table 1:}
+  \textbf{Table XX:}
 
   \begin{center}
   \begin{tabular}{|c|c|c|c|c|}
@@ -981,20 +1050,21 @@ Simulation}\label{inferential-outcome-simulation}}
   \end{tabular}
   \end{center}
 
-  \textbf{Table 1 Caption:} summary table for linear regrssion trend
+  \textbf{Table XX Caption:} summary table for linear regression trend
   lines fit to accuracy estimate values displayed in \textbf{Figure XX}
 \item
   After simulating an outcome using the Inferential Simulation method
-  outlined in section (2.4.1) we compared the accuracy of probabilistic
-  scoring and traditional scoring classification methods against this
-  outcome for 50 different definitions of training sample length.
+  outlined in \textbf{Section (XX)} we compared the accuracy of
+  probabilistic scoring and traditional scoring classification methods
+  against this outcome for 50 different definitions of training sample
+  length.
 \item
   The results of this comparison show that traditional scoring
   classification is more accurate than probabilistic scoring for all
-  values simmulated
+  values simulated
 \item
   The results indicated that probabilistic scoring accuracy grew at a
-  faster rate than traditional scoring accuracy; howvever these results
+  faster rate than traditional scoring accuracy; however these results
   lacked significance (p=0.5581)
 \end{itemize}
 
@@ -1010,12 +1080,12 @@ Simulation}\label{inferential-outcome-simulation}}
   \end{center}
 \item
   \textbf{Figure XX Caption:} displays estimated accuracy values for
-  probabilistic scoring classifications and traditional scoring
-  classifications across 50 values of training set definitions. Also
-  plotted are Linear Regression trend lines for each estimation method's
-  accuracy estimates.
+  probabilistic and traditional scoring classifications as estimated
+  using a probabilistically simulated outcome variable, across 50 values
+  of training set definitions. Also plotted are Linear Regression trend
+  lines for each estimation method's accuracy estimates.
 \item
-  \textbf{Table 1:}
+  \textbf{Table XX:}
 
   \begin{center}
   \begin{tabular}{|c|c|c|c|c|}
@@ -1034,8 +1104,201 @@ Simulation}\label{inferential-outcome-simulation}}
   \end{tabular}
   \end{center}
 
-  \textbf{Table 1 Caption:} summary table for linear regrssion trend
+  \textbf{Table XX Caption:} summary table for linear regression trend
   lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+\item
+  After simulating an outcome using the Probabilistic Simulation method
+  outlined in \textbf{Section (XX)} we compared the accuracy of
+  probabilistic scoring and traditional scoring classification methods
+  against this outcome for 50 different definitions of training sample
+  length.
+\item
+  The results of this comparison show that probabilistic scoring
+  classification is more accurate than traditional scoring for all
+  values simulated
+\item
+  The results indicated that probabilistic scoring accuracy grew at a
+  faster rate than traditional scoring accuracy, and that this effect is
+  supported by evidence in the data simulated (p=0.00421)
+\end{itemize}
+
+\hypertarget{unsupervised-algorithm-outcomes}{%
+\subsection{Unsupervised Algorithm
+Outcomes}\label{unsupervised-algorithm-outcomes}}
+
+\hypertarget{kmeans-clustering}{%
+\subsubsection{Kmeans Clustering}\label{kmeans-clustering}}
+
+\begin{itemize}
+\item
+  \textbf{Figure XX:}
+
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{KMeansResultsGraph.jpeg}
+  \end{center}
+\item
+  \textbf{Figure XX:} displays estimated accuracy values for
+  probabilistic and traditional scoring classifications as estimated
+  using outcomes resulting from a Kmeans clustering process. The
+  accuracy values are compared across 50 values of training set
+  definitions. Also plotted are Linear Regression trend lines for each
+  estimation method's accuracy estimates.
+\item
+  \textbf{Table XX:}
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+  \hline
+  \hline
+  Intercept                      &  5.389e-1 &  2.264-2  &  2.380e1  & <2e-16   \\
+  \hline
+  ID = Traditional               & -4.129e-1 &  3.202e-2  & -1.290e1  & <2e-16 \\
+  \hline
+  \#Train Obs                    &  -1.483e-6 &  9.321e-6  &  -1.590e-1  & 8.740e-1 \\
+  \hline
+  (ID = Traditional):(\#Train Obs) &  1.082e-5 &  1.318e-5  &  8.210e-1 & 4.130e-1 \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \textbf{Table XX Caption:} summary table for linear regression trend
+  lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+\item
+  We used the outcomes of a Kmeans unsupervised learning algorithm to
+  calculate the accuracy of probabilistic scoring and traditional
+  scoring classification methods for 50 different definitions of
+  training sample length.
+\item
+  The results of this comparison show that probabilistic scoring
+  classification is more accurate than traditional scoring for all
+  values simulated
+\item
+  The results indicated that probabilistic scoring accuracy did not
+  continue to grow as training sample size increased; however, the
+  estimate of this parameter is not well supported by evidence from the
+  data (p=0.874)
+\end{itemize}
+
+\hypertarget{hierarchical-clustering}{%
+\subsubsection{Hierarchical Clustering}\label{hierarchical-clustering}}
+
+\begin{itemize}
+\item
+  \textbf{Figure XX:}
+
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{HCResultsGraph.jpeg}
+  \end{center}
+\item
+  \textbf{Figure XX:} displays estimated accuracy values for
+  probabilistic and traditional scoring classifications as estimated
+  using outcomes resulting from a hierarchical clustering process. The
+  accuracy values are compared across 50 values of training set
+  definitions. Also plotted are Linear Regression trend lines for each
+  estimation method's accuracy estimates.
+\item
+  \textbf{Table XX:}
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+  \hline
+  \hline
+  Intercept                      &  3.437e-1 &  2.505e-2  &  1.372e1  & <2e-16   \\
+  \hline
+  ID = Traditional               & 3.805e-1 &  3.543e-2  & 1.074e1  & <2e-16 \\
+  \hline
+  \#Train Obs                    &  1.548e-5 &  1.031e-5  &  1.501e0  & 1.350e-1 \\
+  \hline
+  (ID = Traditional):(\#Train Obs) &  -9.187e-6 &  1.459e-5  &  -6.300e-1 & 5.300e-1 \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \textbf{Table XX Caption:} summary table for linear regression trend
+  lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+\item
+  We used the outcomes of a hierarchical clustering learning algorithm
+  to calculate the accuracy of probabilistic scoring and traditional
+  scoring classification methods for 50 different definitions of
+  training sample length.
+\item
+  The results of this comparison show that traditional scoring
+  classification is more accurate than probabilistic scoring for all
+  values simulated
+\item
+  The trend indicated in the probabilistic scoring accuracy over the
+  training sample size appeared to indicate that probabilistic scoring
+  accuracy increase with training sample size; however, the estimate of
+  this parameter is not well supported by evidence from the data
+  (p=0.135)
+\end{itemize}
+
+\hypertarget{self-organizing-maps-1}{%
+\subsubsection{Self Organizing Maps}\label{self-organizing-maps-1}}
+
+\begin{itemize}
+\item
+  \textbf{Figure XX:}
+
+  \begin{center}
+  \includegraphics[width=0.5\textwidth]{SomResultsGraph.jpeg}
+  \end{center}
+\item
+  \textbf{Figure XX Caption:} displays estimated accuracy values for
+  probabilistic and traditional scoring classifications obtained using
+  outcomes estimated by two Self Organizing Maps that has a 15X15
+  lattice structure, a hexagonal topology, and employed either a
+  Euclidean or Manhattan Metric. Also plotted are Linear Regression
+  trend lines for each estimation method's accuracy estimates.
+\item
+  \textbf{Table XX:}
+
+  \begin{center}
+  \begin{tabular}{|c|c|c|c|c|}
+  \hline
+  Parameter     & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+  \hline
+  \hline
+  Intercept    &  6.227e-1 &  2.814e-2  &  2.213e1  & <2e-16   \\                             
+  \hline
+  ID = $\left(\text{Pscore}, \ L^{1}  \right)$               & -9.234e-2 &  3.979e-2  & -2.321e0  & 2.136e-2 \\
+  \hline
+  ID = $\left(\text{Trad}, \ L^{2}   \right)$               & 1.102e-1 &  3.979e-2  & 2.769e0  & 6.170e-3 \\
+  \hline
+  ID = $\left(\text{Trad}, \ L^{1}   \right)$               & 2.841e-2 &  3.979e-2  & 7.140e-1  & 4.762e-1 \\
+  \hline
+  \#Train Obs  &  1.781e-5 &  1.60e-5  &  1.535e0  & 1.264e-1 \\
+  \hline
+  ID = $\left(\text{Pscore}, \ L^{1}  \right)$:(\#Train Obs) &  2.390e-6 &  1.640e-5  &  1.460e-1 & 8.843e-1 \\
+  \hline
+  ID = $\left(\text{Trad}, \ L^{2}   \right)$:(\#Train Obs) &  -1.557e-5 &  1.640e-5  &  -9.490e-1 & 3.437e-1 \\
+  \hline
+  ID = $\left(\text{Trad}, \ L^{1}   \right)$:(\#Train Obs) &  -1.593e-5 &  1.640e-5  &  -9.710e0 & 3.329e-1 \\
+  \hline
+  \end{tabular}
+  \end{center}
+
+  \textbf{Table 1 Caption:} summary table for linear regression trend
+  lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+\item
+  We simulated six different outcomes using three different Self
+  Organizing Maps with two different metrics. We chose to reduce
+  complications by reducing the outcomes we compare the modeling
+  accuracies to the two distinct metric forms of SOM2, which exhibited
+  the highest accuracies with both traditional scoring and probabilistic
+  scoring methods in the \(L^{2}\) metric.
+\item
+  Comparisons of accuracy between probabilistic and traditional
+  classification was performed for each of the two SOMs (two accuracy
+  comparisons) on 50 different definitions of training sample length.
+\item
+  The results of this comparison show that traditional scoring
+  classification is more accurate than probabilistic scoring for all
+  values simulated.
 \end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
@@ -1043,18 +1306,151 @@ Simulation}\label{inferential-outcome-simulation}}
 \hypertarget{discussion}{%
 \section{Discussion}\label{discussion}}
 
+\hypertarget{summary-of-results}{%
+\subsection{Summary of Results}\label{summary-of-results}}
+
+\begin{itemize}
+\item
+  It is hoped that providing a spectrum of theoretically and empirically
+  reasonable accuracy measurements, we can begin to conceptualize those
+  values of accuracy that are likely to represent reality.
+\item
+  We have simulated observation outcomes using information contained in
+  data that should reasonably represent outcome values.
+\item
+  We have performed a comparison of probabilistic and traditional
+  scoring accuracy using multiple simulated outcome variables created in
+  three different ways.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Inferential Simulations are based on empirical evidence in the data,
+    and theoretical information relating to experimentation
+  \item
+    Probabilistic Simulations are also based on empirical evidence in
+    the data, but also incorporated sequential dependencies in the
+    answer sets not accounted for by Inferential Simulations
+  \item
+    Unsupervised Methods do not account for any underlying
+    experimentation practices. These outcomes are generated based upon a
+    hierarchy of relations imposed on the results of a clustering
+    algorithm.
+  \end{itemize}
+\item
+  Comparisons were evaluated at 50 different definitions of training
+  sample length, and trend lines were fit to these calculated accuracy
+  values to estimate the relationship between accuracy and training
+  sample length.
+\item
+  The analysis we have conducted must conclude without a definitive
+  conclusion on a comparison of probabilistic scoring classification
+  accuracy and traditional scoring classification accuracy.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    The analysis evaluated classification accuracy on six different
+    simulated outcomes. In two out of these six outcomes, probabilistic
+    scoring classification was superior in accuracy.
+  \item
+    As this answer is not definitive, we will note that the results of
+    this analysis apply only with respect to the simulated relationships
+    evaluated.
+  \end{itemize}
+\item
+  This analysis has produced initial evidence that probabilistic scoring
+  increases with training sample size.
+\item
+  Out of the six simulated outcome value accuracy comparisons, the
+  probabilistic scoring classification accuracy had a higher positive
+  trend than did traditional scoring classification accuracy.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    It should be noted that further research is required in order to
+    provide a wider-range of estimated training sample set sizes over
+    which accuracy can be calculated.
+  \end{itemize}
+\item
+  The sixth (non-greater probabilistic scoring classification accuracy
+  trend) belonged to the Kmeans simulated outcome
+
+  \begin{itemize}
+  \tightlist
+  \item
+    This outcome dictated probabilistic scoring as the superior method
+    of classification.
+  \item
+    The interaction between the probabilistic scoring trend and
+    traditional scoring trend is weak. Over \(3 \times 10^{4}\)
+    observations would be required to make traditional scoring MORE
+    accurate in a situation where this outcome represented the truth.
+  \item
+    In reality, obtaining more observations should not decrease
+    probabilistic scoring accuracy. However, increasing observational
+    counts will increase initialization dependencies in the Kmeans
+    algorithm. Therefore, the decrease in probabilistic scoring
+    classification accuracy could be explained by a tendency of the
+    outcome variable to ``shift its preference'' when different data
+    sizes are provided.
+  \end{itemize}
+\end{itemize}
+
+\hypertarget{client-satisfaction-concerns}{%
+\subsection{Client Satisfaction
+Concerns}\label{client-satisfaction-concerns}}
+
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Discussion of Results (separate from Results section)}
+  As initially specified, this analysis has not come close to answering
+  either of the client-specified goals.
 \item
-  \textbf{Have you addressed your client's goals?}
+  Mathematical proof aside, this analysis has failed to produce any
+  concrete comparison of probabilistic and traditional scoring
+  accuracies.
 \item
-  \textbf{Are there any caveats to your analysis?}
+  The CV analysis has also failed to produce reliable results and needs
+  to be adapted to allow for more flexible sampling practices.
 \item
-  \textbf{What are the next steps from such an analysis?}
+  The specified analysis does not address or even acknowledge the
+  client's second stated goal.
+\end{itemize}
+
+\hypertarget{next-steps}{%
+\subsection{Next Steps}\label{next-steps}}
+
+\begin{itemize}
+\tightlist
 \item
-  \textbf{Recommended resources}
+  Although this approach might be enlightening, finishing touches are
+  most likely not advisable as they will most likely not produce
+  conclusive results.
+\item
+  However, further analysis would include altering the CV analysis
+  process to re-distribute the values of training sample length to a
+  wider and better representative spectrum.
+
+  \begin{itemize}
+  \tightlist
+  \item
+    Improvements could be easily implemented by independently sampling
+    Test and Training sets, and replacing observations as sampling takes
+    place.
+  \item
+    The new process would allow for potentially infinite (although
+    practically fewer) Train/Test sample size pairings.
+  \item
+    The distribution of Training sample size could also be easily
+    regulated, and even sequentially spaced.
+  \end{itemize}
+\item
+  Self Organizing Maps have improved algorithms which allow for the
+  structure on which they are built to be ``optimized''. This so called
+  ``Growing Self Organizing Map'' (GSOM) would better capture
+  information in the original data than pre-specified structures.
 \end{itemize}
 
 \begin{center}\rule{0.5\linewidth}{\linethickness}\end{center}
@@ -1062,10 +1458,21 @@ Simulation}\label{inferential-outcome-simulation}}
 \hypertarget{appendix}{%
 \section{Appendix}\label{appendix}}
 
+\hypertarget{data-and-code-availability}{%
+\subsection{Data and Code
+Availability}\label{data-and-code-availability}}
+
+Access to code, with instructions, and all data used for the analysis
+completed here is available for download at:
+
+\texttt{https://github.com/leepanter/PScoreVSTscore}
+
+\texttt{git@github.com:leepanter/PScoreVSTscore.git}
+
 \begin{itemize}
 \tightlist
 \item
-  \textbf{Necessary code or solftware instructions to carry our your analysis.}\\
+  \textbf{Necessary code or software instructions to carry our your analysis.}
 \item
   \textbf{Include any resources you have referred to or found helpful}
 \item
@@ -1097,6 +1504,13 @@ patient health questionnaire (phq) and gad-7 measures.
 
 \leavevmode\hypertarget{ref-STHDA_2020}{}%
 5. (2020) \emph{Sthdacom}.
+
+\leavevmode\hypertarget{ref-Belavkin}{}%
+6. Belavkin R Lecture 13: Self-organising maps.
+
+\leavevmode\hypertarget{ref-Tanner_2020}{}%
+7. Tanner D (2020) Introduction to self organizing maps in r - the
+kohonen package and nba player statistics. \emph{Githubio}.
 
 
 \end{document}

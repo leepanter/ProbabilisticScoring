@@ -1,0 +1,37 @@
+\babel@toc {english}{}
+\contentsline {section}{\numberline {1}Introduction}{3}{section.1}
+\contentsline {subsection}{\numberline {1.1}Background \& Context necessary for project}{3}{subsection.1.1}
+\contentsline {subsection}{\numberline {1.2}Data}{3}{subsection.1.2}
+\contentsline {subsubsection}{\numberline {1.2.1}Data Origin:}{3}{subsubsection.1.2.1}
+\contentsline {subsubsection}{\numberline {1.2.2}Data Properties:}{3}{subsubsection.1.2.2}
+\contentsline {subsection}{\numberline {1.3}Classification Methods}{4}{subsection.1.3}
+\contentsline {subsubsection}{\numberline {1.3.1}Traditional Classification}{4}{subsubsection.1.3.1}
+\contentsline {subsubsection}{\numberline {1.3.2}Probabilistic Classification}{4}{subsubsection.1.3.2}
+\contentsline {subsection}{\numberline {1.4}Consultation goals and deliverables}{6}{subsection.1.4}
+\contentsline {subsubsection}{\numberline {1.4.1}Client's Specified Goals:}{6}{subsubsection.1.4.1}
+\contentsline {subsubsection}{\numberline {1.4.2}Analysis Goals:}{7}{subsubsection.1.4.2}
+\contentsline {subsubsection}{\numberline {1.4.3}Deliverables:}{7}{subsubsection.1.4.3}
+\contentsline {section}{\numberline {2}Model and Methods}{7}{section.2}
+\contentsline {subsection}{\numberline {2.1}Quantifying Accuracy}{7}{subsection.2.1}
+\contentsline {subsection}{\numberline {2.2}Cross Validation Processing:}{8}{subsection.2.2}
+\contentsline {subsection}{\numberline {2.3}Optimal Convergence Criterion}{11}{subsection.2.3}
+\contentsline {subsection}{\numberline {2.4}Simulated Validation Outcomes}{11}{subsection.2.4}
+\contentsline {subsubsection}{\numberline {2.4.1}Inferential Simulations}{11}{subsubsection.2.4.1}
+\contentsline {subsubsection}{\numberline {2.4.2}Probabilistic Outcome Simulations}{12}{subsubsection.2.4.2}
+\contentsline {subsubsection}{\numberline {2.4.3}Unsupervised Learning Classifications}{14}{subsubsection.2.4.3}
+\contentsline {paragraph}{\numberline {2.4.3.1}Kmeans and Hierarchical Clustering}{14}{paragraph.2.4.3.1}
+\contentsline {paragraph}{\numberline {2.4.3.2}Self Organizing Maps}{16}{paragraph.2.4.3.2}
+\contentsline {section}{\numberline {3}Analysis and Results}{17}{section.3}
+\contentsline {subsection}{\numberline {3.1}Inferential Outcome Simulation}{17}{subsection.3.1}
+\contentsline {subsection}{\numberline {3.2}Probabilistic Simulations}{18}{subsection.3.2}
+\contentsline {subsection}{\numberline {3.3}Unsupervised Algorithm Outcomes}{19}{subsection.3.3}
+\contentsline {subsubsection}{\numberline {3.3.1}Kmeans Clustering}{19}{subsubsection.3.3.1}
+\contentsline {subsubsection}{\numberline {3.3.2}Hierarchical Clustering}{20}{subsubsection.3.3.2}
+\contentsline {subsubsection}{\numberline {3.3.3}Self Organizing Maps}{21}{subsubsection.3.3.3}
+\contentsline {section}{\numberline {4}Discussion}{22}{section.4}
+\contentsline {subsection}{\numberline {4.1}Summary of Results}{22}{subsection.4.1}
+\contentsline {subsection}{\numberline {4.2}Client Satisfaction Concerns}{23}{subsection.4.2}
+\contentsline {subsection}{\numberline {4.3}Next Steps}{23}{subsection.4.3}
+\contentsline {section}{\numberline {5}Appendix}{24}{section.5}
+\contentsline {subsection}{\numberline {5.1}Data and Code Availability}{24}{subsection.5.1}
+\contentsline {section}{\numberline {6}References}{24}{section.6}

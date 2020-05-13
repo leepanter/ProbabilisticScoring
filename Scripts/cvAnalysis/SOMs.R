@@ -372,19 +372,19 @@ median.total.table3.tx=aggregate(x=dat$qTot,
 # SOM CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-number.samples=50
-sample.length=number.samples+2
-df.set.info=df.train.set.info
-colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
-sample.vec.k.sets=df.set.info$df.k.sets
-sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
-N.set.arg=sort(c(N.set.arg,1247, 1248))
+# number.samples=50
+# sample.length=number.samples+2
+# df.set.info=df.train.set.info
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+# sample.vec.k.sets=df.set.info$df.k.sets
+# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+# N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
+# N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-# df.set.info=df.k.final
-# colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
-# sample.length=100
-# N.set.arg=df.set.info$df.k.sets
+df.set.info=df.k.final
+colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+sample.length=50
+N.set.arg=sample(df.set.info$df.k.sets, sample.length, replace = FALSE)
 
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
@@ -447,7 +447,7 @@ for(i in 1:sample.length){
 
 len.i=c()
 for(i in 1:sample.length){
-  len.i[i]=length(boot.sample.i[[i]][[2]])
+  len.i[i]=dim(boot.sample.i[[i]][[2]])[1]
 }
 
 pscore.convert=function(in.arg){
@@ -456,9 +456,9 @@ pscore.convert=function(in.arg){
     out.arg="NA"
   } else {
     if(in.arg==1){
-      out.arg="C2"
-    } else if(in.arg==2){
       out.arg="C1"
+    } else if(in.arg==2){
+      out.arg="C2"
     } else {
       out.arg="C3"
     }
@@ -543,17 +543,17 @@ length.train=c()
 
 for(i in 1:sample.length){
   acc.pscore.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som1[i]=length(which(som1[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som1[i]=length(which(som1[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   acc.pscore.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som2[i]=length(which(som2[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som2[i]=length(which(som2[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   acc.pscore.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som3[i]=length(which(som3[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som3[i]=length(which(som3[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   acc.pscore.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som1.tx[i]=length(which(som1.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som1.tx[i]=length(which(som1.tx[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   acc.pscore.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som2.tx[i]=length(which(som2.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som2.tx[i]=length(which(som2.tx[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   acc.pscore.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
-  acc.tradit.som3.tx[i]=length(which(som3.tx[[i]]==pscore.i[[i]]))/length(pscore.i[[i]])
+  acc.tradit.som3.tx[i]=length(which(som3.tx[[i]]==tradit.i[[i]]))/length(pscore.i[[i]])
   length.train[i]=dim(boot.sample.i[[i]][[1]][[1]])[1]
 }
 
@@ -571,6 +571,120 @@ accuracy.df.som=data.frame(length.train,
                        acc.pscore.som3.tx,
                        acc.tradit.som3.tx)
 
+mean.acc.trad=c(mean(acc.tradit.som1),
+                mean(acc.tradit.som2),
+                mean(acc.tradit.som3),
+                mean(acc.tradit.som1.tx),
+                mean(acc.tradit.som2.tx),
+                mean(acc.tradit.som3.tx))
+mean.acc.psco=c(mean(acc.pscore.som1),
+                mean(acc.pscore.som2),
+                mean(acc.pscore.som3),
+                mean(acc.pscore.som1.tx),
+                mean(acc.pscore.som2.tx),
+                mean(acc.pscore.som3.tx))
+mean.acc.trad
+mean.acc.psco
+#Som2 is the winner
+
+acc.df.som2=data.frame(length.train,
+                       acc.pscore.som2,
+                       acc.tradit.som2,
+                       acc.pscore.som2.tx,
+                       acc.tradit.som2.tx)
+
+save(acc.df.som2, file = "/Users/lee/Desktop/Sup3NEW/accDFsom2.Rdata")
+
+write.csv(acc.df.som2, file = "/Users/lee/Desktop/Sup3NEW/accDFsom2.csv")
+
+ones=rep("PS" , times=sample.length)
+twos=rep("TR" , times=sample.length)
+thre=rep("PSx", times=sample.length)
+four=rep("TRx", times=sample.length)
+
+method=as.factor(c(ones,twos, thre, four))
+method.PS=as.factor(c(ones, ones, twos, twos))
+method.X=as.factor(c(ones, ones, thre, thre))
+
+len.train=rep(length.train, times=4)
+
+acc.som2=c(acc.pscore.som2,
+           acc.tradit.som2,
+           acc.pscore.som2.tx,
+           acc.tradit.som2.tx)
+
+mean(acc.pscore.som2)
+mean(acc.tradit.som2)
+mean(acc.pscore.som2.tx)
+mean(acc.tradit.som2.tx)
+
+
+df.som2=data.frame(method, len.train, acc.som2)
+
+lmod.som2=lm(acc.som2~len.train*method, data=df.som2)
+(lmods.som2=summary(lmod.som2))
+
+coef.lmod.som2=coef(lmod.som2)
+
+(coef.int.1=coef.lmod.som2[1])
+(coef.int.2=coef.lmod.som2[1]+coef.lmod.som2[3])
+(coef.int.3=coef.lmod.som2[1]+coef.lmod.som2[4])
+(coef.int.4=coef.lmod.som2[1]+coef.lmod.som2[5])
+
+(coef.slp.1=coef.lmod.som2[2])
+(coef.slp.2=coef.lmod.som2[2]+coef.lmod.som2[6])
+(coef.slp.3=coef.lmod.som2[2]+coef.lmod.som2[7])
+(coef.slp.4=coef.lmod.som2[2]+coef.lmod.som2[8])
+
+
+p=ggplot(acc.df.som2, aes(x=length.train))+
+  geom_point(aes(y=acc.pscore.som2, color="firebrick"))+
+  geom_point(aes(y=acc.tradit.som2, color="hotpink4"))+
+  geom_point(aes(y=acc.pscore.som2.tx, color="blue"))+
+  geom_point(aes(y=acc.tradit.som2.tx, color="mediumpurple"))+
+  geom_abline(intercept = coef.int.1,
+              slope = coef.slp.1)+
+  geom_abline(intercept = coef.int.2,
+              slope = coef.slp.2)+
+  geom_abline(intercept = coef.int.3,
+              slope = coef.slp.3)+
+  geom_abline(intercept = coef.int.4,
+              slope = coef.slp.4)+
+  theme(legend.position = "none")
+p
+
+
+pPS=ggplot(acc.df.som2, aes(x=length.train))+
+  geom_point(aes(y=acc.pscore.som2, color="firebrick"))+
+  geom_point(aes(y=acc.tradit.som2, color="hotpink4"))+
+  geom_abline(intercept = coef.int.1,
+              slope = coef.slp.1)+
+  geom_abline(intercept = coef.int.3,
+              slope = coef.slp.3)+
+  theme(legend.position = "none")
+pPS
+
+pX=ggplot(acc.df.som2, aes(x=length.train))+
+  geom_point(aes(y=acc.pscore.som2, color="firebrick"))+
+  geom_point(aes(y=acc.pscore.som2.tx, color="blue"))+
+  geom_abline(intercept = coef.int.2,
+              slope = coef.slp.2)+
+  # geom_abline(intercept = coef.int.1,
+  #             slope = coef.slp.1)+
+  theme(legend.position = "none")
+pX
+
+pX=ggplot(acc.df.som2, aes(x=length.train))+
+  geom_point(aes(y=acc.tradit.som2, color="firebrick"))+
+  geom_point(aes(y=acc.tradit.som2.tx, color="blue"))+
+  # geom_abline(intercept = coef.int.3,
+  #             slope = coef.slp.3)+
+  geom_abline(intercept = coef.int.4,
+              slope = coef.slp.4)+
+  theme(legend.position = "none")
+pX
+
+
 p1=ggplot(accuracy.df.som, aes(x=length.train))+
   geom_point(aes(y=acc.tradit.som1, color="firebrick"), shape=15)+
   geom_point(aes(y=acc.pscore.som1, color="blue"), shape=18)+
@@ -585,7 +699,6 @@ p1.tx
 
 p2=ggplot(accuracy.df.som, aes(x=length.train))+
   geom_point(aes(y=acc.tradit.som2, color="firebrick"), shape=15)+
-  #geom_point(aes(y=acc.pscore.som2, color="blue"), shape=18)+
   geom_point(aes(y=acc.pscore.som2.tx, color="mediumpurple"), shape=18)+
   theme(legend.position = "none")
 p2
@@ -598,7 +711,6 @@ p2.tx
 
 p3=ggplot(accuracy.df.som, aes(x=length.train))+
   geom_point(aes(y=acc.tradit.som3, color="firebrick"), shape=15)+
-  #geom_point(aes(y=acc.pscore.som3, color="blue"), shape=18)+
   geom_point(aes(y=acc.pscore.som3.tx, color="mediumpurple"), shape=18)+
   theme(legend.position = "none")
 p3

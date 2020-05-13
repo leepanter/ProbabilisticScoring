@@ -243,19 +243,19 @@ table.hclust.factor2
 # Kmeans CVk analysis -----------------------------------------------------
 #-------------------------------------------------------------------------#
 
-number.samples=50
-sample.length=number.samples+2
-df.set.info=df.train.set.info
-colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
-sample.vec.k.sets=df.set.info$df.k.sets
-sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
-N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
-N.set.arg=sort(c(N.set.arg,1247, 1248))
+# number.samples=50
+# sample.length=number.samples+2
+# df.set.info=df.train.set.info
+# colnames(df.set.info)=c("df.k.sets", "N.obs.train.set")
+# sample.vec.k.sets=df.set.info$df.k.sets
+# sample.vec.k.sets=sample.vec.k.sets[-c(1,1245)]
+# N.set.arg=sort(sample(sample.vec.k.sets, number.samples, replace = FALSE))
+# N.set.arg=sort(c(N.set.arg,1247, 1248))
 
-# df.set.info=df.k.final
-# colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
-# sample.length=100
-# N.set.arg=df.set.info$df.k.sets
+df.set.info=df.k.final
+colnames(df.set.info)=c("df.k.sets", "N.obs.train", "N.obs.test" )
+sample.length=100
+N.set.arg=sample(df.set.info$df.k.sets, sample.length, replace = FALSE)
 
 accuracy.ksets=c()
 traditional.accuracy.ksets=c()
@@ -402,24 +402,68 @@ accuracy.df=data.frame(length.train,
                        acc.pscore.kmeans,
                        acc.tradit.kmeans,
                        acc.pscore.hclust,
-                       acc.tradit.hclust,
-                       # acc.pscore.som108,
-                       # acc.tradit.som108,
-                       # acc.pscore.sommap,
-                       # acc.tradit.sommap
-                       )
+                       acc.tradit.hclust)
 
-p=ggplot(accuracy.df, aes(x=length.train))+
-  geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=18)+
-  geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=15)+
-  geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=18)+
-  geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=15)+
-  #geom_point(aes(y=acc.pscore.som108,      color="orchid2"), shape=18)+
-  #geom_point(aes(y=acc.tradit.som108, color="deepskyblue4"), shape=15)+
-  #geom_point(aes(y=acc.pscore.sommap,     color="seagreen"), shape=18)+
-  #geom_point(aes(y=acc.tradit.sommap,  color="saddlebrown"), shape=15)+
-  theme(legend.position = "none")
-p
+ones=rep("KMps", times=sample.length)
+twos=rep("KMts", times=sample.length)
+threes=rep("HCps", times=sample.length)
+fours=rep("HCts", times=sample.length)
+method.KM=as.factor(c(ones,twos))
+method.HC=as.factor(c(threes,fours))
+accuracy.KM=c(acc.pscore.kmeans,acc.tradit.kmeans)
+accuracy.HC=c(acc.pscore.hclust,acc.tradit.hclust)
+len.train=rep(length.train, times=2)
+acc.df.KM=data.frame(method.KM, len.train, accuracy.KM)
+acc.df.HC=data.frame(method.HC, len.train, accuracy.HC)
+
+save(acc.df.KM, file = "/Users/lee/Desktop/Sup3NEW/accDFkm.Rdata")
+write.csv(acc.df.KM, file = "/Users/lee/Desktop/Sup3NEW/accDFkm.csv")
+
+save(acc.df.HC, file = "/Users/lee/Desktop/Sup3NEW/accDFhc.Rdata")
+write.csv(acc.df.HC, file = "/Users/lee/Desktop/Sup3NEW/accDFhc.csv")
+
+
+lmod.KM=lm(accuracy.KM~len.train*method.KM, data=acc.df.KM)
+(lmods.KM=summary(lmod.KM))
+
+coef.KM=coef(lmod.KM)
+(Inter.KM.1=coef.KM[1])
+(slope.KM.1=coef.KM[2])
+(Inter.KM.2=coef.KM[1]+coef.KM[3])
+(slope.KM.2=coef.KM[2]+coef.KM[4])
+
+lmod.HC=lm(accuracy.HC~len.train*method.HC, data=acc.df.HC)
+(lmods.HC=summary(lmod.HC))
+
+coef.HC=coef(lmod.HC)
+(Inter.HC.1=coef.HC[1])
+(slope.HC.1=coef.HC[2])
+(Inter.HC.2=coef.HC[1]+coef.HC[3])
+(slope.HC.2=coef.HC[2]+coef.HC[4])
+
+p.KM=ggplot(accuracy.df, aes(x=length.train))+
+     geom_point(aes(y=acc.pscore.kmeans,    color="firebrick"), shape=18)+
+     geom_point(aes(y=acc.tradit.kmeans,     color="hotpink4"), shape=15)+
+     geom_abline(intercept = Inter.KM.1, slope = slope.KM.1, color="firebrick")+
+     geom_abline(intercept = Inter.KM.2, slope = slope.KM.2, color="hotpink4")+
+     theme(legend.position = "none")
+p.KM
+
+p.HC=ggplot(accuracy.df, aes(x=length.train))+
+     geom_point(aes(y=acc.pscore.hclust,         color="blue"), shape=18)+
+     geom_point(aes(y=acc.tradit.hclust, color="mediumpurple"), shape=15)+
+     geom_abline(intercept = Inter.HC.1, slope = slope.HC.1, color="blue")+
+     geom_abline(intercept = Inter.HC.2, slope = slope.HC.2, color="mediumpurple")+
+     theme(legend.position = "none")
+p.HC
+
+
+
+
+
+
+
+
 
 
 
