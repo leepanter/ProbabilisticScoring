@@ -686,56 +686,99 @@ Outcomes}\label{simulated-validation-outcomes}}
     Depression Classifications are a hierarchy, so outcomes for group 1
     are lower than group 2,\ldots{}etc
   \item
+    Within each class there is a spectrum of conditions, and transitions
+    between classes are essentially continuous.
+  \item
     The 12 percent misclassification is due to the traditional scoring
     algorithm mis-classifying observations into a proximal class. Group
     1 into group 2, group 3 into group 2 or group 2 into either group 1
-    or 2
-  \item
-    Within each class there is a spectrum of conditions, and transitions
-    between classes are essentially continuous.
+    or 2.
   \end{itemize}
 \item
-  Based on the number of observations with the same traditional
-  sum-score.
+  Practical implementations of quantity switched related to:
 
   \begin{itemize}
   \tightlist
   \item
-    Let \(\mathbb{S}^{PR}_{T}=\left \{ i\ \Big | \ S_{i}=T \right \}\)
-    for \(i=1,\ldots, N\) and \(T=0, 1,\ldots, 27\) where
-    \(S_{i} = \sum_{q=1}^{9} a_{q}\)
-  \item
-    Then the number of observations with the same traditional sum-score
-    (\(S_{i}\)) is the value: \(|\mathbb{S}^{PR}_{T}|\)
-  \end{itemize}
-\item
-  Based upon distance from a threshold value. Meaning that observations
-  which are closer to a threshold value are more likely to be
-  mis-classified (switched)
+    traditional sum statistic
 
-  \begin{itemize}
-  \tightlist
+    \begin{itemize}
+    \tightlist
+    \item
+      Let \(\mathbb{S}^{PR}_{T}=\left \{ i\ \Big | \ S_{i}=T \right \}\)
+      for \(i=1,\ldots, N\) and \(T=0, 1,\ldots, 27\) where
+      \(S_{i} = \sum_{q=1}^{9} a_{q}\)
+    \item
+      Then the number of observations with the same traditional
+      sum-score (\(S_{i}\)) is the value: \(|\mathbb{S}^{PR}_{T}|\)
+    \end{itemize}
   \item
-    If we suppose that
-    \(\alpha_{1} \leq \alpha_{2} \in \ \left \{ 0,1,\ldots, 27 \right \}\)
-    are threshold values. The distance to the nearest threshold value of
-    an observation \(i\) that is classified into traditional sum value
-    \(S_{i}\) is:
-    \[D_{i} = \underset{k=1,2}{min}\left \{ \Big | \alpha_{k}-S_{i}   \Big | \right \}\]
+    Distance from a threshold value. Meaning that observations which are
+    closer to a threshold value are more likely to be mis-classified
+    (switched)
+
+    \begin{itemize}
+    \tightlist
+    \item
+      If we suppose that
+      \(\alpha_{1} \leq \alpha_{2} \in \ \left \{ 0,1,\ldots, 27 \right \}\)
+      are threshold values. The distance to the nearest threshold value
+      of an observation \(i\) that is classified into traditional sum
+      value \(S_{i}\) is:
+      \[D_{i} = \underset{k=1,2}{min}\left \{ \Big | \alpha_{k}-S_{i}   \Big | \right \}\]
+    \end{itemize}
   \end{itemize}
 \item
   The final probability of a traditional classification being altered in
-  its representation in the simulated outcome data set then follows:
+  its representation in the simulated outcome data set:
 
   \begin{itemize}
   \tightlist
   \item
-    \(P\left(C_{i}^{TR} \neq \tilde{C}_{i}^{1} \right) \propto \frac{|\mathbb{S}^{PR}_{T}|}{D_{i}}\)
+    \(P\left(j_{i}^{TR} \neq \tilde{j}_{i} \right) \propto \frac{|\mathbb{S}^{PR}_{T}|}{D_{i}}\)
   \item
     Proportionality constants were chosen so that the total difference
     between Traditional Scoring classification and simulated outcome was
     12\%
+  \item
+    Specific values of \(P\left(j_{i}^{TR} \neq \tilde{j}_{i} \right)\)
+    that were used for this analysis are displayed in \textbf{Table XX}
   \end{itemize}
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+Trad Sum & Orig Class & SimClass & $D_{\alpha_{1}}$ & $D_{\alpha_{2}}$ & $|\mathbb{S}_{T}^{PR}|$ & NO Flip & Prop Const & \% Total Data \\
+\hline
+\hline
+5 & 1 & 2 & 2 & 5 & 149 & 42 & 0.282 & 0.017 \\
+\hline
+6 & 1 & 2 & 1 & 4 & 137 & 63 & 0.460 & 0.025 \\
+\hline
+7 & 2 & 1 & 0 & 3 & 108 & 42 & 0.389 & 0.017 \\
+\hline
+8 & 2 & 1 & 1 & 2 & 115 & 19 & 0.165 & 0.008 \\
+\hline
+8 & 2 & 3 & 1 & 2 & 115 & 21 & 0.183 & 0.008 \\
+\hline
+9 & 2 & 1 & 2 & 1 & 134 & 16 & 0.119 & 0.006 \\
+\hline
+9 & 2 & 3 & 2 & 1 & 134 & 21 & 0.157 & 0.008 \\
+\hline
+10 & 3 & 2 & 3 & 0 & 72 & 21 & 0.292 & 0.008 \\
+\hline
+11 & 3 & 2 & 4 & 1 & 73 & 21 & 0.288 & 0.008 \\
+\hline
+12 & 3 & 2 & 5 & 2 & 77 & 21 & 0.273 & 0.008 \\
+\hline
+ &  &  &  &  &  &  & SUM $\rightarrow$ & 0.113 \\
+\hline
+\end{tabular}
+\end{center}
+
+\begin{itemize}
+\tightlist
 \item
   \textbf{Figure 2:}
 \item

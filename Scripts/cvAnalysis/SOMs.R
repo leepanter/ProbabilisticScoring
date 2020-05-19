@@ -209,6 +209,13 @@ dat$class.som2=as.factor(class.som2)
 table.som2=dat %>% group_by(class.som2) %>% tally()
 table.som2
 
+table.som2.med=dat %>%
+  group_by(class.som2) %>%
+  summarise(median(qTot))
+table.som2.med
+
+
+
 plot(som.out2, type = 'codes', bgcol = rainbow(3)[class.cuts2])
 add.cluster.boundaries(som.out2, class.cuts2)
 plot(som.out2, type = 'changes')
@@ -254,6 +261,12 @@ dat$class.som2.tx=as.factor(class.som2.tx)
 
 table.som2.tx=dat %>% group_by(class.som2.tx) %>% tally()
 table.som2.tx
+
+table.som2.med.tx=dat %>%
+  group_by(class.som2.tx) %>%
+  summarise(median(qTot))
+table.som2.med.tx
+
 
 plot(som.out2.tx, type = 'codes', bgcol = rainbow(3)[class.cuts2.tx])
 add.cluster.boundaries(som.out2.tx, class.cuts2.tx)

@@ -1,0 +1,785 @@
+---
+title: \vspace{1.5in} \textbf{\underline{Comparing Accuracy}}
+subtitle: |
+  | \vspace{0.35in} \textbf{Traditional vs Probabilistic Scoring}
+  | \textbf{of PHQ9 Data}
+  | \vspace{0.5in} \underline{Consultation Summary Report }
+  | \vspace{0.5in} \underline{Client:} \hspace{10pt} Alan Malik, PhD - Patient Tools, inc.
+  | \vspace{0.25in} \underline{Consultant:} \hspace{10pt} Lee Panter - University of Colorado - Denver
+csl: mathematical-biosciences-and-engineering.csl
+output:
+  pdf_document:
+    df_print: kable
+    includes:
+      in_header:  Rmarkdown_preamble.tex
+    keep_tex: yes
+    number_sections: yes
+geometry: margin=1.0in
+fontsize: 12pt
+spacing: double
+bibliography: Bib_AccRefSheet.bib
+---
+
+
+<!------------------------------------------------------------------------------>
+<!--  ####  KNITR Setup & Script Information   #### -->
+<!------------------------------------------------------------------------------>
+
+<!--  ####  KNITR Specs   #### -->
+```{r setup, cache=TRUE, echo=FALSE, eval=TRUE}
+knitr::opts_chunk$set(echo=FALSE, 
+                      cache = TRUE, 
+                      fig.align = "center",
+                      fig.width = 5)
+```
+
+
+<!-- ####	 Set Working Directory	 ####   -->
+```{r, echo=FALSE}
+WD="/Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/V1"
+setwd(WD)
+```
+<!------------------------------------------------------------------------------>
+
+\thispagestyle{empty}
+
+\newpage
+
+\thispagestyle{empty}
+
+\setcounter{secnumdepth}{4}
+\setcounter{tocdepth}{4}
+\begin{singlespace}
+\tableofcontents
+\end{singlespace}
+
+
+\newpage
+
+
+
+\pagenumbering{arabic}
+
+<!------------------------------------------------------------------------------>
+
+
+
+
+
+# Introduction
+
+## Background
+
+The Patient Health Questionnaire-Nine (PHQ9) is a nine-question module used for screening, monitoring and grading depressive symptions related to criteria outlined by the Diagnostic and Statistical Manual of Mental Health Disorders (DSM-IV) [@kroenke2002phq].  The PHQ9 can be administered by medical staff, or it can be self-administered either electronically or in paper format. Responses to the nine questions correspond to a numerical value and a written description of frequencies pertaining to activities, feelings, and thoughts related to depression symptoms.  The PHQ9 was originally developed by Dr. Robert J. Spitzer, Dr. Janet B.W. Williams, Dr. Kurt Kroenke in 1999 with a grant from Pfizer [@kroenke2010instruction].  
+
+Responses to the PHQ9 are classified into a discrete set of groups which can be ordered according to the severity of symptoms contained within the group.  This analysis considers classification of PHQ9 data into three categories with the depression risk assignment values: $C_{1}$ - "Not clinically depressed", $C_{2}$ - "Sub-threshold depression", and $C_{3}$ - "Major depression".  
+
+Classification of responses is traditionally performed using the total sum of numerical scores assigned to answers provided.  Traditional classification asserts that the sum of the provided answers can be used to classify an observation in conjunction with decision threshold values.  This method has been shown to achieve 88\% accuracy in previous investigations [@kroenke16spitzer], but it assumes that each question is contributing equally to the outcome.  Traditional classification also requires test takers to answer all nine questions to obtain comparable classification sum-values. These factors have led to a significant decrease in the effective implementaion of the PHQ9 in the clinical environments it was designed to function [@MalikMoreEf].  Practitioners suffer from false-positive and false-negative results that cause patient concern and healthcare system burdens, and ultimately clinical fatigue in implementation of the PHQ9.
+
+An alternative method of classifying PHQ9 observations is Probabilistic classification.  Probabilistic classification improves unpon traditional methods by using a pre-trained algorithm to iteratively re-weight probabilities for being classified within a given depression risk category until a sufficient confidence threshold is met.  The probabilistic classification algorithm allows for early-stopping when taking the PHQ9 (certain answer subsets may contain enough information to probabilistically classify without needing the all nine answers provided).  Probabilistic classification is also not reliant on integer-length distances and similarity measures that limit the resolution of the traditional classification criteria.  The probabilistic classification algorithm has the possibilities of gaining accuracy with training sample size and relating outcomes to actionable information and treatment plans.  
+
+This analysis seeks to compare the accuracy of traditional and probabilistic classification on provided PHQ9 data.  It also seeks to investigate the relationship between probabilistic classification accuracy and training sample size, and determine how this effect interacts with the accuracy of traditional classification.  
+
+
+## Data
+
+The PHQ9 data that is used to conduct this analysis originated from a Federally Qualified Health Research Center in Montana, United States of America [@MalikMoreEf].  The data was collected over a six month period of time, employing electronic-tablet administration of the module.  
+
+The data sample consists of 2495 observations on 286 variables and is observational with respect to measurements made on PHQ9 outcomes.  In addition to PHQ9 answer variables, the data also contains demographic information (age and gender), record-keeping variables (time, date, record numbers,...etc), and the results of another psychological evaluation that is not considered in this analysis. Observations of PHQ9 variables are integer-valued (0,1,2, and 3), corresponding to the numerical association of the response provided in the module.  Nine questions constitute a full answer set, and all nine questions had the same possible answers (0,1,2, and 3) for each question. It is assumed that questions are provided, and answered sequentially, i.e. question ordering was followed.  The data has been de-indentified, and contains no missing observations.   
+
+The data contains no representation of the response.  In other words, the data contains real responses to PHQ9 tests, and these responses can be traditionally or probabilistically classified into one of the three depression risk categories based upon these values; however, the data does not iclude any variable that can be used to determine which method is closer to the underlying truth.  The data is self-reported, responses can be misrepresented or misinterpreted by the participant.  
+
+
+## Classification Methods 
+
+A general framework for the traditional and probabilistic classification methods is provided.  Suppose that the index $i=1, 2, \ldots, N=2495$ represents a particular observation from the PHQ9 data, and let $q=1, \ 2, \ldots, 9$ represent a specific question within each response sequence.  Each response, to each qustion in an oberservation sequence will be denoted $A_{iq}=a_{iq}$, where the random value $A_{iq}$ is associated with the outcome $a_{iq}$.  Referrences to an arbitrary (fixed) observation value $I=i^{*}$ will utilize the shortened notation: $A_{q}=A_{i^{*}q}=k$ where $k\in \{ 0,\ 1, \ 2, \ 3 \}$.    
+
+
+### Traditional Classification
+
+The traditional classification of observation $i$ will be denoted:
+    $$\mathbb{T}_{i}^{c} \in \mathbf{T}_{i}^{C}=\left(\mathbb{T}_{i}^{1}, \ \mathbb{T}_{i}^{2}, \ \mathbb{T}_{i}^{3} \right)$$
+The taditional classification of an observation is determined using the sum of the answer set provided:
+$$S_{i} = \sum_{q=1}^{9} a_{iq}$$
+Traditional depression classification outcomes are distinguished by threshold values \newline $\alpha_{1}, \ \alpha_{2} \ \in  \left [0, \ 27 \right ]$ with $\alpha_{1} \leq \alpha_{2}$.
+
+The traditional classification outcome sets can then be defined as $\mathbb{T}^{c}$ for $c=1,2,3$:
+\begin{center}
+$\mathbb{T}^{1}=\left \{i \ \Big | \ S_{i} < \alpha_{1}  \right \}$ \hspace{5pt} $\mathbb{T}^{2}=\left \{i \ \Big | \ \alpha_{1} \leq S_{i} < \alpha_{2}  \right \}$ \hspace{5pt} $\mathbb{T}^{3}=\left \{i \ \Big | \ \alpha_{2} \leq S_{i}  \right \}$
+\end{center}
+
+where $i=1,\ldots, 2495$ represents a single observation from the PHQ9 data.
+  
+
+###  Probabilistic Classification
+
+The probabilistic classification of observation $i$ will be denoted:
+  $$\mathbb{P}_{i}^{c} \in \mathbf{P}_{i}^{C}=(\mathbb{P}_{i}^{1}, \ \mathbb{P}_{i}^{2}, \ \mathbb{P}_{i}^{3})$$
+Given a set of training observations $\mathbf{\Omega}_{Train}$ of length $N_{train}=|\mathbf{\Omega}_{Train}|$, it is possible to characterize the probability of certain events within $\mathbf{\Omega}_{Train}$.
+
+The probability that a response value of $k$ is provided to question $q$ is given by:
+      $$P\left(A_{q}=k \right) = \frac{1}{N_{train}} \sum_{i=1}^{N_{train}} \mathbb{I}\left(A_{iq}=k \right)$$
+      where
+      $$\mathbb{I}\left(A_{iq} = k \right)=
+      \begin{cases}
+        0 &\mbox{if} \quad  a_{iq} \neq k \\
+        1 &\mbox{if} \quad  a_{iq}=k \\  
+      \end{cases}
+      $$
+Similarly, the probability that an observation is assigned (via traditional classification) into into traditional class $j$ where $j \in \left \{  1, \ 2,  \ 3 \right \}$ is given by: 
+    $$P\left( \mathbb{T}^{C}=j \right) = \frac{1}{N_{Train}} \sum_{i=1}^{N_{train}} \mathbb{I}\left(\mathbb{T}_{i}^{C}=j \right)$$
+    where
+      $$\mathbb{I}\left(\mathbb{T}_{i}^{C}=j \right)
+      \begin{cases}
+        0 &\mbox{if} \quad  j \neq c \\
+        1 &\mbox{if} \quad  j = c \\  
+      \end{cases}
+      $$
+Lastly, the probability that an observation's response value is $k \in \left \{ 0, 1, 2, 3 \right \}$ in question $Q=q$ and that same observation also has been assigned into traditional classification class $\mathbb{T}^{C}=j$ is given by:
+$$P\left(A_{q} = k \bigcap \mathbb{T}^{C}=j   \right) =  \frac{1}{|\mathbb{T}_{Train}^{j}|} \sum_{i \in \mathbb{T}_{Train}^{j}} \mathbb{I} \left(A_{iq}=k \right) $$
+where we are defining the set:
+$$\mathbb{T}_{Train}^{j}= \left \{  i \in \mathbf{\Omega}_{Train} \ \Big | \ i \in \mathbb{T}^{j} \right \}$$
+for $j=1,2,3$ and the value $|\mathbb{T}_{Train}^{j}|$ represents the number of elements in $\mathbb{T}_{Train}^{j}$
+      
+These probabilities allow for the definition of a weight parameter corresponding to each 108 distinct combination of question number ($Q=q \in \left \{ 1, \ 2, \ldots, 9 \right \}$), response value ($A_{q} = k \in \left \{  0, 1, 2, 3 \right \}$), and traditional classification: ($\mathbb{T}^{C} = j \in \left \{ 1, \ 2 , \ 3 \right \}$).  
+
+\begin{align*}
+  \mathbf{W}_{A_{q}}^{\mathbb{T}^j} &= \frac{P\left(A_{q} = k \ \Big | \ \mathbb{T}^{C}=j \right) }{P\left( A_{q} = k   \right) } \tag{EQ: 1.3.2-1} \label{EQ: 1.3.2-1} \\[0.5em]
+&= \frac{P\left(A_{q} = k \ \bigcap \ \mathbb{T}^{C}=j \right)}{P\left( A_{q} = k   \right)P\left( \mathbb{T}^{C}=j  \right)}\\[0.5em]
+&= \frac{\frac{1}{|\mathbb{T}_{Train}^{j}|} \sum_{i \in \mathbb{T}_{Train}^{j}} \mathbb{I} \left(A_{iq}=k \right)}{\left( \frac{1}{N_{train}} \sum_{i=1}^{N_{train}} \mathbb{I}\left(A_{iq}=k \right) \right) \left( \frac{1}{N_{Train}} \sum_{i=1}^{N_{train}} \mathbb{I}\left(\mathbb{T}_{i}^{C}=j \right) \right) }\\[0.5em]
+&= \frac{N_{Train}^{2}}{|\mathbb{T}_{Train}^{j}|} \times \frac{\sum_{i \in \mathbb{T}_{Train}^{j}} \mathbb{I} \left(A_{iq}=k \right)}{\left( \sum_{i=1}^{N_{train}} \mathbb{I}\left(A_{iq}=k \right)  \right)  \left(  \sum_{i=1}^{N_{train}} \mathbb{I}\left(\mathbb{T}_{i}^{C}=j \right)  \right) }   
+\end{align*}
+
+Calculating the values of $\mathbf{W}_{A_{q}}^{\mathbb{T}^{j}}$ constitutes the training portion of the probabilistic classification alogrithm which now proceeds to classifying newly introduced data using an iterative approach.  A pre-specified confidence threshold value $\gamma \in (0,1)$ determines the stopping point of the algoritm which proceeds according to the framework:  
+
+Let $\mathbf{P}_{(q)}^{C}=\left(\mathbb{P}_{(q)}^{1}, \ \mathbb{P}_{(q)}^{2}, \ \mathbb{P}_{(q)}^{3} \right)$ represent the $q^{th}$ iteration of the probabilistic re-weighting algorithm, for $q=1, \ldots, 9$
+\begin{align*}
+\left(\mathbb{P}_{(0)}^{1}, \ \mathbb{P}_{(0)}^{2}, \ \mathbb{P}_{(0)}^{1} \right) &= \left( \frac{1}{3}, \  \frac{1}{3}, \ \frac{1}{3}\right) \\[0.5em]
+    \left(\mathbb{P}_{(q+1)}^{1}, \ \mathbb{P}_{(q+1)}^{2}, \ \mathbb{P}_{(q+1)}^{3} \right) &= \frac{\left(\mathbb{P}_{(q)}^{1}\mathbf{W}_{A_{q}}^{\mathbb{T}^{1}}, \ \mathbb{P}_{(q)}^{2}\mathbf{W}_{A_{q}}^{\mathbb{T}^{2}}, \ \mathbb{P}_{(q)}^{3}\mathbf{W}_{A_{q}}^{\mathbb{T}^{3}} \right) }{\sum_{j=1}^{3} \mathbb{P}_{(q)}^{j}\mathbf{W}_{A_{q}}^{\mathbb{T}^{j}}} \tag{EQ: 1.3.2-2} \label{EQ: 1.3.2-2}
+\end{align*}
+for $q=1, 2, \ldots, 9$  
+by defining
+$$\mathbb{P}_{q}^{*}= \underset{j \in \left \{1, 2, 3 \right \}}{max} \ \left \{ \mathbb{P}_{q}^{j} \right \} \quad \text{for} \quad q=1, \ldots, 9$$
+and
+$$q^{*}=\underset{q \in \left \{1, \ldots, 9 \right \}}{min} \ \left \{q \ \Big | \ \mathbb{P}^{*}_{q} > \gamma \right \}$$
+then (provided that $q^{*}$ exists), the probabilistic scoring classification is:
+\begin{align*}
+\mathbb{P}_{q^{*}}^{*} &= \underset{j \in \left \{1, 2, 3 \right \}}{max} \ \left \{ \mathbb{P}_{q^{*}}^{j} \right \} \\[0.5em]
+&= \underset{j \in \left \{1, 2, 3 \right \}}{max} \ \left \{ \underset{q \in \left \{1, \ldots, 9 \right \}}{min} \ \left \{q \ \Big | \ \mathbb{P}^{*}_{q} > \gamma \right \} \right \}
+\end{align*}
+  
+
+## Consultation goals and deliverables
+
+The initially specified goals provided by Dr. Alan Malik were: 
+
+> "First, mathematically prove that probabilistic scoring is more accurate than conventional scoring"
+
+> "Second, mathematically prove that probabilistic scoring derived from a conventional scored validation dataset is essentially as accurate as using the original validation dataset and therefore still more accurate than conventional scoring"
+
+Over the course of this analysis, the objectives shifted to reflect the lack of response variable and an inability to simulate a comprehensive response distribution.  Mathematical proof was deprioritized in favor of seeking a comparison of traditional and probabilistic classification that allowed for accuracy comparisons and demonstrated that probabilistic classification accuracy improves with training sample size.  The provided data lacked sufficient information to conduct a formal evaluation of accuracy within the time allotted, and simmulated response values were used to evaluate relative accuracy measures as a substitue for realistic accuracy measures.
+
+This analysis had a stated objective of producing deliverables for Dr. Malik's commercial use.  Presentable results and evidence of outcomes that can be used to demonstrate the practical advantages of probabilistic scoring.  Diagrams and other visualizations that demonstrate infomational gain when probabilistc classification is implemented, with particular interest relating outcomes to answers provided in specific questions.  
+
+***
+
+# Model and Methods
+
+## Quantifying Accuracy
+Model classification accuracy is calculated as a function of predicted/fitted value and response value:
+$$\text{Accuracy} = f(\mathbf{y}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(y_{i}=\hat{y}_{i} \right)$$
+where $\mathbf{y}=\left(y_{1}, \ldots, y_{N}\right)$ are the response values, $\mathbf{\hat{y}}=\left(\hat{y}_{1},\ldots, \hat{y}_{N} \right)$ are the predicted/fitted values, and   
+$$
+I\left(y_{i}=\hat{y}_{i} \right)=
+\begin{cases} 
+0 &\mbox{if} \quad  y_{i} \neq \hat{y}_{i} \\ 
+1 &\mbox{if} \quad  y_{i} = \hat{y}_{i} \\ 
+\end{cases}
+$$
+When response values are not available, accuracy can be calculated as a function of fitted values ($\mathbf{\hat{y}}$) and a \textit{simulated} response ($\tilde{\mathbf{y}}=\left(\tilde{y}_{1}, \ldots, \tilde{y}_{N} \right)$), where it is assumed that $\mathbf{\tilde{y}}\approx\mathbf{y}$ but $\mathbf{\tilde{y}} \neq \mathbf{y}$
+\[
+\tilde{\text{Accuracy}} = f(\mathbf{\tilde{y}}, \mathbf{\hat{y}}) = \frac{1}{N} \sum_{i=1}^{N}  I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \tag{EQ: 2.1-1} \label{EQ: 2.1-1}
+\]
+Simulated accuracy calculation can be performed for traditional and probabilistic classifications:
+\begin{align*}
+\tilde{Accuracy_{\mathbb{T}}} \leftarrow & \rightarrow \tilde{Accuracy_{\mathbb{P}}} \\[0.5em]
+f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}_{\mathbb{T}} \right) \leftarrow & \rightarrow f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}}_{\mathbb{P}} \right) \tag{EQ: 2.1-2} \label{2.1-2}
+\end{align*} 
+This analysis will focus on estimating various values of $\tilde{Accuracy}$ using multiple methods of generating values of $\tilde{\mathbf{y}}$
+
+
+## Cross Validation Processing:
+
+Estimating $\tilde{Accuracy}$ using Cross Validation (CV) allows for the estimation of both probabilistic and traditional classifications simultaneously, and the ability to establish the relationship between training sample size and accuracy.  Given a fixed value of $K \in \left \{ 1, 2, \ldots, N \right \}$ a partition of the original data is formed from $K$ equal subsets, each of which has $N_{K}$ observations sampled randomly without replacement from the original data, where: 
+$$N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor$$
+There are $K$ different ways in which $K-1$ data sets can be chosen from $K$ sets when order does not matter:
+\begin{align*}
+\binom{k}{k-1} &= \frac{k!}{(k-1)!(k-(k-1))!}\\[0.5em]
+&= \frac{k!}{(k-1)!}\\[0.5em]
+&= k
+\end{align*}
+for each of these $K$ combinations a train-test combination is created by combining $K-1$ selected sets to form the training set, and the remaining set to form the test set.  Let the $j^{th}$ train-test pairing in the partion of the full data into $K$ sets be represented by: 
+$$\left(TR, TE \right)^{K}_{j}=\left(TR_{j}^{K}, TE_{j}^{K} \right) $$ 
+for $j=1, \ldots, K$.  
+Using the definition of $N_{K}$, and the fact that each training set is a union of $\left(K-1 \right)$ sets of length $N_{K}$, it is possible to establish a relationship between training set length, i.e. $|TR_{j}^{k}|$ the number of observations in the $j^{th}$ training set and the value of $K$ from which the original train-test partitions were formed:  
+  $$|TR_{j}^{k}|=(K-1)N_{K}=(K-1)\Big \lfloor \frac{N}{K} \Big \rfloor$$
+a similar relationship may be defined for the length of the test set:
+  $$|TE_{j}^{k}|=N_{K}=\Big \lfloor \frac{N}{K} \Big \rfloor$$
+note that:
+$$\Big \lfloor \frac{N}{K} \Big \rfloor \leq \frac{N}{K}$$
+implies
+\begin{align*}
+|TR_{j}^{K}| + |TE_{j}^{K}| &= (k-1)\Big \lfloor \frac{N}{K} \Big \rfloor + \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+&= K \Big \lfloor \frac{N}{K} \Big \rfloor \\[0.5em]
+&\leq K \frac{N}{K} = N
+\end{align*}
+meaning that observations will be left out of the sampling process in the selection of subsets. This is due to the definition of the subsample sizes chosen using the floor function which is not injective on real valued domains.
+
+It is a stated objective of this analysis to establish a relationship between $|TR_{j}^{k}|$ and $\tilde{accuracy}$, idealistically represented as:
+\[
+\tilde{Accuracy} = \tilde{Accuracy}\left( |TE_{j}^{k}|  \right)  \tag{EQ-XX} 
+\]
+If it can be shown that:
+$$\mathbf{\hat{y}}=\mathbf{\hat{y}}\left(|TR_{j}^{K}| \right) $$
+then 
+\begin{align*}
+\tilde{Accuracy} &= f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}} \right) \\[0.5em]
+&= f\left(\mathbf{\tilde{y}}, \mathbf{\hat{y}} (|TR_{j}^{K}|)  \right) \\[0.5em]
+&\Rightarrow \tilde{Accuracy}= \tilde{Accuracy}\left( |TE_{j}^{k}|  \right)
+\end{align*}
+This formula establishes a connection between the value of $K$ and $\tilde{accuracy}$.  Demonstrating that by calculating the value of $\tilde{Accuracy}$ at a variety of $K$ values, it is possible to establish the relationship between $\tilde{Accuracy}$ and $|TR_{j}^{k}|$ (i.e. Training Sample Length).
+
+\eqref{EQ: 2.1-1} can be used to write an expression for the classification accuracy of each train-test pair within a specific value of K:
+$$\tilde{Accuracy}\left(TR, TE \right)_{j}^{k}= \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) $$
+the average of these values is used to represent the accuracy at a particular K-value  
+
+\begin{align*}
+  \tilde{accuracy}\left(TR, TE \right)^{k} &= \tilde{accuracy}_{m}\left(TR, TE \right)_{\bullet}^{k} \\
+  &=\frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}\left(TR, TE \right)_{j}^{k}\right \} \\
+  &=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i} \right) \right \}
+\end{align*}
+and the process can be applied to traditional and probabilistic classification methods:
+\begin{align*}
+  \tilde{accuracy}_{\mathbb{T}}\left(TR, TE \right)^{k} \leftarrow & \rightarrow \tilde{accuracy}_{\mathbb{P}}\left(TR, TE \right)^{k} \\[0.5em]
+  \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{\mathbb{T}}\left(TR, TE \right)_{j}^{k}\right \} \leftarrow & \rightarrow \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{\mathbb{P}}\left(TR, TE \right)_{j}^{k}\right \} \\[0.5em]
+  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i}^{\mathbb{T}} \right) \right \} \leftarrow & \rightarrow  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}=\hat{y}_{i}^{\mathbb{P}} \right) \right \}
+\end{align*}
+where $\hat{y}_{i}^{\mathbb{P}}$ is a probabilistic classification generated outcome, and $\hat{y}_{i}^{\mathbb{T}}$ is a traditional classification generated outcome.  It will also be applied to a multitude of different simulated validation outcomes
+\begin{align*}
+\tilde{accuracy}_{\mathbb{T}or\mathbb{P}}^{h}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \tilde{accuracy}_{\mathbb{T}or\mathbb{P}}^{h}\left(TR, TE \right)_{j}^{k}\right \} \\[0.5em]
+&=  \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} I\left(\tilde{y}_{i}^{h}=\hat{y}_{i}^{\mathbb{T}or\mathbb{P}} \right) \right \}
+\end{align*}
+where the values of $h$ will be outlined in \textbf{Section XX}.  Since notation is obviously cumbersome, indices displayed will be limited only to those relevant.
+
+
+
+\begin{figure*}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{KvsTrainlen.jpeg}
+\caption[Figure 1:]{Training and Test set observation counts vs K}
+\end{center}
+\end{figure*}
+
+The possible training set observation counts using the CV method outlined above on the data provided range between 1247 and 2492 observations.  The figure also shows that for K-values greater than 1248, test set sizes are confined to one.  Training set sizes were selected for analysis by sampling 50 different values of K from k=5 to k=2490.  It was assumed that subsets taken from the data which were sampled randomly without replacement are at least partially representative of the population as a whole.
+
+
+## Optimal Convergence Criterion 
+
+The probabilistic classification process requires the specification of a confidence level $\gamma \in (0,1)$ that determines the threshold at which the algorithm terminates.  In this analysis, a confidence level of $\gamma=0.75$ was chosen.  This value optimizes probabilistic classification accuracy of the first simulated validation outcome (see below) when the probabilistic weights are trained on the full data set.
+
+
+
+## Simulated Validation Outcomes
+
+### Inferential Simulations
+
+The first simulated outcome is generated using a series of assumptions that collectively determine a method for creating a response distribution uniquely functional on the PHQ9 data inputs and radom sampling.
+
+The three theoretical assumptions made to generate the outcome are:
+
+1. Depression classifications are a hierarchy, so outcomes in group 1 are generally lower than those in group 2, and outcomes in group 2 are generally lower than those in group 3
+2. Within each class there is a spectrum of conditions, and transitions between classes exhibit continuous properties.  This means that outcomes high in group 2 are closer in magnitude to a lower group 3 outcome compared to average or lower group 2 outcomes.
+3. The 12 percent misclassification specified in \textbf{Section 1.1} is attributable to the traditional classification algorithm mis-classifying observations into a proximal class.  This means that the traditional classification algorithm misclassifies according to: group 1 for group 2, group 3 for group 2, and group 2 for either group 1 or 2; however, it never mistakes group 1 for group 3 or group 3 for group 1.
+
+The deterministic traditional classification algorithm outcome is altered using the three assumptions by implementing quantity variations related to:
+
+- $\mathbb{S}_{T}=\left \{ i\ \Big | \ S_{i}=T \right \}$ for $i=1,\ldots, N$ and $T=0, 1,\ldots, 27$ where 
+$S_{i} = \sum_{q=1}^{9} a_{q}$, and the number of observations with the same traditional sum-score ($S_{i}$) is the value: $|\mathbb{S}_{T}|$. Traditional sum-scores with higher observation counts will have more variation induced. 
+- Distance from a threshold value.  Observations which are closer to a threshold value are more likely to be mis-classified, if $\alpha_{1} \leq \alpha_{2} \in \ \left \{ 0,1,\ldots, 27 \right \}$ are threshold values then thhe distance to the nearest threshold value of an observation $i$ that is classified into traditional sum value $S_{i}$ is:
+  $$
+  D\left(\alpha_{k}, S_{i}   \right)  = 
+  \begin{cases}
+  \underset{k=1,2}{min}\left \{ \Big | \alpha_{k}-S_{i}   \Big | \right \} &\mbox{if} \quad  \alpha_{k} \neq S_{i} \\ 
+  \frac{1}{2} &\mbox{if} \quad  \alpha_{k} = S_{i} \\
+  \end{cases}
+  $$
+The final probability of a traditional classification being altered (different from its traditional classifications) in its representation in the simulated outcome data set is then:
+$$P\left(\tilde{\mathbb{T}}_{i} \neq \tilde{\mathbb{T}}_{i} \right) \propto \frac{|\mathbb{S}_{T}|}{D\left(\alpha_{k}, S_{T} \right) }$$
+where proportionality constants are chosen so that the total difference between Traditional Scoring classification and simulated outcome is 12\%
+
+Specific values of  $P\left(\tilde{\mathbb{T}}_{i} \neq \tilde{\mathbb{T}}_{i} \right)$ that were used for this analysis are displayed in \textbf{Table XX}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+\hline
+$\mathbb{S}_{T}$ & Orig Class & Sim Class & $D_{\alpha_{1}}$ & $D_{\alpha_{2}}$ & $|\mathbb{S}_{T}^{PR}|$ & \# Flip & Prop Const & \% Total Data \\
+\hline
+\hline
+5 & 1 & 2 & 2 & 5 & 149 & 42 & 0.282 & 0.017 \\
+\hline
+6 & 1 & 2 & 1 & 4 & 137 & 63 & 0.460 & 0.025 \\
+\hline
+7 & 2 & 1 & 0 & 3 & 108 & 42 & 0.389 & 0.017 \\
+\hline
+8 & 2 & 1 & 1 & 2 & 115 & 19 & 0.165 & 0.008 \\
+\hline
+8 & 2 & 3 & 1 & 2 & 115 & 21 & 0.183 & 0.008 \\
+\hline
+9 & 2 & 1 & 2 & 1 & 134 & 16 & 0.119 & 0.006 \\
+\hline
+9 & 2 & 3 & 2 & 1 & 134 & 21 & 0.157 & 0.008 \\
+\hline
+10 & 3 & 2 & 3 & 0 & 72 & 21 & 0.292 & 0.008 \\
+\hline
+11 & 3 & 2 & 4 & 1 & 73 & 21 & 0.288 & 0.008 \\
+\hline
+12 & 3 & 2 & 5 & 2 & 77 & 21 & 0.273 & 0.008 \\
+\hline
+ &  &  &  &  &  &  & SUM $\rightarrow$ & 0.113 \\
+\hline
+\end{tabular}
+\end{center}
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{ClassFlips.jpeg}
+\end{center}
+\textbf{Figure XX:} depicts observational distributions as classified by traditional methods, and how the first simulated validation outcome induced change
+ 
+Since the simulated validation outcomes generated using this method depended only on information relevant to the observation from which the outcome was being simulated, the simulated data values are paired with their corresponding observations prior to evaluating the CV algorithm.  Once paired, 50 accuracy comparisons of probabilistic and traditional classification were obtained on 50 different values of K using the CV algorithm previously outlined.
+
+This simulated outcome is implemented in the process to obtain the optimal convergence confidence level in \textbf{Section XX}
+
+
+### Probabilistic Outcome Simulations
+
+The probabilistic classification algorithm is appealing because it offers multiple possible advantages over traditional classification.  Although not fully confirmed, intuition indicates that the accuracy of the probabilistic classification should increase with sample size.  Moreover, the probabilistic classification algorithm considers the information each question response provides independently, considering responses as sequences of information instead of an agglomeration.  
+
+Together, these aspects make probabilistic classification not only appealing for classification, but also simulation.  The probabilistic algorithm incorperates information from a sample to estimate an outcome.  Similar to the inferences conducted in \textbf{Section 2.4.1}, the probabilistic classification algorithm estimates can be used as a simulated responses to conduct an analysis of accuracy.
+
+The process involves altering the CV algorithm to allow for estimation of the probabilistic and traditional classification outcomes and a distinct probabilistically simulated response, simmultanneously.  
+
+As before, the original data is separated into K-CV sets, and combined into train-test pairings
+      $$(TR, TE)_{j}^{K}$$
+where $j =1, \ldots, K$.  For each training set, calculate the corresponding set of probabilistic training weights
+$$TR_{j}^{K} \ \rightarrow \ \eqref{EQ: 1.3.2-1} \ \rightarrow \  W_{A_{q}}^{\mathbb{T}_{j}}$$
+K train-test pairs means there will be K distinct estimates of the training weights.  The average training weight (for each weight value)
+$$W_{A_{q}}^{\mathbb{T}_{K}}= W_{A_{q}}^{\mathbb{T}^{\bullet}}=\frac{1}{K}\sum_{j=1}^{K} W_{A_{q}}^{\mathbb{T}^{j}}$$
+is used for the classification of new response values:
+$$\left(W_{A_{q}}^{\mathbb{T}_{K}}, TE_{j}^{K}\right)  \ \rightarrow \  \eqref{EQ: 1.3.2-2} \ \rightarrow \   \tilde{y}_{j}^{K}$$
+The simulated outcomes generated using this method depend on information obtained from a training set used to generate the probabilistic weights which were used in its classifications.  Each simulated outcome will therefore be paired with data that was simulated using the same set of information inside of the CV algorithm. 
+\begin{align*}
+  \tilde{accuracy}_{\mathbb{T}or\mathbb{P}}\left(TR, TE \right)^{k} &= \frac{1}{K}\sum_{j=1}^{K} \left \{\tilde{accuracy}_{\mathbb{T}or\mathbb{P}} \left(TR, TE)_{j}^{k}   \right)   \right \} \\
+  &= \frac{1}{K}\sum_{j=1}^{K} \left \{ \frac{1}{|TE_{j}^{k}|} \sum_{i=1}^{|TE_{j}^{k}|} \left \{ I\left(\tilde{y}_{ji}^{K}=\hat{y}_{ji}^{K\left(\mathbb{T}or\mathbb{P} \right) } \right) \right \}   \right \}
+\end{align*}
+
+This method makes the assumption that the estimates of average weights are stable enough to produce reasonably consistent estimates
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{VariancePlot.jpg}
+\end{center}
+\textbf{Figure XX:} Variance of average weight values for several question number/class ID combinations plotted against training data count length
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{MeanPlot.jpg}
+\end{center}
+\textbf{Figure XX:} Mean value of the average weight estimates for several question number/class ID combinations plotted against training data count length
+
+The stability of the average estimate value, as training sample increases, in combination with a dramatic decrease in variance as training sample size increases are indications that the average weight values are capable of producing stable outcome estimates
+  
+
+### Unsupervised Learning Classifications
+
+Unsupervised learning methods can be used to discover patterns in data without the need to specify a response variable, or include additional assumptions.  The methods employed in this analysis attempt to derive trends in the PHQ9 data and infer an  outcome by deriving similarities in the observations using the predictor variables, and associating similar observations with an unknown outcome variable.  The ranked-outcomes $C_{1}, \ C_{2}, \ C_{3}$ in the PHQ9 data allow for a hierarchy to be imposed upon the unknown variables based upon the characteristics of the observations contained within each outcome.  This hierarchy can then be input into the CV algorithm as a simulated outcome to obtain estimates of traditional and probabilistic classification accuracies.
+
+
+#### Kmeans Clustering
+
+The proper number of clusters in the Kmeans algorithm can be determined with the use of an elbow plot.  The first instance of diminishing returns is two or three clusters.  Since the PHQ9 data needs to be grouped into three clusters this coincides with intuition:
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{ElbowPlot.jpeg}
+\end{center}
+\textbf{Figure XX:} A plot depicting the total within sum of squares vs the number of clusters chosen for the algorithm
+
+The Kmeans algorithm minimizes the sum of squares distance from the assigned cluster centers. A value of 2000 random intitializations with a maximum iteration per initialization of 1000 steps, and a random seed of "123" is utilized.
+
+Cluster assignments are formed using the median traditional sum value within each cluster:
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|}
+\hline
+Cluster Label & Cluster Population & Median Traditional Sum Value \\
+\hline
+\hline
+C1 & 1254 & 2 \\
+\hline
+C2 & 776 & 9 \\
+\hline
+C3 & 465 & 19 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} Kmeans cluster assignments based upon median traditional sum value
+
+
+
+
+#### Hierarchical Clustering
+
+Two hierarchical clustering variables are created.  The first distinguishes observations based upon Euclidean distance.  A circular dendogram, with corresponding classifications is displayed in \textbf{Figure XXa} [@STHDA_2020]. The second hierarchical clustering technique distinguishes observations based upon Manhattan distance.  A circular dendogram, with corresponding classifications is displayed in \textbf{Figure XXb} [@STHDA_2020]
+
+\textbf{Figure XXa/b:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{CircularDendos.jpg}
+\end{center}
+\textbf{Figure XXa:} Circular dendogram with three-category classifications distance-Euclidean
+\textbf{Figure XXb:} Circular dendogram with three-category classifications distance-Manhattan
+
+Cluster assignments are formed using the median traditional sum value within each cluster-:
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Cluster &  Pop $L^{2}$ & Med. Sum  $L^{2}$ & Pop. $L^{1}$ & Med. Sum $L^{1}$\\
+\hline
+\hline
+C1 & 1768 & 3 & 1834 & 4\\
+\hline
+C2 & 246 & 10 & 261 & 13 \\
+\hline
+C3 & 481 & 18 & 400 & 19 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} Hierarchical clustering with Euclidean ($L^{2}$) metric and Manhattan ($L^{1}$) assignments based upon median traditional sum value
+
+
+
+
+#### Self Organizing Maps
+
+Self-organizing maps (SOMs) require a pre-specified structure (generally a lattice structure) to which observations are clustered based upon projected proximity [@Belavkin].  SOMs are not restricted to linear model frameworks, and they preserve topological relationships between variables in the mapping from higher dimensions [@Belavkin].  SOMs have useful visualization methods that are meaningful and can be used for deduction and inference [@Tanner_2020].
+
+In this analysis SOMs are fit to a 15x15 lattice structure with a hexagonal topology and both $L^{2}$ and $L^{1}$ metrics.  Data is standardized prior to completing all SOM clustering procedures.  Plots of each of these mappings are found in \textbf{Figure XXa} $L^{2}$ metric and  \textbf{Figure XXb} $L^{1}$ metric below   
+
+\textbf{Figure XXa and XXb:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{SOMmappings.jpg}
+\end{center}
+\textbf{Figure XXa}: Self Organizing Map with Euclidean metric, 15x15 hexagonal topology lattice with $L^{2}$ metric
+\textbf{Figure XXb}: Self Organizing Map with Manhattan metric, 15x15 hexagonal topology lattice with $L^{2}$ metric
+
+
+Cluster assignments are formed using the median traditional sum value within each cluster-:
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Cluster &  Pop $L^{2}$ & Med. Sum  $L^{2}$ & Pop. $L^{1}$ & Med. Sum $L^{1}$\\
+\hline
+\hline
+C1 & 1790 & 3 & 2006 & 4\\
+\hline
+C2 & 122 & 15 & 155 & 16 \\
+\hline
+C3 & 583 & 21 & 334 & 21 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} Self Organizing Map clustering with Euclidean ($L^{2}$) metric and Manhattan ($L^{1}$) assignments based upon median traditional sum value
+
+*** 
+
+# Analysis and Results
+
+## Inferential Outcome Simulation
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Sup1Graph.jpg}
+\end{center}
+\textbf{Figure XX:} displays estimated accuracy values for probabilistic and traditional classifications across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+- \textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  8.844e-1 &  2.902e-2  &  3.048e1  & <2e-16   \\                             
+\hline
+ID = Pscore                    & -1.409e-1 &  4.104e-2  & -3.433e0  & 8.840e-4 \\
+\hline
+\#Train Obs                    &  1.019e-6 &  1.197e-5  &  8.850e-2 & 9.323e-1 \\
+\hline
+(ID = Pscore):(\#Train Obs) &  1.020e-5 &  1.692e-5  &  6.030e-1 & 5.481e-1 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} summary table for linear regression trend lines fit to accuracy estimate values displayed in 
+\textbf{Figure XX}
+
+After simulating an outcome using the Inferential Simulation method outlined in \textbf{Section (XX)} accuracy values of probabilistic and tradition classification are plotted for 50 different definitions of training sample length.  The results of this comparison show that, when measured agains the inferentially simulated outcome, traditional scoring classification is more accurate than probabilistic scoring for all defined training samples.  The results indicate that probabilistic classification accuracy grows at a faster rate than traditional classification accuracy; however this result lacks sufficient evidence to support the claim of a significant finding (p=0.5581).
+
+
+## Probabilistic Simulations
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Sup2Graph.jpg}
+\end{center}
+\textbf{Figure XX:} displays estimated accuracy values for probabilistic and traditional classifications as estimated using a probabilistically simulated outcome variable, and calculated across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  8.864e-1 &  2.503e-2  &  3.541e1  & <2e-16   \\
+\hline
+ID = Traditional               & -8.453e-2 &  3.540e-2  & -2.388e0  & 1.891e-2 \\
+\hline
+\#Train Obs                    &  3.026e-5 &  1.032e-5  &  2.932e0  & 4.210e-3 \\
+\hline
+(ID = Traditional):(\#Train Obs) &  -2.956e-5 &  1.460e-5  &  -2.025e0 & 4.562e-2 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} summary table for linear regression trend lines fit to accuracy estimate values displayed in 
+\textbf{Figure XX}
+
+After simulating an outcome using the Probabilistic Simulation method outlined in \textbf{Section (XX)} accuracy values of probabilistic and tradition classification are plotted for 50 different definitions of training sample length.  The results of this calculation show that, when measured against the probabilistically simulated outcome, probabilistic classification is more accurate than traditional classification for all defined training samples. The results indicate that probabilistic scoring accuracy grows at a faster rate than traditional scoring accuracy, and that this effect is supported by evidence in the probabilistically simulated data (p=0.00421)
+
+
+
+
+## Unsupervised Algorithm Outcomes
+
+
+### Kmeans Clustering
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{KMeansResultsGraph.jpeg}
+\end{center}
+\textbf{Figure XX:} displays estimated accuracy values for probabilistic and traditional classifications as estimated using outcomes resulting from a Kmeans clustering process.  The accuracy values are calculated across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+- \textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  5.389e-1 &  2.264-2  &  2.380e1  & <2e-16   \\
+\hline
+ID = Traditional               & -4.129e-1 &  3.202e-2  & -1.290e1  & <2e-16 \\
+\hline
+\#Train Obs                    &  -1.483e-6 &  9.321e-6  &  -1.590e-1  & 8.740e-1 \\
+\hline
+(ID = Traditional):(\#Train Obs) &  1.082e-5 &  1.318e-5  &  8.210e-1 & 4.130e-1 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} summary table for linear regression trend lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+
+A Kmeans unsupervised learning algorithm was used to generate response simulations to calculate the accuracy of probabilistic and traditional classification methods for 50 different definitions of training sample length.  The results of this calculation show that, when measured against responses generated from a Kmeans unsupervised learning algorithm, probabilistic classification is more accurate than traditional classification for all training samples defined.  The results indicate that probabilistic scoring accuracy does not continue to grow as training sample size increases; however, this result lacks sufficient evidence to support the claim of a significant finding (p=0.874).
+
+
+
+### Hierarchical Clustering
+
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{HCResultsGraph.jpeg}
+\end{center}
+\textbf{Figure XX:} displays estimated accuracy values for probabilistic and traditional classifications as estimated using outcomes resulting from a hierarchical clustering process.  The accuracy values are calculated across 50 values of training set definitions.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter                      & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept                      &  3.437e-1 &  2.505e-2  &  1.372e1  & <2e-16   \\
+\hline
+ID = Traditional               & 3.805e-1 &  3.543e-2  & 1.074e1  & <2e-16 \\
+\hline
+\#Train Obs                    &  1.548e-5 &  1.031e-5  &  1.501e0  & 1.350e-1 \\
+\hline
+(ID = Traditional):(\#Train Obs) &  -9.187e-6 &  1.459e-5  &  -6.300e-1 & 5.300e-1 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX Caption:} summary table for linear regression trend lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+
+A hierarchical clustering learning algorithm was used to generate response simulations to calculate the accuracy of probabilistic and traditional  classification methods for 50 different definitions of training sample length.  The results of this calculation show that, when measured against responses generated from a hierarchical clustering algorithm, traditional classification is more accurate than probabilistic scoring for all training samples defined.  The results indicate that probabilistic classification accuracy increases with training sample size; however, this result lacks sufficient evidence to support the claim of a significant finding (p=0.135).
+
+
+
+### Self Organizing Maps
+\textbf{Figure XX:}
+\begin{center}
+\includegraphics[width=0.85\textwidth]{SomResultsGraph.jpeg}
+\end{center}
+\textbf{Figure XX:} displays estimated accuracy values for probabilistic and traditional classifications obtained using outcomes estimated by two Self Organizing Maps that have a 15x15 lattice structure, a hexagonal topology, and employed either a Euclidean or Manhattan metric.  Also plotted are Linear Regression trend lines for each estimation method's accuracy estimates.
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c|c|c|c|c|}
+\hline
+Parameter     & Estimate  & Std. Error & t. Value  & Pr(>|t|) \\
+\hline
+\hline
+Intercept    &  6.227e-1 &  2.814e-2  &  2.213e1  & <2e-16   \\
+\hline
+ID = $\left(\text{Pscore}, \ L^{1}  \right)$               & -9.234e-2 &  3.979e-2  & -2.321e0  & 2.136e-2 \\
+\hline
+ID = $\left(\text{Trad}, \ L^{2}   \right)$               & 1.102e-1 &  3.979e-2  & 2.769e0  & 6.170e-3 \\
+\hline
+ID = $\left(\text{Trad}, \ L^{1}   \right)$               & 2.841e-2 &  3.979e-2  & 7.140e-1  & 4.762e-1 \\
+\hline
+\#Train Obs  &  1.781e-5 &  1.60e-5  &  1.535e0  & 1.264e-1 \\
+\hline
+ID = $\left(\text{Pscore}, \ L^{1}  \right)$:(\#Train Obs) &  2.390e-6 &  1.640e-5  &  1.460e-1 & 8.843e-1 \\
+\hline
+ID = $\left(\text{Trad}, \ L^{2}   \right)$:(\#Train Obs) &  -1.557e-5 &  1.640e-5  &  -9.490e-1 & 3.437e-1 \\
+\hline
+ID = $\left(\text{Trad}, \ L^{1}   \right)$:(\#Train Obs) &  -1.593e-5 &  1.640e-5  &  -9.710e0 & 3.329e-1 \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} summary table for linear regression trend lines fit to accuracy estimate values displayed in \textbf{Figure XX}
+
+Self Organizing Maps were used to simulate response simulations to estimate the accuracy of probabilistic and traditional classification methods for 50 different definitions of training sample length.  The results of this calculation show that, when measured against responses generated by a 15x15 hexagonal topology lattice SOM (either Euclidean or Manhattan metrics), traditional classification is more accurate than probabilistic classification for all training samples defined.  The results indicate that probabilistic classification accuracy increases with training sample size; however, in both SOM simulations (Euclidean and Manhattan metrics) this result lacks sufficient evidence to support the claim of a significant finding (p=0.1264, $L^{2}$) and (p=0.8843, $L^{1}$) 
+
+
+***
+
+# Discussion
+
+## Summary of Methods
+
+This analysis has performed calculations of probabilistic and traditional classification accuracy using multiple outcomes simulated from information contained in PHQ9 data that should reasonably represent a hierarchy of depression classification categories.  It is hoped that, by providing a spectrum of theoretically and empirically reasonable accuracy measurements, this analysis can begin to elucidate those values of accuracy that are likely to represent reality.  Six outcome variables were simulated in three different ways:
+
+- Inferential Simulations are based on theoretical information relating to experimentation
+- Probabilistic Simulations are also based on theoretical information relating to experimentation, but also incorporate empirical evidence in the data
+- Unsupervised Methods do not account for any underlying experimentation practices.  These outcomes are generated based upon a hierarchy of relations imposed on the results of a clustering algorithm.
+
+Calculations were evaluated at 50 different definitions of training sample length, and trend lines were fit to these calculated accuracy values to estimate the relationship between accuracy and training sample length.
+
+
+
+
+
+## Summary of Results
+
+\textbf{Table XX:}
+\begin{center}
+\begin{tabular}{|c||c|c|c|}
+\hline
+Outcome       &  Superior     &  Min Train   &  Max Train \\
+Simulation    &  Model        &  Set Size    &  Set Size  \\  
+Method        &  Accuracy     &  Equality    &  Equality  \\  
+\hline
+\hline
+Inferential   & Traditional   &  1.256e4     &  1.381e4    \\
+\hline 
+Probabilistic & Probabilistic &  NA          &  NA          \\
+\hline
+KMeans        & Probabilistic &  NA          &  NA          \\
+\hline
+Hierarchical  & Traditional   &  2.455e4     &  4.135e4     \\
+\hline
+SOM           & Traditional   &  6.176e3     &  7.106e3     \\
+Euclidean     &               &              &              \\
+\hline
+SOM           & Traditional   &  5.500e3     &  6.122e3     \\
+Manhattan     &               &              &              \\
+\hline
+\end{tabular}
+\end{center}
+\textbf{Table XX:} Analysis results summary.  \textbf{Table XX} above lists the modeling method found to be more accurate with each corresponding simmulated response.  In the cases where probabilistic classification is not the preffered method, \textbf{Table XX} also lists a range of estimated training set sizes that, if surpassed, would theoretically allow probabilistic classification accuracy to exceed traditional classification accuracy when measured against the corresponding response.  
+
+Training set size ranges in \textbf{XX} were obtained by solving for the intersection of trend lines in each simulation method.  Minimum range value estimates assume that traditional scoring accuracy trends have zero accuracy growth, and maximum range value estimates assume the estimated positive growth rate in the traditional classification accuracy trend line.
+
+
+The analysis conducted must conclude without a definitive conclusion concerning the comparison of probabilistic classification accuracy and traditional classification accuracy.  In two of the six simulated outcomes evaluated, probabilistic classification accuracy is judged to be superior to traditional classification accuracy.  As this answer is not deffinitive, this analysis has failed to produce a directly useable comparison of probabilistic and traditional classification accuracy.  
+
+Conversely, this analysis has produced confirmational evidence that probabilistic classification accuracy increases with training sample size.  Excluding only the Kmeans simmulated respose, the probabilistic classification accuracy had a higher positive trend than did traditional scoring classification accuracy.  Further research is required in order to provide a complete range of estimated training sample set sizes over which accuracy can be calculated.
+
+The Kmeans simmulated outcome is expected.  Intuition would dictate that obtaining more observations should not decrease probabilistic scoring accuracy.  However, increasing observational counts will increase initialization dependencies in the Kmeans algorithm. Therefore, the decrease in probabilistic scoring classification accuracy is reasonably explained by a tendency of the outcome variable to "shift its preference" when different training data sizes are provided.  
+
+## Client Satisfaction Concerns
+
+As initially specified, this analysis has not completed either of the client-specified goals.  Mathematical proof aside, this analysis has failed to produce any concrete comparison of probabilistic and traditional scoring accuracies. The CV analysis has also failed to produce reliable results and needs to be adapted to allow for more flexible sampling practices.  Additionaly, the analysis does not address or even acknowledge the client's second stated goal.
+
+
+## Next Steps
+
+Although the approach taken in this analysis might be interesting, additional simmulations, further or more extensive training sample size evaluations, and other finishing touches are not advisable as they will most likely not produce conclusive results.  However, improvements could be easily implemented by independently sampling Test and Training sets, then replacing observations as sampling takes place. This new process would allow for an increased number of Train/Test sample size pairings.
+  
+Self Organizing Maps have improved algorithms which allow for the structure on which they are built to be "optimized".  This so called "Growing Self Organizing Map" (GSOM) would better capture information in the original data than pre-specified structures, and would be an appropriate algorithmic improvement.
+
+
+
+***
+
+# Appendix
+
+
+***
+
+\newpage
+
+***
+
+## Data and Code Availability
+
+\thispagestyle{empty}
+
+Access to code, with instructions, and all data used for the analysis completed here is available for download at:
+
+`https://github.com/leepanter/PScoreVSTscore`
+
+`git@github.com:leepanter/PScoreVSTscore.git`
+
+\newpage
+
+***
+## List of Figures and Tables
+
+\thispagestyle{empty}
+
+\listoffigures
+
+\listoftables
+
+\newpage
+
+***
+
+## References
+
+\thispagestyle{empty}
+
+\bibliography{Bib_AccRefSheet}
+

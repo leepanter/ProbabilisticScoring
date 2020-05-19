@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  12 MAY 2020 22:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.19 (TeX Live 2018) (preloaded format=pdflatex 2018.4.16)  16 MAY 2020 01:08
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -865,125 +865,131 @@ Ups/Outline/KvsTrainlen.jpeg  used on input line 630.
 (pdftex.def)             Requested size: 440.373pt x 236.16217pt.
 [10 </Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/KvsTrain
 len.jpeg>]
+Overfull \hbox (31.81561pt too wide) in paragraph at lines 750--778
+ [] 
+ []
+
+[11]
 </Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFlips.j
-peg, id=265, 1923.185pt x 1034.86626pt>
+peg, id=272, 1923.185pt x 1032.85875pt>
 File: /Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFl
 ips.jpeg Graphic file (type jpg)
 <use /Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFli
 ps.jpeg>
 Package pdftex.def Info: /Users/lee/Documents/GitHub/ProbabilisticScoring/Write
-Ups/Outline/ClassFlips.jpeg  used on input line 742.
-(pdftex.def)             Requested size: 440.35712pt x 236.95625pt.
-[11]
-
-LaTeX Warning: Reference `1.3.2-1' on page 12 undefined on input line 789.
-
+Ups/Outline/ClassFlips.jpeg  used on input line 785.
+(pdftex.def)             Requested size: 440.35712pt x 236.49658pt.
 [12 </Users/lee/Documents/GitHub/ProbabilisticScoring/WriteUps/Outline/ClassFli
 ps.jpeg>]
-Underfull \hbox (badness 10000) in paragraph at lines 807--811
+
+LaTeX Warning: Reference `1.3.2-1' on page 13 undefined on input line 832.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 850--854
 
  []
 
-<VariancePlot.jpg, id=282, 1919.17pt x 967.615pt>
+<VariancePlot.jpg, id=283, 1919.17pt x 967.615pt>
 File: VariancePlot.jpg Graphic file (type jpg)
 <use VariancePlot.jpg>
-Package pdftex.def Info: VariancePlot.jpg  used on input line 828.
+Package pdftex.def Info: VariancePlot.jpg  used on input line 871.
 (pdftex.def)             Requested size: 440.37488pt x 222.03001pt.
-<MeanPlot.jpg, id=283, 1918.16624pt x 967.615pt>
+[13]
+<MeanPlot.jpg, id=289, 1918.16624pt x 967.615pt>
 File: MeanPlot.jpg Graphic file (type jpg)
 <use MeanPlot.jpg>
-Package pdftex.def Info: MeanPlot.jpg  used on input line 836.
+Package pdftex.def Info: MeanPlot.jpg  used on input line 879.
 (pdftex.def)             Requested size: 440.37871pt x 222.14813pt.
-[13 <./VariancePlot.jpg>]
-<ElbowPlot.jpeg, id=289, 1922.18124pt x 1032.85875pt>
+[14 <./VariancePlot.jpg> <./MeanPlot.jpg>]
+<ElbowPlot.jpeg, id=295, 1922.18124pt x 1032.85875pt>
 File: ElbowPlot.jpeg Graphic file (type jpg)
 <use ElbowPlot.jpeg>
-Package pdftex.def Info: ElbowPlot.jpeg  used on input line 895.
+Package pdftex.def Info: ElbowPlot.jpeg  used on input line 938.
 (pdftex.def)             Requested size: 414.52211pt x 222.73799pt.
-[14 <./MeanPlot.jpg>]
-<Hclust1Dend.jpeg, id=297, 991.705pt x 976.64874pt>
+<Hclust1Dend.jpeg, id=296, 991.705pt x 976.64874pt>
 File: Hclust1Dend.jpeg Graphic file (type jpg)
 <use Hclust1Dend.jpeg>
-Package pdftex.def Info: Hclust1Dend.jpeg  used on input line 919.
+Package pdftex.def Info: Hclust1Dend.jpeg  used on input line 962.
 (pdftex.def)             Requested size: 117.42572pt x 115.64293pt.
-<Hclust2Dend.jpeg, id=298, 985.6825pt x 981.6675pt>
+[15 <./ElbowPlot.jpeg>]
+<Hclust2Dend.jpeg, id=303, 985.6825pt x 981.6675pt>
 File: Hclust2Dend.jpeg Graphic file (type jpg)
 <use Hclust2Dend.jpeg>
-Package pdftex.def Info: Hclust2Dend.jpeg  used on input line 931.
+Package pdftex.def Info: Hclust2Dend.jpeg  used on input line 974.
 (pdftex.def)             Requested size: 117.43454pt x 116.95619pt.
-[15 <./ElbowPlot.jpeg> <./Hclust1Dend.jpeg>]
-<KeySom.jpeg, id=303, 678.535pt x 334.24875pt>
+[16 <./Hclust1Dend.jpeg> <./Hclust2Dend.jpeg>]
+<KeySom.jpeg, id=309, 678.535pt x 334.24875pt>
 File: KeySom.jpeg Graphic file (type jpg)
 <use KeySom.jpeg>
-Package pdftex.def Info: KeySom.jpeg  used on input line 998.
+Package pdftex.def Info: KeySom.jpeg  used on input line 1041.
 (pdftex.def)             Requested size: 117.4305pt x 57.84666pt.
-[16 <./Hclust2Dend.jpeg>]
-<Som1.jpg, id=309, 3432.825pt x 2978.12625pt>
+<Som1.jpg, id=310, 3432.825pt x 2978.12625pt>
 File: Som1.jpg Graphic file (type jpg)
 <use Som1.jpg>
-Package pdftex.def Info: Som1.jpg  used on input line 1006.
+Package pdftex.def Info: Som1.jpg  used on input line 1049.
 (pdftex.def)             Requested size: 117.43735pt x 101.88205pt.
-<Sup1Graph.jpg, id=310, 1923.185pt x 972.63374pt>
+<Sup1Graph.jpg, id=311, 1923.185pt x 972.63374pt>
 File: Sup1Graph.jpg Graphic file (type jpg)
 <use Sup1Graph.jpg>
-Package pdftex.def Info: Sup1Graph.jpg  used on input line 1025.
+Package pdftex.def Info: Sup1Graph.jpg  used on input line 1068.
 (pdftex.def)             Requested size: 234.85126pt x 118.77393pt.
-[17 <./KeySom.jpeg> <./Som1.jpg> <./Sup1Graph.jpg>]
-<Sup2Graph.jpg, id=317, 1924.18875pt x 969.6225pt>
+[17 <./KeySom.jpeg> <./Som1.jpg>]
+<Sup2Graph.jpg, id=318, 1924.18875pt x 969.6225pt>
 File: Sup2Graph.jpg Graphic file (type jpg)
 <use Sup2Graph.jpg>
-Package pdftex.def Info: Sup2Graph.jpg  used on input line 1079.
+Package pdftex.def Info: Sup2Graph.jpg  used on input line 1122.
 (pdftex.def)             Requested size: 234.85638pt x 118.34703pt.
-[18 <./Sup2Graph.jpg>]
-<KMeansResultsGraph.jpeg, id=323, 1922.18124pt x 1032.85875pt>
+[18 <./Sup1Graph.jpg> <./Sup2Graph.jpg>]
+<KMeansResultsGraph.jpeg, id=324, 1922.18124pt x 1032.85875pt>
 File: KMeansResultsGraph.jpeg Graphic file (type jpg)
 <use KMeansResultsGraph.jpeg>
-Package pdftex.def Info: KMeansResultsGraph.jpeg  used on input line 1137.
+Package pdftex.def Info: KMeansResultsGraph.jpeg  used on input line 1180.
 (pdftex.def)             Requested size: 234.87534pt x 126.20715pt.
 [19 <./KMeansResultsGraph.jpeg>]
-<HCResultsGraph.jpeg, id=331, 1920.17375pt x 1030.85126pt>
+<HCResultsGraph.jpeg, id=332, 1920.17375pt x 1030.85126pt>
 File: HCResultsGraph.jpeg Graphic file (type jpg)
 <use HCResultsGraph.jpeg>
-Package pdftex.def Info: HCResultsGraph.jpeg  used on input line 1192.
+Package pdftex.def Info: HCResultsGraph.jpeg  used on input line 1235.
 (pdftex.def)             Requested size: 234.86443pt x 126.08769pt.
 [20 <./HCResultsGraph.jpeg>]
 <SomResultsGraph.jpeg, id=338, 1919.17pt x 1031.855pt>
 File: SomResultsGraph.jpeg Graphic file (type jpg)
 <use SomResultsGraph.jpeg>
-Package pdftex.def Info: SomResultsGraph.jpeg  used on input line 1248.
+Package pdftex.def Info: SomResultsGraph.jpeg  used on input line 1291.
 (pdftex.def)             Requested size: 234.85878pt x 126.27344pt.
 [21 <./SomResultsGraph.jpeg>] [22] [23]
-LaTeX Font Info:    Try loading font information for T1+lmtt on input line 1468
+LaTeX Font Info:    Try loading font information for T1+lmtt on input line 1511
 .
 (/usr/local/texlive/2018/texmf-dist/tex/latex/lm/t1lmtt.fd
 File: t1lmtt.fd 2009/10/30 v1.6 Font defs for Latin Modern
 )
 No file Outline.bbl.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1516.
 [24]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1516.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1559.
+[25]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1559.
 (./Outline.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1516.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1516.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1559.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1559.
 
 Package rerunfilecheck Info: File `Outline.out' has not changed.
 (rerunfilecheck)             Checksum: 9AD4E86E792EB92B35D4CC26636A0F7A;6296.
 
 LaTeX Warning: There were undefined references.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1516.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1559.
  ) 
 Here is how much of TeX's memory you used:
- 15961 strings out of 492649
- 233860 string characters out of 6129622
- 386868 words of memory out of 5000000
+ 15960 strings out of 492649
+ 233847 string characters out of 6129622
+ 387868 words of memory out of 5000000
  19361 multiletter control sequences out of 15000+600000
- 73150 words of font info for 105 fonts, out of 8000000 for 9000
+ 73063 words of font info for 104 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 32i,14n,40p,332b,552s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 32i,14n,40p,332b,534s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc}{/usr/local/
-texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/20
-18/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/texmf-dist/
+texlive/2018/texmf-dist/fonts/enc/dvips/lm/lm-rm.enc}{/usr/local/texlive/2018/t
+exmf-dist/fonts/enc/dvips/lm/lm-mathit.enc}{/usr/local/texlive/2018/texmf-dist/
 fonts/enc/dvips/lm/lm-mathex.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/
 dvips/lm/lm-mathsy.enc}{/usr/local/texlive/2018/texmf-dist/fonts/enc/dvips/lm/l
 m-ts1.enc}</usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmbx12.pfb>
@@ -992,17 +998,18 @@ l/texlive/2018/texmf-dist/fonts/type1/public/lm/lmmi12.pfb></usr/local/texlive/
 2018/texmf-dist/fonts/type1/public/lm/lmmi6.pfb></usr/local/texlive/2018/texmf-
 dist/fonts/type1/public/lm/lmmi8.pfb></usr/local/texlive/2018/texmf-dist/fonts/
 type1/public/lm/lmr12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/publi
-c/lm/lmr17.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr8.p
-fb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/l
-ocal/texlive/2018/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texli
-ve/2018/texmf-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2018/tex
-mf-dist/fonts/type1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fon
-ts/type1/public/lm/lmtt12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/p
-ublic/amsfonts/symbols/msbm10.pfb>
-Output written on Outline.pdf (24 pages, 5088002 bytes).
+c/lm/lmr17.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr6.p
+fb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/lm/lmr8.pfb></usr/loc
+al/texlive/2018/texmf-dist/fonts/type1/public/lm/lmri12.pfb></usr/local/texlive
+/2018/texmf-dist/fonts/type1/public/lm/lmsy10.pfb></usr/local/texlive/2018/texm
+f-dist/fonts/type1/public/lm/lmsy6.pfb></usr/local/texlive/2018/texmf-dist/font
+s/type1/public/lm/lmsy8.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/pub
+lic/lm/lmtt12.pfb></usr/local/texlive/2018/texmf-dist/fonts/type1/public/amsfon
+ts/symbols/msbm10.pfb>
+Output written on Outline.pdf (25 pages, 5133043 bytes).
 PDF statistics:
- 452 PDF objects out of 1000 (max. 8388607)
- 391 compressed objects within 4 object streams
- 110 named destinations out of 1000 (max. 500000)
+ 461 PDF objects out of 1000 (max. 8388607)
+ 398 compressed objects within 4 object streams
+ 111 named destinations out of 1000 (max. 500000)
  10599 words of extra memory for PDF output out of 12000 (max. 10000000)
 

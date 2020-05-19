@@ -108,7 +108,7 @@ plot(k.values, wss_values,
      xlab="Number of clusters K",
      ylab="Total within-clusters sum of squares")
 
-
+set.seed(123)
 k.means.out1=kmeans(dat.kmeans, centers=3, iter.max = 50, nstart = 100)
 k.means.out=kmeans(dat.kmeans, centers=3, iter.max = 1000, nstart = 2000)
 
@@ -129,9 +129,10 @@ dat$kmeans.factor=kmeans.factor
 
 table.kmeans.factor = dat %>% group_by(kmeans.factor) %>% tally()
 table.kmeans.factor
+table.kmeans.factor.sum = dat %>% group_by(kmeans.factor) %>% summarise(median(qTot))
+table.kmeans.factor.sum
 
-
-phq9$kmeans=dat$kmeans
+C2phq9$kmeans=dat$kmeans
 phq9$kmeans.factor=dat$kmeans.factor
 
 fviz_cluster(k.means.out, data = dat.kmeans)
@@ -205,6 +206,11 @@ dat$hcluster.factor=hcluster.factor
 table.hclust.factor = dat %>% group_by(hcluster.factor) %>% tally()
 table.hclust.factor
 
+table.hclust.factor = dat %>% group_by(hcluster.factor) %>% summarise(median(qTot))
+table.hclust.factor
+
+
+
 plot(as.phylo(hc), type = "unrooted", cex = 0.6,
      no.margin = TRUE)
 
@@ -235,6 +241,8 @@ dat$hcluster.factor2=hcluster.factor2
 table.hclust.factor2 = dat %>% group_by(hcluster.factor2) %>% tally()
 table.hclust.factor2
 
+table.hclust.factor2 = dat %>% group_by(hcluster.factor2) %>% summarise(median(qTot))
+table.hclust.factor2
 
 
 
